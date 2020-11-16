@@ -1,0 +1,3 @@
+# MYSITE
+
+this is mysite, holds my Django Apps in one place. The main app is called ProjectView. 
