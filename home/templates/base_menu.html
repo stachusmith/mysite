@@ -15,7 +15,7 @@
     <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
         <li>
-        <a href="{% url 'project_view:main' %}">Create Part</a>
+        <a href="{% url 'project_view:part_create' %}">Create Part</a>
         </li>
         <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
