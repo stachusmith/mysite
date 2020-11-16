@@ -1,0 +1,3 @@
+#ignore django SECRET_KEY
+
+mysite/secret_settings.py

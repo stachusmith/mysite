@@ -1,0 +1,31 @@
+{% extends "base_menu.html" %}
+{% block content %}
+
+<h1>Parts</h1>
+
+<p>
+{% if part_list %}
+<ul>
+  {% for part in part_list %}
+    <li>
+        <a href="{% url 'project_view:part_detail'  part.id %}">{{ part.name }}</a>
+        {% if part.owner == user %}
+        (<a href="{% url 'project_view:part_update' part.id %}">Edit</a> |
+        <a href="{% url 'project_view:part_delete' part.id %}">Delete</a>)
+        {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>There are no parts in the database.</p>
+{% endif %}
+</p>
+<p>
+<a href="{% url 'project_view:part_create' %}">Add a Part</a> |
+{% if user.is_authenticated %}
+<a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a>
+{% else %}
+<a href="{% url 'login' %}?next={% url 'project_view:main' %}">Login</a>
+{% endif %}
+</p>
+{% endblock %}

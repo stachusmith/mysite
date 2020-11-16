@@ -1,0 +1,34 @@
+
+{% extends "base_menu.html" %}
+
+{% load humanize %}
+
+{% block content %}
+
+<span style="float: right;">
+({{ part.updated_at|naturaltime }})
+{% if part.owner == user %}
+<a href="{% url 'ads:ad_update' ad.id %}"><i class="fa fa-pencil"></i></a>
+<a href="{% url 'ads:ad_delete' ad.id %}"><i class="fa fa-trash"></i></a>
+{% endif %}
+</span>
+<h1>{{ part.name }}</h1>
+
+<p>
+{{ part.description }}
+{{ part.project }}
+{{ part.module }}
+{{ part.client }}
+{{ part.supplier }}
+{{ part.thickness }}
+{{ fix.number_of_elements }}
+
+</p>
+<p>
+</p>
+<p>
+<a href="{% url 'project_view:main' %}">All parts</a>
+</p>
+
+{% endblock %}
+
