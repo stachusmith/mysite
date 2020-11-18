@@ -11,14 +11,14 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
 from project_view.forms import CreateForm #, CommentForm
 
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q
 
-class PartListView(ListView):
+class PartListView(View):
     model = Part
     # By convention:
     template_name = "project_view/part_list.html"
@@ -93,3 +93,60 @@ class PartDeleteView(DeleteView, LoginRequiredMixin):
         print('delete get_queryset called')
         qs = super(DeleteView, self).get_queryset()
         return qs.filter(owner=self.request.user)
+
+# Clients
+#-------------------------------------------------------------------------------
+
+class ClientListView(ListView):
+    model = Client
+
+class ClientDetailView(View, LoginRequiredMixin):
+    model = Client
+    
+    # By convention:
+    template_name = "project_view/client_detail.html"
+    def get(self, request, pk) :
+        x = Client.objects.get(id=pk) #pulling the client from db
+        project_list = Project.objects.filter(name=x) #pulling projects belonging to client from db
+
+        ctx = {'client' : x, 'project_list' : project_list}
+        return render(request, self.template_name, ctx)
+
+class ClientCreateView(LoginRequiredMixin, CreateView):
+    model = Client
+    fields = ['name']
+    success_url=reverse_lazy('project_view:clients')
+
+    def form_valid(self, form):
+        print('form_valid called')
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        return super(ClientCreateView, self).form_valid(form)
+
+
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
+    
+    model = Client
+    fields = ['name']
+    success_url=reverse_lazy('project_view:clients')
+    def get_queryset(self):
+        print('update get_queryset called')
+        """ Limit a User to only modifying their own data. """
+        qs = super(ClientUpdateView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
+    model = Client
+    success_url=reverse_lazy('project_view:clients')
+    def get_queryset(self):
+        print('delete get_queryset called')
+        qs = super(DeleteView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+# Clients
+#-------------------------------------------------------------------------------
+
+class ProjectListView(ListView):
+    model = Project
