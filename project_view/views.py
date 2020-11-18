@@ -39,7 +39,7 @@ class ClientDetailView(View, LoginRequiredMixin):
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     fields = ['name']
-    success_url=reverse_lazy('project_view:clients')
+    success_url=reverse_lazy('project_view:main')
 
     def form_valid(self, form):
         print('form_valid called')
@@ -53,17 +53,17 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Client
     fields = ['name']
-    success_url=reverse_lazy('project_view:clients')
+    success_url=reverse_lazy('project_view:main')
     def get_queryset(self):
         print('update get_queryset called')
-        """ Limit a User to only modifying their own data. """
+        #Limit a User to only modifying their own data
         qs = super(ClientUpdateView, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
-    success_url=reverse_lazy('project_view:clients')
+    success_url=reverse_lazy('project_view:main')
     def get_queryset(self):
         print('delete get_queryset called')
         qs = super(DeleteView, self).get_queryset()
@@ -78,11 +78,44 @@ class ProjectDetailView(View, LoginRequiredMixin):
     # By convention:
     template_name = "project_view/project_detail.html"
     def get(self, request, pk) :
-        x = Project.objects.get(id=pk) #pulling the client from db
-        module_list = Module.objects.filter(project_id=x) #pulling projects belonging to client from db
+        x = Project.objects.get(id=pk)
+        module_list = Module.objects.filter(project_id=x)
 
         ctx = {'project' : x, 'module_list' : module_list}
         return render(request, self.template_name, ctx)
+
+class ProjectCreateView(LoginRequiredMixin, CreateView):
+    model = Project
+    fields = ['name']
+    success_url=reverse_lazy('project_view:project_detail')
+
+    def form_valid(self, form):
+        print('form_valid called')
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        return super(ProjectCreateView, self).form_valid(form)
+
+
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+    
+    model = Project
+    fields = ['name']
+    success_url=reverse_lazy('project_view:project_detail')
+    def get_queryset(self):
+        print('update get_queryset called')
+        #Limit a User to only modifying their own data
+        qs = super(ProjectUpdateView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+    model = Project
+    success_url=reverse_lazy('project_view:project_detail')
+    def get_queryset(self):
+        print('delete get_queryset called')
+        qs = super(ProjectDeleteView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
 
 # Modules
 #-------------------------------------------------------------------------------
@@ -96,21 +129,44 @@ class ModuleDetailView(View, LoginRequiredMixin):
         x = Module.objects.get(id=pk) #pulling the client from db
         part_list = Part.objects.filter(module_id=x) #pulling projects belonging to client from db
 
-        ctx = {'module' : x, 'part_list' : module_list}
+        ctx = {'module' : x, 'part_list' : part_list}
         return render(request, self.template_name, ctx)
+
+class ModuleCreateView(LoginRequiredMixin, CreateView):
+    model = Module
+    fields = ['name']
+    success_url=reverse_lazy('project_view:module_detail')
+
+    def form_valid(self, form):
+        print('form_valid called')
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        return super(ModuleCreateView, self).form_valid(form)
+
+
+class ModuleUpdateView(LoginRequiredMixin, UpdateView):
+    
+    model = Module
+    fields = ['name']
+    success_url=reverse_lazy('project_view:module_detail')
+    def get_queryset(self):
+        print('update get_queryset called')
+        #Limit a User to only modifying their own data
+        qs = super(ModuleUpdateView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+
+class ModuleDeleteView(LoginRequiredMixin, DeleteView):
+    model = Module
+    success_url=reverse_lazy('project_view:module_detail')
+    def get_queryset(self):
+        print('delete get_queryset called')
+        qs = super(ModuleDeleteView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
 
 # Parts
 #-------------------------------------------------------------------------------
-
-class PartListView(View):
-    model = Part
-    # By convention:
-    template_name = "project_view/part_list.html"
-    def get(self, request) :
-        part_list = Part.objects.all() #pulling objects from db
-
-        ctx = {'part_list' : part_list} # leaving out for now: 'favorites': favorites, 'search': strval}
-        return render(request, self.template_name, ctx)
 
 class PartDetailView(DetailView, LoginRequiredMixin):
     model = Part
@@ -172,8 +228,8 @@ class PartUpdateView(LoginRequiredMixin, View):
 
 class PartDeleteView(DeleteView, LoginRequiredMixin):
     model = Part
-
+    success_url=reverse_lazy('project_view:main')
     def get_queryset(self):
         print('delete get_queryset called')
-        qs = super(DeleteView, self).get_queryset()
+        qs = super(PartDeleteView, self).get_queryset()
         return qs.filter(owner=self.request.user)

@@ -10,6 +10,8 @@ class Client(models.Model):
     name = models.CharField(
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
 
     def __str__(self):
         return self.name
@@ -20,6 +22,8 @@ class Project(models.Model):
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
 
     def __str__(self):
         return self.name
@@ -30,6 +34,8 @@ class Module(models.Model):
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
 
     def __str__(self):
         return self.name

@@ -7,27 +7,26 @@ app_name = 'project_view'
 
 urlpatterns = [
     
-    path('clients', views.ClientListView.as_view(), name='clients'),
+    path('', views.ClientListView.as_view(), name='main'),
     path('client/create', views.ClientCreateView.as_view(), name='client_create'),
-    path('client/update', views.ClientUpdateView.as_view(), name='client_update'),
-    path('client/delete', views.ClientDeleteView.as_view(), name='client_delete'),
+    path('client/<int:pk>/update', views.ClientUpdateView.as_view(), name='client_update'),
+    path('client/<int:pk>/delete', views.ClientDeleteView.as_view(), name='client_delete'),
     path('client/<int:pk>', views.ClientDetailView.as_view(), name='client_detail'), 
     
     path('project/<int:pk>', views.ProjectDetailView.as_view(), name='project_detail'), 
-    #path('project/create', views.ProjectCreateView.as_view(), name='project_create'),
-    #path('project/update', views.ProjectUpdateView.as_view(), name='project_update'),
-    #path('project/delete', views.ProjectDeleteView.as_view(success_url=reverse_lazy('project_view:clients')), name='project_delete'),
+    path('project/create', views.ProjectCreateView.as_view(), name='project_create'),
+    path('project/<int:pk>/update', views.ProjectUpdateView.as_view(), name='project_update'),
+    path('project/<int:pk>/delete', views.ProjectDeleteView.as_view(), name='project_delete'),
 
-    #path('modules', views.ModuleListView.as_view(), name='modules'),
-    #path('module/create', views.ModuleCreateView.as_view(), name='module_create'),
-    #path('module/update', views.ModuleUpdateView.as_view(), name='module_update'),
-    #path('module/delete', views.ModuleDeleteView.as_view(success_url=reverse_lazy('module_view:clients')), name='module_delete'),
+    path('module/<int:pk>', views.ModuleDetailView.as_view(), name='module_detail'),
+    path('module/create', views.ModuleCreateView.as_view(), name='module_create'),
+    path('module/<int:pk>/update', views.ModuleUpdateView.as_view(), name='module_update'),
+    path('module/<int:pk>/delete', views.ModuleDeleteView.as_view(), name='module_delete'),
 
-    path('', views.PartListView.as_view(), name='main'),
     path('part/<int:pk>', views.PartDetailView.as_view(), name='part_detail'),
     path('part/create', views.PartCreateView.as_view(), name='part_create'),
     path('part/<int:pk>/update', views.PartUpdateView.as_view(), name='part_update'),
-    path('part/<int:pk>/delete', views.PartDeleteView.as_view(success_url=reverse_lazy('project_view:main')), name='part_delete'),
+    path('part/<int:pk>/delete', views.PartDeleteView.as_view(), name='part_delete'),
 ]
     
     
