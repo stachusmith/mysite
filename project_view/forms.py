@@ -10,7 +10,7 @@ class CreateForm(forms.ModelForm):
 
     class Meta:
         model = Part
-        fields = ['client', 'project', 'module', 'supplier', 'name', 'description', 'thickness', 'minimal_draft_angle']  # Picture is manual
+        fields = ['module', 'supplier', 'name', 'description', 'thickness', 'minimal_draft_angle']  # Picture is manual
 
     # Validate the size of the picture
     #def clean(self):

@@ -18,6 +18,90 @@ from project_view.forms import CreateForm #, CommentForm
 
 #from django.db.models import Q
 
+# Clients
+#-------------------------------------------------------------------------------
+
+class ClientListView(ListView):
+    model = Client
+
+class ClientDetailView(View, LoginRequiredMixin):
+    model = Client
+    
+    # By convention:
+    template_name = "project_view/client_detail.html"
+    def get(self, request, pk) :
+        x = Client.objects.get(id=pk) #pulling the client from db
+        project_list = Project.objects.filter(client_id=x) #pulling projects belonging to client from db
+
+        ctx = {'client' : x, 'project_list' : project_list}
+        return render(request, self.template_name, ctx)
+
+class ClientCreateView(LoginRequiredMixin, CreateView):
+    model = Client
+    fields = ['name']
+    success_url=reverse_lazy('project_view:clients')
+
+    def form_valid(self, form):
+        print('form_valid called')
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        return super(ClientCreateView, self).form_valid(form)
+
+
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
+    
+    model = Client
+    fields = ['name']
+    success_url=reverse_lazy('project_view:clients')
+    def get_queryset(self):
+        print('update get_queryset called')
+        """ Limit a User to only modifying their own data. """
+        qs = super(ClientUpdateView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
+    model = Client
+    success_url=reverse_lazy('project_view:clients')
+    def get_queryset(self):
+        print('delete get_queryset called')
+        qs = super(DeleteView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+# Projects
+#-------------------------------------------------------------------------------
+
+class ProjectDetailView(View, LoginRequiredMixin):
+    model = Project
+    
+    # By convention:
+    template_name = "project_view/project_detail.html"
+    def get(self, request, pk) :
+        x = Project.objects.get(id=pk) #pulling the client from db
+        module_list = Module.objects.filter(project_id=x) #pulling projects belonging to client from db
+
+        ctx = {'project' : x, 'module_list' : module_list}
+        return render(request, self.template_name, ctx)
+
+# Modules
+#-------------------------------------------------------------------------------
+
+class ModuleDetailView(View, LoginRequiredMixin):
+    model = Module
+    
+    # By convention:
+    template_name = "project_view/module_detail.html"
+    def get(self, request, pk) :
+        x = Module.objects.get(id=pk) #pulling the client from db
+        part_list = Part.objects.filter(module_id=x) #pulling projects belonging to client from db
+
+        ctx = {'module' : x, 'part_list' : module_list}
+        return render(request, self.template_name, ctx)
+
+# Parts
+#-------------------------------------------------------------------------------
+
 class PartListView(View):
     model = Part
     # By convention:
@@ -93,60 +177,3 @@ class PartDeleteView(DeleteView, LoginRequiredMixin):
         print('delete get_queryset called')
         qs = super(DeleteView, self).get_queryset()
         return qs.filter(owner=self.request.user)
-
-# Clients
-#-------------------------------------------------------------------------------
-
-class ClientListView(ListView):
-    model = Client
-
-class ClientDetailView(View, LoginRequiredMixin):
-    model = Client
-    
-    # By convention:
-    template_name = "project_view/client_detail.html"
-    def get(self, request, pk) :
-        x = Client.objects.get(id=pk) #pulling the client from db
-        project_list = Project.objects.filter(name=x) #pulling projects belonging to client from db
-
-        ctx = {'client' : x, 'project_list' : project_list}
-        return render(request, self.template_name, ctx)
-
-class ClientCreateView(LoginRequiredMixin, CreateView):
-    model = Client
-    fields = ['name']
-    success_url=reverse_lazy('project_view:clients')
-
-    def form_valid(self, form):
-        print('form_valid called')
-        object = form.save(commit=False)
-        object.owner = self.request.user
-        object.save()
-        return super(ClientCreateView, self).form_valid(form)
-
-
-class ClientUpdateView(LoginRequiredMixin, UpdateView):
-    
-    model = Client
-    fields = ['name']
-    success_url=reverse_lazy('project_view:clients')
-    def get_queryset(self):
-        print('update get_queryset called')
-        """ Limit a User to only modifying their own data. """
-        qs = super(ClientUpdateView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
-
-
-class ClientDeleteView(LoginRequiredMixin, DeleteView):
-    model = Client
-    success_url=reverse_lazy('project_view:clients')
-    def get_queryset(self):
-        print('delete get_queryset called')
-        qs = super(DeleteView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
-
-# Clients
-#-------------------------------------------------------------------------------
-
-class ProjectListView(ListView):
-    model = Project

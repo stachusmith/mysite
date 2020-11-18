@@ -13,7 +13,7 @@ urlpatterns = [
     path('client/delete', views.ClientDeleteView.as_view(), name='client_delete'),
     path('client/<int:pk>', views.ClientDetailView.as_view(), name='client_detail'), 
     
-    
+    path('project/<int:pk>', views.ProjectDetailView.as_view(), name='project_detail'), 
     #path('project/create', views.ProjectCreateView.as_view(), name='project_create'),
     #path('project/update', views.ProjectUpdateView.as_view(), name='project_update'),
     #path('project/delete', views.ProjectDeleteView.as_view(success_url=reverse_lazy('project_view:clients')), name='project_delete'),

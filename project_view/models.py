@@ -6,10 +6,20 @@ from django.conf import settings
 
 # one to many:
 
+class Client(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
     name = models.CharField(
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
@@ -19,13 +29,7 @@ class Module(models.Model):
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
-    def __str__(self):
-        return self.name
-
-class Client(models.Model):
-    name = models.CharField(
-            max_length=200,
-            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
@@ -66,12 +70,8 @@ class Part(models.Model):
 
     description = models.TextField()
     
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
-    
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    
+          
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
