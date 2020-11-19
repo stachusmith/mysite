@@ -12,7 +12,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
-from project_view.forms import CreateProjectForm, CreatePartForm #, CommentForm
+from project_view.forms import CreateForm #, CommentForm
 
 #from project_view.utils import dump_queries
 
@@ -84,40 +84,23 @@ class ProjectDetailView(View, LoginRequiredMixin):
         ctx = {'project' : x, 'module_list' : module_list}
         return render(request, self.template_name, ctx)
 
-class ProjectCreateView(LoginRequiredMixin, View):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
+    model = Project
+    fields = ['name']
+    success_url=reverse_lazy('project_view:client_detail')
 
-    template_name='project_view/project_form.html'
-    
-    def get(self, request):
-        form = CreateProjectForm()
+    def form_valid(self, form):
+        print('form_valid called')
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        return super(ProjectCreateView, self).form_valid(form)
 
-        ctx= { 'form':form }
-        return render(request, self.template_name, ctx)
-
-    def post(self, request):
-        
-        pk=request.POST['client']
-        print(pk)
-        
-        form = CreateProjectForm(request.POST)
-
-        if not form.is_valid():
-            ctx = {'form': form}
-            return render(request, self.template_name, ctx)
-
-        project = form.save(commit=False)
-        project.owner = self.request.user
-        project.save()
-        return redirect(reverse('project_view:client_detail', args=[pk]))
-#---------------------------------------------------------------------
-# tesing field:   
-
-#---------------------------------------------------------------------
 
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Project
-    fields = ['name', 'client']
+    fields = ['name']
     success_url=reverse_lazy('project_view:client_detail')
     def get_queryset(self):
         print('update get_queryset called')
@@ -198,14 +181,14 @@ class PartCreateView(LoginRequiredMixin, View):
     template_name='project_view/part_form.html'
 
     def get(self, request):
-        form = CreatePartForm()
+        form = CreateForm()
         ctx = {'form': form}
         return render(request, self.template_name, ctx)
         #form is produced from forms.py
 
     def post(self, request):
-        form = CreatePartForm(request.POST)
-        #without the picture fuctionality for now
+        form = CreateForm(request.POST)
+        #because of the picture fuctionality
 
         if not form.is_valid():
             ctx = {'form': form}
@@ -225,13 +208,13 @@ class PartUpdateView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
         part = get_object_or_404(Part, id=pk, owner=self.request.user) #from db
-        form = CreatePartForm(instance=part)
+        form = CreateForm(instance=part)
         ctx = {'form': form}
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk):
         part = get_object_or_404(Part, id=pk, owner=self.request.user)
-        form = CreatePartForm(request.POST, instance=part)
+        form = CreateForm(request.POST, instance=part)
 
         if not form.is_valid():
             ctx = {'form': form}

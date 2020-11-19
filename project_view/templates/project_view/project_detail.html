@@ -1,27 +1,27 @@
 {% extends "base_menu.html" %}
 {% block content %}
 
-<h1>Projects</h1>
+<h1>Modules</h1>
 
 <p>
-{% if project_list %}
+{% if module_list %}
 <ul>
-  {% for project in project_list %}
+  {% for module in module_list %}
     <li>
-        <a href="{% url 'project_view:modules'  project.id %}">{{ client.name }}</a>
+        <a href="{% url 'project_view:module_detail'  module.id %}">{{ module.name }}</a>
         {% if client.owner == user %}
-        (<a href="{% url 'project_view:project_update' project.id %}">Edit</a> |
-        <a href="{% url 'project_view:project_delete' project.id %}">Delete</a>)
+        (<a href="{% url 'project_view:module_update' module.id %}">Edit</a> |
+        <a href="{% url 'project_view:module_delete' module.id %}">Delete</a>)
         {% endif %}
     </li>
   {% endfor %}
 </ul>
 {% else %}
-  <p>There are no projects in the database.</p>
+  <p>There are no modules for this project.</p>
 {% endif %}
 </p>
 <p>
-<a href="{% url 'project_view:project_create' %}">Add a Project</a> |
+<a href="{% url 'project_view:module_create' %}">Add a Module</a> |
 {% if user.is_authenticated %}
 <a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a>
 {% else %}
