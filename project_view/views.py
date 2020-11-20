@@ -92,15 +92,16 @@ class ProjectCreateView(LoginRequiredMixin, View):
         form = CreateProjectForm()
 
         ctx= { 'form':form }
+        
         return render(request, self.template_name, ctx)
 
     def post(self, request):
         
         pk=request.POST['client']
-        print(pk)
+        print(request.POST)
         
         form = CreateProjectForm(request.POST)
-
+        
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
@@ -114,16 +115,47 @@ class ProjectCreateView(LoginRequiredMixin, View):
 
 #---------------------------------------------------------------------
 
-class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, View):
     
-    model = Project
-    fields = ['name', 'client']
-    success_url=reverse_lazy('project_view:client_detail')
-    def get_queryset(self):
-        print('update get_queryset called')
-        #Limit a User to only modifying their own data
-        qs = super(ProjectUpdateView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+#    model = Client
+#    fields = ['name', 'client']
+    template_name='project_view/project_form.html'
+    #model = Project
+
+     
+    def get(self, request, pk):
+        
+        project = get_object_or_404(Project, pk=pk, owner=self.request.user)
+        print (project.id)
+        print (project.client_id)
+        #client = get_object_or_404(self.model.client_id, id=pk)
+        form_data = {'name': project, 'client':project.client_id}
+        print(form_data)
+        form = CreateProjectForm(form_data)
+        
+        ctx= {'form':form}
+        return render(request, self.template_name, ctx)
+#    def get_queryset(self):
+#        print('update get_queryset called')
+#        #Limit a User to only modifying their own data
+#        qs = super(ProjectUpdateView, self).get_queryset()
+#        return qs.filter(owner=self.request.user)
+
+    def post(self, request):
+        
+        #pk=request.POST['client']
+        #print(pk)
+        
+        form = CreateProjectForm(request.POST)
+
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+
+        project = form.save(commit=False)
+        project.owner = self.request.user
+        project.save()
+        return redirect(reverse('project_view:main'))
 
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):
