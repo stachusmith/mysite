@@ -19,6 +19,7 @@ class Client(models.Model):
 class Project(models.Model):
     name = models.CharField(
             max_length=200,
+            unique=True,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)

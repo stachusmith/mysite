@@ -1,8 +1,10 @@
 {% extends "base_menu.html" %}
 {% block content %}
 
-<h1>Projects</h1>
-
+<h1>{{ client.name }} Projects:</h1>
+<p>
+  <a href="{% url 'project_view:main' %}">back to OEMs</a>
+</p>
 <p>
 {% if project_list %}
 <ul>

@@ -12,7 +12,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
-from project_view.forms import CreateProjectForm, CreatePartForm #, CommentForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm #, CommentForm
 
 #from project_view.utils import dump_queries
 
@@ -80,8 +80,10 @@ class ProjectDetailView(View, LoginRequiredMixin):
     def get(self, request, pk) :
         x = Project.objects.get(id=pk)
         module_list = Module.objects.filter(project_id=x)
-
-        ctx = {'project' : x, 'module_list' : module_list}
+        client_number = x.client_id
+        client = Client.objects.get(id=client_number)
+        print(client)
+        ctx = {'project' : x, 'module_list' : module_list, 'client': client}
         return render(request, self.template_name, ctx)
 
 class ProjectCreateView(LoginRequiredMixin, View):
@@ -89,10 +91,10 @@ class ProjectCreateView(LoginRequiredMixin, View):
     template_name='project_view/project_form.html'
     
     def get(self, request):
-        form = CreateProjectForm()
-
-        ctx= { 'form':form }
         
+        form = CreateProjectForm()
+        
+        ctx= { 'form':form }
         return render(request, self.template_name, ctx)
 
     def post(self, request):
@@ -120,19 +122,13 @@ class ProjectUpdateView(LoginRequiredMixin, View):
 #    model = Client
 #    fields = ['name', 'client']
     template_name='project_view/project_form.html'
-    #model = Project
+    model = Project
 
      
     def get(self, request, pk):
-        
-        project = get_object_or_404(Project, pk=pk, owner=self.request.user)
-        print (project.id)
-        print (project.client_id)
-        #client = get_object_or_404(self.model.client_id, id=pk)
-        form_data = {'name': project, 'client':project.client_id}
-        print(form_data)
-        form = CreateProjectForm(form_data)
-        
+        project = get_object_or_404(self.model, pk=pk, owner=self.request.user)
+        #form_data = {'name': project, 'client':project.client_id}
+        form = CreateProjectForm(instance=project)
         ctx= {'form':form}
         return render(request, self.template_name, ctx)
 #    def get_queryset(self):
@@ -145,16 +141,16 @@ class ProjectUpdateView(LoginRequiredMixin, View):
         
         #pk=request.POST['client']
         #print(pk)
-        
-        form = CreateProjectForm(request.POST)
+        project = get_object_or_404(self.model, pk=pk, owner=self.request.user)
+        form = CreateProjectForm(request.POST, instance=project)
 
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
-        project = form.save(commit=False)
+        #project = form.save(commit=False)
         #project.owner = self.request.user
-        project.save()
+        form.save()
         return redirect(reverse('project_view:client_detail', args=[project.client_id]))
 
 
@@ -190,33 +186,72 @@ class ModuleDetailView(View, LoginRequiredMixin):
     def get(self, request, pk) :
         x = Module.objects.get(id=pk) #pulling the client from db
         part_list = Part.objects.filter(module_id=x) #pulling projects belonging to client from db
+        project_number = x.project_id
+        project = Project.objects.get(id=project_number)
+        client_number = project.client_id
+        client = Client.objects.get(id=client_number)
+        ctx = {'client': client, 'project': project, 'module' : x, 'part_list' : part_list}
+        project_pk = pk
+        return render(request, self.template_name, ctx)
+#new_below------------------------------------------
+class ModuleCreateView(LoginRequiredMixin, View):
 
-        ctx = {'module' : x, 'part_list' : part_list}
+    template_name='project_view/module_form.html'
+    
+    def get(self, request):
+        print(request.META)
+        
+        form = CreateModuleForm()
+        #print(form)
+        ctx= { 'form':form }
+        
         return render(request, self.template_name, ctx)
 
-class ModuleCreateView(LoginRequiredMixin, CreateView):
-    model = Module
-    fields = ['name']
-    success_url=reverse_lazy('project_view:project_detail')
+    def post(self, request):
+        
+        pk=request.POST['project']
+        print(request.POST)
+        
+        form = CreateModuleForm(request.POST)
+        
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
 
-    def form_valid(self, form):
-        print('form_valid called')
-        object = form.save(commit=False)
-        object.owner = self.request.user
-        object.save()
-        return super(ModuleCreateView, self).form_valid(form)
+        module = form.save(commit=False)
+        module.owner = self.request.user
+        module.save()
+        return redirect(reverse('project_view:project_detail', args=[pk]))
 
 
-class ModuleUpdateView(LoginRequiredMixin, UpdateView):
+class ModuleUpdateView(LoginRequiredMixin, View):
     
+#    model = Client
+#    fields = ['name', 'client']
+    template_name='project_view/module_form.html'
     model = Module
-    fields = ['name']
-    success_url=reverse_lazy('project_view:project_detail')
-    def get_queryset(self):
-        print('update get_queryset called')
-        #Limit a User to only modifying their own data
-        qs = super(ModuleUpdateView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+
+     
+    def get(self, request, pk):
+        module = get_object_or_404(self.model, pk=pk, owner=self.request.user)
+        #form_data = {'name': project, 'client':project.client_id}
+        form = CreateModuleForm(instance=module)
+        ctx= {'form':form}
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk):
+        
+        module = get_object_or_404(self.model, pk=pk, owner=self.request.user)
+        form = CreateModuleForm(request.POST, instance=module)
+
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+
+        #project = form.save(commit=False)
+        #project.owner = self.request.user
+        form.save()
+        return redirect(reverse('project_view:project_detail', args=[module.project_id]))
 
 
 class ModuleDeleteView(LoginRequiredMixin, DeleteView):

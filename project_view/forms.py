@@ -19,6 +19,11 @@ class CreateProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'client']
+
+class CreateModuleForm(forms.ModelForm):
+    class Meta:
+        model = Module
+        fields = ['name', 'project']
     # Validate the size of the picture
     #def clean(self):
     #    cleaned_data = super().clean()

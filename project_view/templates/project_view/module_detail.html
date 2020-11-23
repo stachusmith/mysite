@@ -1,7 +1,8 @@
 {% extends "base_menu.html" %}
 {% block content %}
 
-<h1>Parts</h1>
+<h1><a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }}</a>
+   / <a href="{% url 'project_view:project_detail'  project.id %}">{{ project.name }}</a> / {{ module.name }}:</h1>
 
 <p>
 {% if part_list %}
