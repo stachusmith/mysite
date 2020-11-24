@@ -1,5 +1,5 @@
 from django import forms
-from project_view.models import Project, Module, Part 
+from project_view.models import Client, Project, Module, Part 
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
@@ -16,9 +16,47 @@ class CreatePartForm(forms.ModelForm):
 
 # Create the form class.
 class CreateProjectForm(forms.ModelForm):
+    
     class Meta:
         model = Project
         fields = ['name', 'client']
+
+#    def __init__(self, pk):
+#        super(CreateProjectForm, self).__init__(pk)
+#        client_name = Client.objects.get(id=pk)
+#        client_id = pk
+#        CLIENT_CHOICES = (
+#            (client_id, (client_name))
+#        )
+#
+#        self.fields['client'].choices = CLIENT_CHOICES
+#        self.fields['client'].widget.choices = CLIENT_CHOICES
+#        print (self.fields['client'].choices)
+
+
+
+    #client = forms.ChoiceField(choices = CLIENT_CHOICES)
+    #name = forms.CharField(required=True, max_length=500, min_length=3, strip=True)
+    
+#    def __init__(self, pk):
+#        super(CreateProjectForm, self).__init__(pk)
+#        client_name = Client.objects.get(id=pk)
+#        client_id = pk
+#        CLIENT_CHOICES = (
+#            (client_id, (client_name))
+#        )
+#        client = forms.ChoiceField(choices = CLIENT_CHOICES)
+#        print(self.fields['client'])
+        
+        
+        
+        #self.fields['client'].queryset = Project.objects.filter(client_id=client)
+        #self.fields['client'].queryset = client
+        #print(self.fields['client'].queryset)
+
+
+
+    
 
 class CreateModuleForm(forms.ModelForm):
     class Meta:

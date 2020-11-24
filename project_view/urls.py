@@ -13,10 +13,10 @@ urlpatterns = [
     path('client/<int:pk>/delete', views.ClientDeleteView.as_view(), name='client_delete'),
     path('client/<int:pk>', views.ClientDetailView.as_view(), name='client_detail'), 
     
-    path('project/<int:pk>', views.ProjectDetailView.as_view(), name='project_detail'), 
-    path('project/create', views.ProjectCreateView.as_view(), name='project_create'),
-    path('project/<int:pk>/update', views.ProjectUpdateView.as_view(), name='project_update'),
-    path('project/<int:pk>/delete', views.ProjectDeleteView.as_view(), name='project_delete'),
+    path('client/<int:pk>/project/<int:pk_proj>', views.ProjectDetailView.as_view(), name='project_detail'), 
+    path('client/<int:pk>/project/create', views.ProjectCreateView.as_view(), name='project_create'),
+    path('client/<int:pk>/project/<int:pk_proj>/update', views.ProjectUpdateView.as_view(), name='project_update'),
+    path('client/<int:pk>/project/<int:pk_proj>/delete', views.ProjectDeleteView.as_view(), name='project_delete'),
 
     path('module/<int:pk>', views.ModuleDetailView.as_view(), name='module_detail'),
     path('module/create', views.ModuleCreateView.as_view(), name='module_create'),

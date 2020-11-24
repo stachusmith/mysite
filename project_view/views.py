@@ -34,6 +34,7 @@ class ClientDetailView(View, LoginRequiredMixin):
         project_list = Project.objects.filter(client_id=x) #pulling projects belonging to client from db
 
         ctx = {'client' : x, 'project_list' : project_list}
+        print(ctx)
         return render(request, self.template_name, ctx)
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
@@ -77,11 +78,10 @@ class ProjectDetailView(View, LoginRequiredMixin):
     
     # By convention:
     template_name = "project_view/project_detail.html"
-    def get(self, request, pk) :
-        x = Project.objects.get(id=pk)
+    def get(self, request, pk, pk_proj) :
+        x = Project.objects.get(id=pk_proj)
         module_list = Module.objects.filter(project_id=x)
-        client_number = x.client_id
-        client = Client.objects.get(id=client_number)
+        client = Client.objects.get(id=pk)
         print(client)
         ctx = {'project' : x, 'module_list' : module_list, 'client': client}
         return render(request, self.template_name, ctx)
@@ -90,27 +90,37 @@ class ProjectCreateView(LoginRequiredMixin, View):
 
     template_name='project_view/project_form.html'
     
-    def get(self, request):
+    def get(self, request, pk):
         
-        form = CreateProjectForm()
+        #pull defaults in form:
+        client = Client.objects.get(id=pk)
+        form_data = {'name':'project name', 'client':client}
+        form = CreateProjectForm(form_data)
         
+        #limit options in dropdown:
+        form.fields['client'].queryset = Client.objects.filter(id=pk)
+
         ctx= { 'form':form }
         return render(request, self.template_name, ctx)
 
-    def post(self, request):
+    def post(self, request, pk):
         
-        pk=request.POST['client']
-        print(request.POST)
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
         
         form = CreateProjectForm(request.POST)
         
+        #if not valid render the form again:
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
+        #add user as owner before saving:
         project = form.save(commit=False)
         project.owner = self.request.user
         project.save()
+
         return redirect(reverse('project_view:client_detail', args=[pk]))
 #---------------------------------------------------------------------
 # tesing field:   
@@ -125,31 +135,35 @@ class ProjectUpdateView(LoginRequiredMixin, View):
     model = Project
 
      
-    def get(self, request, pk):
-        project = get_object_or_404(self.model, pk=pk, owner=self.request.user)
-        #form_data = {'name': project, 'client':project.client_id}
+    def get(self, request, pk, pk_proj):
+        project = get_object_or_404(self.model, id=pk_proj, owner=self.request.user)
         form = CreateProjectForm(instance=project)
+        
+        #limit options in dropdown:
+        form.fields['client'].queryset = Client.objects.filter(id=pk)
+        
         ctx= {'form':form}
         return render(request, self.template_name, ctx)
+
+#    for TemplateView:
 #    def get_queryset(self):
 #        print('update get_queryset called')
 #        #Limit a User to only modifying their own data
 #        qs = super(ProjectUpdateView, self).get_queryset()
 #        return qs.filter(owner=self.request.user)
 
-    def post(self, request, pk):
+    def post(self, request, pk, pk_proj):
         
+        #unused:
         #pk=request.POST['client']
         #print(pk)
-        project = get_object_or_404(self.model, pk=pk, owner=self.request.user)
+        project = get_object_or_404(self.model, id=pk_proj, owner=self.request.user)
         form = CreateProjectForm(request.POST, instance=project)
 
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
-        #project = form.save(commit=False)
-        #project.owner = self.request.user
         form.save()
         return redirect(reverse('project_view:client_detail', args=[project.client_id]))
 
@@ -157,8 +171,8 @@ class ProjectUpdateView(LoginRequiredMixin, View):
 class ProjectDeleteView(LoginRequiredMixin, View):
     
     template_name='project_view/project_confirm_delete.html'
-    def get (self, request, pk):
-        project = get_object_or_404(Project, pk=pk, owner=self.request.user)
+    def get (self, request, pk, pk_proj):
+        project = get_object_or_404(Project, pk=pk_proj, owner=self.request.user)
         print(project)
         ctx = {'project': project}
         return render(request, self.template_name, ctx)
@@ -168,8 +182,8 @@ class ProjectDeleteView(LoginRequiredMixin, View):
 #        qs = super(ProjectDeleteView, self).get_queryset()
 #        return qs.filter(owner=self.request.user)
 
-    def post(self, request, pk):
-        project = get_object_or_404(Project, id=pk)
+    def post(self, request, pk, pk_proj):
+        project = get_object_or_404(Project, id=pk_proj)
         arg = [project.client_id]
         
         project.delete()
