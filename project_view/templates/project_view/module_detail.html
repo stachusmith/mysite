@@ -2,17 +2,17 @@
 {% block content %}
 
 <h1><a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }}</a>
-   / <a href="{% url 'project_view:project_detail'  project.id %}">{{ project.name }}</a> / {{ module.name }}:</h1>
+   / <a href="{% url 'project_view:project_detail'  client.id project.id %}">{{ project.name }}</a> / {{ module.name }}:</h1>
 
 <p>
 {% if part_list %}
 <ul>
   {% for part in part_list %}
     <li>
-        <a href="{% url 'project_view:part_detail'  part.id %}">{{ part.name }}</a>
+        <a href="{% url 'project_view:part_detail' module.id part.id %}">{{ part.name }}</a>
         {% if client.owner == user %}
-        (<a href="{% url 'project_view:part_update' part.id %}">Edit</a> |
-        <a href="{% url 'project_view:part_delete' part.id %}">Delete</a>)
+        (<a href="{% url 'project_view:part_update' module.id part.id %}">Edit</a> |
+        <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>)
         {% endif %}
     </li>
   {% endfor %}

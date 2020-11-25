@@ -122,15 +122,9 @@ class ProjectCreateView(LoginRequiredMixin, View):
         project.save()
 
         return redirect(reverse('project_view:client_detail', args=[pk]))
-#---------------------------------------------------------------------
-# tesing field:   
-
-#---------------------------------------------------------------------
 
 class ProjectUpdateView(LoginRequiredMixin, View):
     
-#    model = Client
-#    fields = ['name', 'client']
     template_name='project_view/project_form.html'
     model = Project
 
@@ -197,84 +191,122 @@ class ModuleDetailView(View, LoginRequiredMixin):
     
     # By convention:
     template_name = "project_view/module_detail.html"
-    def get(self, request, pk) :
-        x = Module.objects.get(id=pk) #pulling the client from db
-        part_list = Part.objects.filter(module_id=x) #pulling projects belonging to client from db
-        project_number = x.project_id
-        project = Project.objects.get(id=project_number)
+    def get(self, request, pk_proj, pk_modu) :
+        #print(pk_proj, pk_modu)
+        module = Module.objects.get(id=pk_modu)
+        print(module)
+        
+        part_list = Part.objects.filter(module_id=module)
+        print(part_list)
+
+        project = Project.objects.get(id=pk_proj)
+        print(project)
+        
         client_number = project.client_id
         client = Client.objects.get(id=client_number)
-        ctx = {'client': client, 'project': project, 'module' : x, 'part_list' : part_list}
-        project_pk = pk
+        print(client)
+        
+        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list}
         return render(request, self.template_name, ctx)
-#new_below------------------------------------------
+
 class ModuleCreateView(LoginRequiredMixin, View):
 
     template_name='project_view/module_form.html'
     
-    def get(self, request):
-        print(request.META)
+    def get(self, request, pk_proj):
         
-        form = CreateModuleForm()
-        #print(form)
+        #pull defaults in form:
+        project = Project.objects.get(id=pk_proj)
+        form_data = {'name':'module name', 'project':project}
+        form = CreateModuleForm(form_data)
+        
+        #limit options in dropdown:
+        form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
+
         ctx= { 'form':form }
-        
         return render(request, self.template_name, ctx)
 
-    def post(self, request):
+    def post(self, request, pk_proj):
         
-        pk=request.POST['project']
-        print(request.POST)
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
         
         form = CreateModuleForm(request.POST)
         
+        #if not valid render the form again:
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
+        #add user as owner before saving:
         module = form.save(commit=False)
         module.owner = self.request.user
         module.save()
-        return redirect(reverse('project_view:project_detail', args=[pk]))
+        
+        return redirect(reverse('project_view:project_detail', args=[module.project_id, module.project.client.id]))
 
 
 class ModuleUpdateView(LoginRequiredMixin, View):
     
-#    model = Client
-#    fields = ['name', 'client']
     template_name='project_view/module_form.html'
     model = Module
 
      
-    def get(self, request, pk):
-        module = get_object_or_404(self.model, pk=pk, owner=self.request.user)
-        #form_data = {'name': project, 'client':project.client_id}
+    def get(self, request, pk_proj, pk_modu):
+        module = get_object_or_404(self.model, id=pk_modu, owner=self.request.user)
         form = CreateModuleForm(instance=module)
+        
+        #limit options in dropdown:
+        form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
+        
         ctx= {'form':form}
         return render(request, self.template_name, ctx)
 
-    def post(self, request, pk):
+#    for TemplateView:
+#    def get_queryset(self):
+#        print('update get_queryset called')
+#        #Limit a User to only modifying their own data
+#        qs = super(ModuleUpdateView, self).get_queryset()
+#        return qs.filter(owner=self.request.user)
+
+    def post(self, request, pk_proj, pk_modu):
         
-        module = get_object_or_404(self.model, pk=pk, owner=self.request.user)
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
+        module = get_object_or_404(self.model, id=pk_modu, owner=self.request.user)
         form = CreateModuleForm(request.POST, instance=module)
 
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
-        #project = form.save(commit=False)
-        #project.owner = self.request.user
         form.save()
-        return redirect(reverse('project_view:project_detail', args=[module.project_id]))
+        return redirect(reverse('project_view:project_detail', args=[module.project_id, module.project.client.id]))
 
 
-class ModuleDeleteView(LoginRequiredMixin, DeleteView):
-    model = Module
-    success_url=reverse_lazy('project_view:project_detail')
-    def get_queryset(self):
-        print('delete get_queryset called')
-        qs = super(ModuleDeleteView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+class ModuleDeleteView(LoginRequiredMixin, View):
+    
+    template_name='project_view/module_confirm_delete.html'
+    def get (self, request, pk_proj, pk_modu):
+        module = get_object_or_404(Module, pk=pk_modu, owner=self.request.user)
+        print(module)
+        ctx = {'module': module}
+        return render(request, self.template_name, ctx)
+    
+#    def get_queryset(self):
+#        print('delete get_queryset called')
+#        qs = super(ModuleDeleteView, self).get_queryset()
+#        return qs.filter(owner=self.request.user)
+
+    def post(self, request, pk_proj, pk_modu):
+        module = get_object_or_404(Module, id=pk_modu)
+        arg = [module.project_id, module.project.client.id]
+        
+        module.delete()
+        print(arg)
+        return redirect(reverse('project_view:project_detail', args=arg))
 
 # Parts
 #-------------------------------------------------------------------------------

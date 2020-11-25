@@ -8,10 +8,10 @@
 <ul>
   {% for module in module_list %}
     <li>
-        <a href="{% url 'project_view:module_detail'  module.id %}">{{ module.name }}</a>
+        <a href="{% url 'project_view:module_detail' project.id module.id %}">{{ module.name }}</a>
         {% if client.owner == user %}
-        (<a href="{% url 'project_view:module_update' module.id %}">Edit</a> |
-        <a href="{% url 'project_view:module_delete' module.id %}">Delete</a>)
+        (<a href="{% url 'project_view:module_update' project.id module.id %}">Edit</a> |
+        <a href="{% url 'project_view:module_delete' project.id module.id %}">Delete</a>)
         {% endif %}
     </li>
   {% endfor %}
@@ -21,7 +21,7 @@
 {% endif %}
 </p>
 <p>
-<a href="{% url 'project_view:module_create' %}">Add a Module</a> |
+<a href="{% url 'project_view:module_create' project.id %}">Add a Module</a> |
 {% if user.is_authenticated %}
 <a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a>
 {% else %}

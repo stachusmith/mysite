@@ -18,15 +18,15 @@ urlpatterns = [
     path('client/<int:pk>/project/<int:pk_proj>/update', views.ProjectUpdateView.as_view(), name='project_update'),
     path('client/<int:pk>/project/<int:pk_proj>/delete', views.ProjectDeleteView.as_view(), name='project_delete'),
 
-    path('module/<int:pk>', views.ModuleDetailView.as_view(), name='module_detail'),
-    path('module/create', views.ModuleCreateView.as_view(), name='module_create'),
-    path('module/<int:pk>/update', views.ModuleUpdateView.as_view(), name='module_update'),
-    path('module/<int:pk>/delete', views.ModuleDeleteView.as_view(), name='module_delete'),
+    path('project/<int:pk_proj>/module/<int:pk_modu>', views.ModuleDetailView.as_view(), name='module_detail'),
+    path('project/<int:pk_proj>/module/create', views.ModuleCreateView.as_view(), name='module_create'),
+    path('project/<int:pk_proj>/module/<int:pk_modu>/update', views.ModuleUpdateView.as_view(), name='module_update'),
+    path('project/<int:pk_proj>/module/<int:pk_modu>/delete', views.ModuleDeleteView.as_view(), name='module_delete'),
 
-    path('part/<int:pk>', views.PartDetailView.as_view(), name='part_detail'),
+    path('module/<int:pk_modu>/part/<int:pk_part>', views.PartDetailView.as_view(), name='part_detail'),
     path('part/create', views.PartCreateView.as_view(), name='part_create'),
-    path('part/<int:pk>/update', views.PartUpdateView.as_view(), name='part_update'),
-    path('part/<int:pk>/delete', views.PartDeleteView.as_view(), name='part_delete'),
+    path('module/<int:pk_modu>/part/<int:pk_part>/update', views.PartUpdateView.as_view(), name='part_update'),
+    path('module/<int:pk_modu>/part/<int:pk_part>/delete', views.PartDeleteView.as_view(), name='part_delete'),
 ]
     
     
