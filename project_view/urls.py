@@ -24,7 +24,7 @@ urlpatterns = [
     path('project/<int:pk_proj>/module/<int:pk_modu>/delete', views.ModuleDeleteView.as_view(), name='module_delete'),
 
     path('module/<int:pk_modu>/part/<int:pk_part>', views.PartDetailView.as_view(), name='part_detail'),
-    path('part/create', views.PartCreateView.as_view(), name='part_create'),
+    path('module/<int:pk_modu>/part/create', views.PartCreateView.as_view(), name='part_create'),
     path('module/<int:pk_modu>/part/<int:pk_part>/update', views.PartUpdateView.as_view(), name='part_update'),
     path('module/<int:pk_modu>/part/<int:pk_part>/delete', views.PartDeleteView.as_view(), name='part_delete'),
 ]

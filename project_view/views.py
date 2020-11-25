@@ -207,6 +207,7 @@ class ModuleDetailView(View, LoginRequiredMixin):
         print(client)
         
         ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list}
+        print(ctx)
         return render(request, self.template_name, ctx)
 
 class ModuleCreateView(LoginRequiredMixin, View):
@@ -314,65 +315,134 @@ class ModuleDeleteView(LoginRequiredMixin, View):
 class PartDetailView(DetailView, LoginRequiredMixin):
     model = Part
     template_name = "project_view/part_detail.html"
-    def get(self, request, pk) :
-        x = Part.objects.get(id=pk)
-        context = { 'part' : x }
+    def get(self, request, pk_modu, pk_part) :
+        part = Part.objects.get(id=pk_part)
+        
+        module = Module.objects.get(id=pk_modu)
+        
+        project_number = part.module.project_id
+        project = Project.objects.get(id=project_number)
+        context = { 'part' : part, 'module': module, 'project': project}
         return render(request, self.template_name, context)
 
-class PartCreateView(LoginRequiredMixin, View):
-    success_url=reverse_lazy('project_view:module_detail')
-    template_name='project_view/part_form.html'
+class ModuleDetailView(View, LoginRequiredMixin):
+    model = Module
+    
+    # By convention:
+    template_name = "project_view/module_detail.html"
+    def get(self, request, pk_proj, pk_modu) :
+        #print(pk_proj, pk_modu)
+        module = Module.objects.get(id=pk_modu)
+        print(module)
+        
+        part_list = Part.objects.filter(module_id=module)
+        print(part_list)
 
-    def get(self, request):
-        form = CreatePartForm()
-        ctx = {'form': form}
+        project = Project.objects.get(id=pk_proj)
+        print(project)
+        
+        client_number = project.client_id
+        client = Client.objects.get(id=client_number)
+        print(client)
+        
+        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list}
+        print(ctx)
         return render(request, self.template_name, ctx)
-        #form is produced from forms.py
 
-    def post(self, request):
+class PartCreateView(LoginRequiredMixin, View):
+
+    template_name='project_view/part_form.html'
+    
+    def get(self, request, pk_modu):
+        
+        #pull defaults in form:
+        module = Module.objects.get(id=pk_modu)
+        form_data = {'name':'part name', 'module':module}
+        form = CreatePartForm(form_data)
+        
+        #limit options in dropdown:
+        form.fields['module'].queryset = Module.objects.filter(id=pk_modu)
+
+        ctx= { 'form':form }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk_modu):
+        
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
+        
         form = CreatePartForm(request.POST)
-        #without the picture fuctionality for now
-
+        
+        #if not valid render the form again:
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
-        #if form isn't valid, refresh the form            
 
-    # Add owner to the model before saving
+        #add user as owner before saving:
         part = form.save(commit=False)
-        part.owner = self.request.user #pull user from request and make him pic owner
+        part.owner = self.request.user
         part.save()
-        return redirect(self.success_url)
 
+        return redirect(reverse('project_view:module_detail', args=[part.module_id, part.module.project_id]))
 
 class PartUpdateView(LoginRequiredMixin, View):
-    success_url=reverse_lazy('project_view:module_detail')
+    
     template_name='project_view/part_form.html'
+    model = Part
 
-    def get(self, request, pk):
-        part = get_object_or_404(Part, id=pk, owner=self.request.user) #from db
+     
+    def get(self, request, pk_modu, pk_part):
+        part = get_object_or_404(self.model, id=pk_part, owner=self.request.user)
         form = CreatePartForm(instance=part)
-        ctx = {'form': form}
+        
+        #limit options in dropdown:
+        form.fields['module'].queryset = Module.objects.filter(id=pk_modu)
+        
+        ctx= {'form':form}
         return render(request, self.template_name, ctx)
 
-    def post(self, request, pk):
-        part = get_object_or_404(Part, id=pk, owner=self.request.user)
+#    for TemplateView:
+#    def get_queryset(self):
+#        print('update get_queryset called')
+#        #Limit a User to only modifying their own data
+#        qs = super(ModuleUpdateView, self).get_queryset()
+#        return qs.filter(owner=self.request.user)
+
+    def post(self, request, pk_modu, pk_part):
+        
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
+        part = get_object_or_404(self.model, id=pk_part, owner=self.request.user)
         form = CreatePartForm(request.POST, instance=part)
 
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
-        part = form.save #(commit=False)
-        #part.save()
-
-        return redirect(self.success_url)
+        form.save()
+        return redirect(reverse('project_view:module_detail', args=[part.module_id, part.module.project_id]))
 
 
-class PartDeleteView(DeleteView, LoginRequiredMixin):
-    model = Part
-    success_url=reverse_lazy('project_view:module_detail')
-    def get_queryset(self):
-        print('delete get_queryset called')
-        qs = super(PartDeleteView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+class PartDeleteView(LoginRequiredMixin, View):
+    
+    template_name='project_view/part_confirm_delete.html'
+    def get (self, request, pk_modu, pk_part):
+        part = get_object_or_404(Part, pk=pk_part, owner=self.request.user)
+        print(part)
+        ctx = {'part': part}
+        return render(request, self.template_name, ctx)
+    
+#    def get_queryset(self):
+#        print('delete get_queryset called')
+#        qs = super(ModuleDeleteView, self).get_queryset()
+#        return qs.filter(owner=self.request.user)
+
+    def post(self, request, pk_modu, pk_part):
+        part = get_object_or_404(Part, id=pk_part)
+        arg = [part.module_id, part.module.project_id]
+        
+        part.delete()
+        print(arg)
+        return redirect(reverse('project_view:module_detail', args=arg))

@@ -8,17 +8,17 @@
 <span style="float: right;">
 ({{ part.updated_at|naturaltime }})
 {% if part.owner == user %}
-<a href="{% url 'project_view:part_update' part.id %}"><i class="fa fa-pencil"></i></a>
-<a href="{% url 'project_view:part_delete' part.id %}"><i class="fa fa-trash"></i></a>
+<a href="{% url 'project_view:part_update' module.id part.id %}"><i class="fa fa-pencil"></i></a>
+<a href="{% url 'project_view:part_delete' module.id part.id %}"><i class="fa fa-trash"></i></a>
 {% endif %}
 </span>
 <h1>{{ part.name }}</h1>
 
 <p>
 {{ part.description }}
-{{ part.project }}
+{{ part.module.project }}
 {{ part.module }}
-{{ part.client }}
+{{ part.module.project.client }}
 {{ part.supplier }}
 {{ part.thickness }}
 {{ fix.number_of_elements }}
@@ -27,7 +27,7 @@
 <p>
 </p>
 <p>
-<a href="{% url 'project_view:main' %}">All parts</a>
+<a href="{% url 'project_view:module_detail' module.id project.id %}">All parts</a>
 </p>
 
 {% endblock %}
