@@ -101,8 +101,8 @@ class Part(models.Model):
 # many to many:
     
 class Fix(models.Model):
+    
     number_of_elements = models.IntegerField(null=True)
-
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     fixing = models.ForeignKey(Fixing, on_delete=models.CASCADE)
 

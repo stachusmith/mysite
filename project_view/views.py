@@ -322,32 +322,11 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         
         project_number = part.module.project_id
         project = Project.objects.get(id=project_number)
-        context = { 'part' : part, 'module': module, 'project': project}
+
+        fixing_types = Fix.objects.filter(part_id=pk_part)
+        
+        context = { 'part' : part, 'module': module, 'project': project, 'fix':fixing_types}
         return render(request, self.template_name, context)
-
-class ModuleDetailView(View, LoginRequiredMixin):
-    model = Module
-    
-    # By convention:
-    template_name = "project_view/module_detail.html"
-    def get(self, request, pk_proj, pk_modu) :
-        #print(pk_proj, pk_modu)
-        module = Module.objects.get(id=pk_modu)
-        print(module)
-        
-        part_list = Part.objects.filter(module_id=module)
-        print(part_list)
-
-        project = Project.objects.get(id=pk_proj)
-        print(project)
-        
-        client_number = project.client_id
-        client = Client.objects.get(id=client_number)
-        print(client)
-        
-        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list}
-        print(ctx)
-        return render(request, self.template_name, ctx)
 
 class PartCreateView(LoginRequiredMixin, View):
 

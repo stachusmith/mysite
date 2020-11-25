@@ -15,17 +15,27 @@
 <h1>{{ part.name }}</h1>
 
 <p>
-{{ part.description }}
-{{ part.module.project }}
-{{ part.module }}
-{{ part.module.project.client }}
-{{ part.supplier }}
-{{ part.thickness }}
-{{ fix.number_of_elements }}
-
+description: {{ part.description }}
 </p>
 <p>
+OEM: {{ part.module.project.client }}
 </p>
+<p>
+project: {{ part.module.project }}
+</p>
+<p>
+module: {{ part.module }}
+</p>
+<p>
+supplier: {{ part.supplier }}
+</p>
+<p>
+thickness: {{ part.thickness }}mm
+</p>
+<p>
+type of fixing elements: {{ fix }}
+</p>
+
 <p>
 <a href="{% url 'project_view:module_detail' module.id project.id %}">All parts</a>
 </p>
