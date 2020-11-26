@@ -100,7 +100,7 @@ class ProjectCreateView(LoginRequiredMixin, View):
         #limit options in dropdown:
         form.fields['client'].queryset = Client.objects.filter(id=pk)
 
-        ctx= { 'form':form }
+        ctx= { 'form':form, 'client':client}
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk):
@@ -130,13 +130,14 @@ class ProjectUpdateView(LoginRequiredMixin, View):
 
      
     def get(self, request, pk, pk_proj):
+        client = Client.objects.get(id=pk)
         project = get_object_or_404(self.model, id=pk_proj, owner=self.request.user)
         form = CreateProjectForm(instance=project)
         
         #limit options in dropdown:
         form.fields['client'].queryset = Client.objects.filter(id=pk)
         
-        ctx= {'form':form}
+        ctx= {'form':form, 'client':client }
         return render(request, self.template_name, ctx)
 
 #    for TemplateView:
@@ -225,8 +226,8 @@ class ModuleCreateView(LoginRequiredMixin, View):
         
         #limit options in dropdown:
         form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
-
-        ctx= { 'form':form }
+        
+        ctx= { 'form':form, 'project':project }
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk_proj):
@@ -258,12 +259,13 @@ class ModuleUpdateView(LoginRequiredMixin, View):
      
     def get(self, request, pk_proj, pk_modu):
         module = get_object_or_404(self.model, id=pk_modu, owner=self.request.user)
+        project = Project.objects.get(id=pk_proj)
         form = CreateModuleForm(instance=module)
         
         #limit options in dropdown:
         form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
-        
-        ctx= {'form':form}
+
+        ctx= {'form':form, 'project':project }
         return render(request, self.template_name, ctx)
 
 #    for TemplateView:
@@ -355,7 +357,7 @@ class PartCreateView(LoginRequiredMixin, View):
         #limit options in dropdown:
         form.fields['module'].queryset = Module.objects.filter(id=pk_modu)
 
-        ctx= { 'form':form }
+        ctx= { 'form':form, 'module':module }
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk_modu):
@@ -385,13 +387,14 @@ class PartUpdateView(LoginRequiredMixin, View):
 
      
     def get(self, request, pk_modu, pk_part):
+        module = Module.objects.get(id=pk_modu)
         part = get_object_or_404(self.model, id=pk_part, owner=self.request.user)
         form = CreatePartForm(instance=part)
         
         #limit options in dropdown:
         form.fields['module'].queryset = Module.objects.filter(id=pk_modu)
         
-        ctx= {'form':form}
+        ctx= {'form':form, 'module':module }
         return render(request, self.template_name, ctx)
 
 #    for TemplateView:
