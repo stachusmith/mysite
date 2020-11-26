@@ -46,7 +46,10 @@ fixing combinations:
       <p>There are no fixing combinations in the database.</p>
     {% endif %}
     <p>
-      <a href="{% url 'project_view:fixing_list' %}">manage fixing elements</a>
+      <a href="{% url 'project_view:fix_create' %}">add new combination</a>
+    </p>
+    <p>
+      <a href="{% url 'project_view:fixing_create' %}">create new fixing elements</a>
     </p>
 </p>
 

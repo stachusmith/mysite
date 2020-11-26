@@ -12,7 +12,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm #, CommentForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm
 
 #from project_view.utils import dump_queries
 
@@ -21,26 +21,44 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 # Fixing elements
 #-------------------------------------------------------------------------------
 
-class FixingListView(ListView):
+class FixingListView(ListView, LoginRequiredMixin):
     model = Fixing
 
-class FixingDetailView(DetailView, LoginRequiredMixin):
-    model = Fixing
-    
 class FixingCreateView(CreateView, LoginRequiredMixin):
-    model = Fixing
-    fields = ['name']
-    success_url=reverse_lazy('project_view:fixing_list')
+    
+    template_name='project_view/fixing_form.html'
+    
+    def get(self, request):
+                
+        form_data = {'name':'...'}
+        form = CreateFixingForm(form_data)
+        
+        ctx= { 'form':form }
+        return render(request, self.template_name, ctx)
 
-    def form_valid(self, form):
-        print('form_valid called')
-        object = form.save(commit=False)
-        object.owner = self.request.user
-        object.save()
-        return super(FixingCreateView, self).form_valid(form)
+    def post(self, request):
+        
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
+        
+        form = CreateFixingForm(request.POST)
+        
+        #if not valid render the form again:
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+
+        #add user as owner before saving:
+        fixing = form.save(commit=False)
+        fixing.owner = self.request.user
+        fixing.save()
+
+        return redirect(reverse('project_view:main'))
 
 class FixingUpdateView(UpdateView, LoginRequiredMixin):
-    model = Fixing
+    model = Fix
+
     fields = ['name']
     success_url=reverse_lazy('project_view:fixing_list')
     def get_queryset(self):
@@ -50,6 +68,63 @@ class FixingUpdateView(UpdateView, LoginRequiredMixin):
         return qs.filter(owner=self.request.user)
 
 class FixingDeleteView(DeleteView, LoginRequiredMixin):
+    model = Fixing
+    success_url=reverse_lazy('project_view:fixing_list')
+    def get_queryset(self):
+        print('delete get_queryset called')
+        qs = super(FixingDeleteView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+#Fix combination views:
+#--------------------------------------------------------
+
+class FixCreateView(CreateView, LoginRequiredMixin):
+    
+    template_name='project_view/fix_form.html'
+    
+    def get(self, request, pk_part):
+                
+        form_data = {'number_of_elements':1, 'part':'...'}
+        form = CreateFixForm(form_data)
+
+        #limit options in dropdown:
+        
+
+        ctx= { 'form':form }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk):
+        
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
+        
+        form = CreateFixForm(request.POST)
+        
+        #if not valid render the form again:
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+
+        #add user as owner before saving:
+        Fix = form.save(commit=False)
+        Fix.owner = self.request.user
+        Fix.save()
+
+        return redirect(reverse('project_view:part_detail', args=[pk_part]))
+
+class FixUpdateView(UpdateView, LoginRequiredMixin):
+    model = Fix
+
+    fields = ['name']
+    success_url=reverse_lazy('project_view:fixing_list')
+    def get_queryset(self):
+        print('update get_queryset called')
+        #Limit a User to only modifying their own data
+        qs = super(FixingUpdateView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+class FixDeleteView(DeleteView, LoginRequiredMixin):
     model = Fixing
     success_url=reverse_lazy('project_view:fixing_list')
     def get_queryset(self):
