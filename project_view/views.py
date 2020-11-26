@@ -13,7 +13,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm #, CommentForm
-
+from project_view.views_fixing import *
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q

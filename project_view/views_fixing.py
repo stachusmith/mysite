@@ -23,3 +23,15 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 
 class FixingListView(ListView):
     model = Fixing
+
+class FixingDetailView(ListView):
+    model = Fixing
+
+class FixingCreateView(ListView):
+    model = Fixing
+
+class FixingUpdateView(ListView):
+    model = Fixing
+
+class FixingDeleteView(ListView):
+    model = Fixing

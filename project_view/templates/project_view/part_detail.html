@@ -45,6 +45,9 @@ fixing combinations:
     {% else %}
       <p>There are no fixing combinations in the database.</p>
     {% endif %}
+    <p>
+      <a href="{% url 'project_view:fixing_list' %}">manage fixing elements</a>
+    </p>
 </p>
 
 <p>

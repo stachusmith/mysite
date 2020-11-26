@@ -1,0 +1,23 @@
+
+{% extends "base_menu.html" %}
+
+{% load humanize %}
+
+{% block content %}
+
+<span style="float: right;">
+
+{% if part.owner == user %}
+<a href="{% url 'project_view:fixing_update' fixing.id %}"><i class="fa fa-pencil"></i></a>
+<a href="{% url 'project_view:fixing_delete' fixing.id %}"><i class="fa fa-trash"></i></a>
+{% endif %}
+</span>
+<h1>{{ part.name }}</h1>
+
+
+
+<p>
+<a href="{% url 'project_view:fixing_list' %}">Back to fixing elements</a>
+</p>
+
+{% endblock %}
