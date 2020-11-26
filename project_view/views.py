@@ -323,9 +323,20 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         project_number = part.module.project_id
         project = Project.objects.get(id=project_number)
 
-        fixing_types = Fix.objects.filter(part_id=pk_part)
+        fixes = Fix.objects.filter(part_id=part)
+        #fix_list = list()
+        #for fix in fixes:
+        #    fix_list=fix_list+fix
+        #print(fix_list)
+        #fixing_types = Fix.objects.filter(part_id=pk_part)
         
-        context = { 'part' : part, 'module': module, 'project': project, 'fix':fixing_types}
+        #rows = part.fixing_project_view.values('id')
+        #print(rows)
+        #for row in rows:
+        #    fixings = row['id']
+        #print(fixings)
+
+        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes}
         return render(request, self.template_name, context)
 
 class PartCreateView(LoginRequiredMixin, View):
@@ -336,7 +347,7 @@ class PartCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         module = Module.objects.get(id=pk_modu)
-        form_data = {'name':'part name', 'module':module}
+        form_data = {'name':'...', 'description':'...', 'module':module, 'thickness':0, 'minimal_draft_angle':0}
         form = CreatePartForm(form_data)
         
         #limit options in dropdown:

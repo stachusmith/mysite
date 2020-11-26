@@ -33,7 +33,18 @@ supplier: {{ part.supplier }}
 thickness: {{ part.thickness }}mm
 </p>
 <p>
-type of fixing elements: {{ fix }}
+fixing combinations:
+    {% if fixes %}
+    <ul>
+      {% for fix in fixes %}
+        <li>
+            {{ fix.number_of_elements }} {{ fix.fixing.name }}s
+        </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>There are no fixing combinations in the database.</p>
+    {% endif %}
 </p>
 
 <p>

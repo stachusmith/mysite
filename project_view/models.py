@@ -79,7 +79,7 @@ class Part(models.Model):
     
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
           
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=True, null=True)
 
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
     
