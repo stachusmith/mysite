@@ -168,7 +168,8 @@ class ProjectDeleteView(LoginRequiredMixin, View):
     def get (self, request, pk, pk_proj):
         project = get_object_or_404(Project, pk=pk_proj, owner=self.request.user)
         print(project)
-        ctx = {'project': project}
+        client = project.client_id
+        ctx = {'project': project, 'client': client}
         return render(request, self.template_name, ctx)
     
 #    def get_queryset(self):
@@ -178,6 +179,7 @@ class ProjectDeleteView(LoginRequiredMixin, View):
 
     def post(self, request, pk, pk_proj):
         project = get_object_or_404(Project, id=pk_proj)
+        print(project)
         arg = [project.client_id]
         
         project.delete()
@@ -245,7 +247,7 @@ class ModuleCreateView(LoginRequiredMixin, View):
         module.owner = self.request.user
         module.save()
         
-        return redirect(reverse('project_view:project_detail', args=[module.project_id, module.project.client.id]))
+        return redirect(reverse('project_view:project_detail', args=[module.project.client.id, module.project_id]))
 
 
 class ModuleUpdateView(LoginRequiredMixin, View):
@@ -284,7 +286,7 @@ class ModuleUpdateView(LoginRequiredMixin, View):
             return render(request, self.template_name, ctx)
 
         form.save()
-        return redirect(reverse('project_view:project_detail', args=[module.project_id, module.project.client.id]))
+        return redirect(reverse('project_view:project_detail', args=[module.project.client.id, module.project_id]))
 
 
 class ModuleDeleteView(LoginRequiredMixin, View):
@@ -303,7 +305,7 @@ class ModuleDeleteView(LoginRequiredMixin, View):
 
     def post(self, request, pk_proj, pk_modu):
         module = get_object_or_404(Module, id=pk_modu)
-        arg = [module.project_id, module.project.client.id]
+        arg = [module.project.client.id, module.project_id]
         
         module.delete()
         print(arg)
@@ -374,7 +376,7 @@ class PartCreateView(LoginRequiredMixin, View):
         part.owner = self.request.user
         part.save()
 
-        return redirect(reverse('project_view:module_detail', args=[part.module_id, part.module.project_id]))
+        return redirect(reverse('project_view:module_detail', args=[part.module.project_id, part.module_id]))
 
 class PartUpdateView(LoginRequiredMixin, View):
     
@@ -412,7 +414,7 @@ class PartUpdateView(LoginRequiredMixin, View):
             return render(request, self.template_name, ctx)
 
         form.save()
-        return redirect(reverse('project_view:module_detail', args=[part.module_id, part.module.project_id]))
+        return redirect(reverse('project_view:module_detail', args=[part.module.project_id, part.module_id]))
 
 
 class PartDeleteView(LoginRequiredMixin, View):
@@ -431,7 +433,7 @@ class PartDeleteView(LoginRequiredMixin, View):
 
     def post(self, request, pk_modu, pk_part):
         part = get_object_or_404(Part, id=pk_part)
-        arg = [part.module_id, part.module.project_id]
+        arg = [part.module.project_id, part.module_id]
         
         part.delete()
         print(arg)

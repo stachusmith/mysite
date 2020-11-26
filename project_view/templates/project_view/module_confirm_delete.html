@@ -7,5 +7,6 @@
 <form action="" method="POST">
   {% csrf_token %}
   <input type="submit" value="Yes, delete.">
+  <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:project_detail' module.project.client.id module.project_id %}'; return false;">
 </form>
 {% endblock %}

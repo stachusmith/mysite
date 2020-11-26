@@ -7,12 +7,12 @@
 
 <span style="float: right;">
 
-{% if part.owner == user %}
+{% if fixing.owner == user %}
 <a href="{% url 'project_view:fixing_update' fixing.id %}"><i class="fa fa-pencil"></i></a>
 <a href="{% url 'project_view:fixing_delete' fixing.id %}"><i class="fa fa-trash"></i></a>
 {% endif %}
 </span>
-<h1>{{ part.name }}</h1>
+<h1>{{ fixing.name }}</h1>
 
 
 

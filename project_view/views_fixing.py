@@ -24,14 +24,35 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 class FixingListView(ListView):
     model = Fixing
 
-class FixingDetailView(ListView):
+class FixingDetailView(DetailView, LoginRequiredMixin):
     model = Fixing
+    
+class FixingCreateView(CreateView, LoginRequiredMixin):
+    model = Fixing
+    fields = ['name']
+    success_url=reverse_lazy('project_view:fixing_list')
 
-class FixingCreateView(ListView):
-    model = Fixing
+    def form_valid(self, form):
+        print('form_valid called')
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        return super(FixingCreateView, self).form_valid(form)
 
-class FixingUpdateView(ListView):
+class FixingUpdateView(UpdateView, LoginRequiredMixin):
     model = Fixing
+    fields = ['name']
+    success_url=reverse_lazy('project_view:fixing_list')
+    def get_queryset(self):
+        print('update get_queryset called')
+        #Limit a User to only modifying their own data
+        qs = super(FixingUpdateView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
 
-class FixingDeleteView(ListView):
+class FixingDeleteView(DeleteView, LoginRequiredMixin):
     model = Fixing
+    success_url=reverse_lazy('project_view:fixing_list')
+    def get_queryset(self):
+        print('delete get_queryset called')
+        qs = super(FixingDeleteView, self).get_queryset()
+        return qs.filter(owner=self.request.user)

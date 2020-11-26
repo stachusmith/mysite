@@ -8,12 +8,12 @@
 <p>
 {% if fixing_list %}
 <ul>
-  {% for fixing_element in fixing_list %}
+  {% for fixing in fixing_list %}
     <li>
-        <a href="{% url 'project_view:main' %}">{{ fixing_element.name }}</a>
-        {% if project.owner == user %}
-        (<a href="{% url 'project_view:main' %}">Edit</a> |
-        <a href="{% url 'project_view:main' %}">Delete</a>)
+        <a href="{% url 'project_view:fixing_detail' fixing.id %}">{{ fixing.name }}</a>
+        {% if fixing.owner == user %}
+        (<a href="{% url 'project_view:fixing_update' fixing.id %}">Edit</a> |
+        <a href="{% url 'project_view:fixing_delete' fixing.id %}">Delete</a>)
         {% endif %}
     </li>
   {% endfor %}
@@ -23,7 +23,7 @@
 {% endif %}
 </p>
 <p>
-<a href="{% url 'project_view:main' %}">Add a fixing element</a> |
+<a href="{% url 'project_view:fixing_create' %}">Add a fixing element</a> |
 {% if user.is_authenticated %}
 <a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a>
 {% else %}

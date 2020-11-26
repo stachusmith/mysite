@@ -30,9 +30,9 @@ urlpatterns = [
 
     path('fixing_elements', views.FixingListView.as_view(), name='fixing_list'),
     path('fixing/create', views.FixingCreateView.as_view(), name='fixing_create'),
-    path('fixing/<int:pk_fixi>', views.FixingDetailView.as_view(), name='fixing_detail'),
-    path('fixing/<int:pk_fixi>/update', views.FixingUpdateView.as_view(), name='fixing_update'),
-    path('fixing/<int:pk_fixi>/delete', views.FixingDeleteView.as_view(), name='fixing_delete'),
+    path('fixing/<int:pk>', views.FixingDetailView.as_view(), name='fixing_detail'),
+    path('fixing/<int:pk>/update', views.FixingUpdateView.as_view(), name='fixing_update'),
+    path('fixing/<int:pk>/delete', views.FixingDeleteView.as_view(), name='fixing_delete'),
 ]
     
     
