@@ -1,0 +1,12 @@
+{% extends "base_menu.html" %}
+{% block content %}
+<h1>Delete Client</h1>
+
+<p>Are you sure you want to delete the following client? {{ client }}?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Yes, delete.">
+  <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:main' %}'; return false;">
+</form>
+{% endblock %}

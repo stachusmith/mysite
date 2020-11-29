@@ -8,26 +8,53 @@
 <span style="float: right;">
 ({{ part.updated_at|naturaltime }})
 {% if part.owner == user %}
-<a href="{% url 'project_view:part_update' part.id %}"><i class="fa fa-pencil"></i></a>
-<a href="{% url 'project_view:part_delete' part.id %}"><i class="fa fa-trash"></i></a>
+<a href="{% url 'project_view:part_update' module.id part.id %}"><i class="fa fa-pencil"></i></a>
+<a href="{% url 'project_view:part_delete' module.id part.id %}"><i class="fa fa-trash"></i></a>
 {% endif %}
 </span>
 <h1>{{ part.name }}</h1>
 
 <p>
-{{ part.description }}
-{{ part.project }}
-{{ part.module }}
-{{ part.client }}
-{{ part.supplier }}
-{{ part.thickness }}
-{{ fix.number_of_elements }}
+description: {{ part.description }}
+</p>
+<p>
+OEM: {{ part.module.project.client }}
+</p>
+<p>
+project: {{ part.module.project }}
+</p>
+<p>
+module: {{ part.module }}
+</p>
+<p>
+supplier: {{ part.supplier }}
+</p>
+<p>
+thickness: {{ part.thickness }}mm
+</p>
+<p>
+fixing combinations:
+    {% if fixes %}
+    <ul>
+      {% for fix in fixes %}
+        <li>
+            {{ fix.number_of_elements }} {{ fix.fixing.name }}s
+        </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>There are no fixing combinations in the database.</p>
+    {% endif %}
+    <p>
+      <a href="{% url 'project_view:fix_create' %}">add new combination</a>
+    </p>
+    <p>
+      <a href="{% url 'project_view:fixing_create' %}">create new fixing elements</a>
+    </p>
+</p>
 
-</p>
 <p>
-</p>
-<p>
-<a href="{% url 'project_view:main' %}">All parts</a>
+<a href="{% url 'project_view:module_detail' module.id project.id %}">All parts</a>
 </p>
 
 {% endblock %}

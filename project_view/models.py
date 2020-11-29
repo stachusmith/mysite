@@ -6,10 +6,25 @@ from django.conf import settings
 
 # one to many:
 
-class Project(models.Model):
+class Client(models.Model):
     name = models.CharField(
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
+
+    def __str__(self):
+        return self.name
+
+class Project(models.Model):
+    name = models.CharField(
+            max_length=200,
+            unique=True,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
 
     def __str__(self):
         return self.name
@@ -19,13 +34,9 @@ class Module(models.Model):
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
-    def __str__(self):
-        return self.name
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
-class Client(models.Model):
-    name = models.CharField(
-            max_length=200,
-            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
     def __str__(self):
         return self.name
@@ -52,7 +63,7 @@ class Fixing(models.Model):
     name = models.CharField(
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
-    
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     def __str__(self):
         return self.name
     
@@ -66,13 +77,9 @@ class Part(models.Model):
 
     description = models.TextField()
     
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
-    
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+          
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=True, null=True)
 
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
     
@@ -94,8 +101,8 @@ class Part(models.Model):
 # many to many:
     
 class Fix(models.Model):
+    
     number_of_elements = models.IntegerField(null=True)
-
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     fixing = models.ForeignKey(Fixing, on_delete=models.CASCADE)
 

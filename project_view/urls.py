@@ -6,11 +6,36 @@ from django.views.generic import TemplateView
 app_name = 'project_view'
 
 urlpatterns = [
-    path('', views.PartListView.as_view(), name='main'),
-    path('part/<int:pk>', views.PartDetailView.as_view(), name='part_detail'),
-    path('part/create', views.PartCreateView.as_view(), name='part_create'),
-    path('part/<int:pk>/update', views.PartUpdateView.as_view(), name='part_update'),
-    path('part/<int:pk>/delete', views.PartDeleteView.as_view(success_url=reverse_lazy('project_view:main')), name='part_delete'),
+    
+    path('', views.ClientListView.as_view(), name='main'),
+    path('client/create', views.ClientCreateView.as_view(), name='client_create'),
+    path('client/<int:pk>/update', views.ClientUpdateView.as_view(), name='client_update'),
+    path('client/<int:pk>/delete', views.ClientDeleteView.as_view(), name='client_delete'),
+    path('client/<int:pk>', views.ClientDetailView.as_view(), name='client_detail'), 
+    
+    path('client/<int:pk>/project/<int:pk_proj>', views.ProjectDetailView.as_view(), name='project_detail'), 
+    path('client/<int:pk>/project/create', views.ProjectCreateView.as_view(), name='project_create'),
+    path('client/<int:pk>/project/<int:pk_proj>/update', views.ProjectUpdateView.as_view(), name='project_update'),
+    path('client/<int:pk>/project/<int:pk_proj>/delete', views.ProjectDeleteView.as_view(), name='project_delete'),
+
+    path('project/<int:pk_proj>/module/<int:pk_modu>', views.ModuleDetailView.as_view(), name='module_detail'),
+    path('project/<int:pk_proj>/module/create', views.ModuleCreateView.as_view(), name='module_create'),
+    path('project/<int:pk_proj>/module/<int:pk_modu>/update', views.ModuleUpdateView.as_view(), name='module_update'),
+    path('project/<int:pk_proj>/module/<int:pk_modu>/delete', views.ModuleDeleteView.as_view(), name='module_delete'),
+
+    path('module/<int:pk_modu>/part/<int:pk_part>', views.PartDetailView.as_view(), name='part_detail'),
+    path('module/<int:pk_modu>/part/create', views.PartCreateView.as_view(), name='part_create'),
+    path('module/<int:pk_modu>/part/<int:pk_part>/update', views.PartUpdateView.as_view(), name='part_update'),
+    path('module/<int:pk_modu>/part/<int:pk_part>/delete', views.PartDeleteView.as_view(), name='part_delete'),
+
+    path('fixing_list', views.FixingListView.as_view(), name='fixing_list'),
+    path('fixing/create', views.FixingCreateView.as_view(), name='fixing_create'),
+    path('fixing/<int:pk>/update', views.FixingUpdateView.as_view(), name='fixing_update'),
+    path('fixing/<int:pk>/delete', views.FixingDeleteView.as_view(), name='fixing_delete'),
+
+    path('part/<int:pk_part>/fix/create', views.FixCreateView.as_view(), name='fix_create'),
+    path('part/<int:pk_part>/fix/<int:pk>/update', views.FixUpdateView.as_view(), name='fixing_update'),
+    path('part/<int:pk_part>/fix/<int:pk>/delete', views.FixDeleteView.as_view(), name='fixing_delete'),
 ]
     
     

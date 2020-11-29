@@ -1,17 +1,40 @@
 from django import forms
-from project_view.models import Part
+from project_view.models import Client, Project, Module, Part, Fixing, Fix
+
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
 from django.core.exceptions import ValidationError
 from django.core import validators
 
 
-class CreateForm(forms.ModelForm):
+class CreateFixingForm(forms.ModelForm):
+    class Meta:
+        model = Fixing
+        fields = ['name']
+
+class CreateFixForm(forms.ModelForm):
+    class Meta:    
+        model = Fix
+        fields = ['fixing', 'number_of_elements', 'part']
+
+class CreatePartForm(forms.ModelForm):
 
     class Meta:
         model = Part
-        fields = ['client', 'project', 'module', 'supplier', 'name', 'description', 'thickness', 'minimal_draft_angle']  # Picture is manual
+        fields = ['name', 'description', 'module', 'supplier', 'thickness', 'minimal_draft_angle']  # Picture is manual
 
+
+# Create the form class.
+class CreateProjectForm(forms.ModelForm):
+    
+    class Meta:
+        model = Project
+        fields = ['name', 'client']
+
+class CreateModuleForm(forms.ModelForm):
+    class Meta:
+        model = Module
+        fields = ['name', 'project']
     # Validate the size of the picture
     #def clean(self):
     #    cleaned_data = super().clean()
