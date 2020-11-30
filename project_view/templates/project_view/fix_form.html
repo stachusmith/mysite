@@ -2,6 +2,9 @@
 
 {% block content %}
 <p>
+  <a href="{% url 'project_view:fixing_create'  %}">add a fixing element to data base</a>
+</p>
+<p>
   <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}

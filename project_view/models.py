@@ -105,6 +105,7 @@ class Fix(models.Model):
     number_of_elements = models.IntegerField(null=True)
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     fixing = models.ForeignKey(Fixing, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
     # https://docs.djangoproject.com/en/3.0/ref/models/options/#unique-together
     class Meta:
