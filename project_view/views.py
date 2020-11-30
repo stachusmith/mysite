@@ -14,6 +14,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm #, CommentForm
 from project_view.views_fixing import *
+from project_view.views_topics import *
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q
@@ -94,8 +95,8 @@ class ProjectCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         client = Client.objects.get(id=pk)
-        form_data = {'name':'project name', 'client':client}
-        form = CreateProjectForm(form_data)
+        form_data = {'name':'', 'client':client}
+        form = CreateProjectForm(initial=form_data)
         
         #limit options in dropdown:
         form.fields['client'].queryset = Client.objects.filter(id=pk)
@@ -221,8 +222,8 @@ class ModuleCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         project = Project.objects.get(id=pk_proj)
-        form_data = {'name':'module name', 'project':project}
-        form = CreateModuleForm(form_data)
+        form_data = {'name':'', 'project':project}
+        form = CreateModuleForm(initial=form_data)
         
         #limit options in dropdown:
         form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
@@ -328,6 +329,12 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         project = Project.objects.get(id=project_number)
 
         fixes = Fix.objects.filter(part_id=part)
+        
+        topic_list = Topic.objects.filter(part_id=part)
+        print(topic_list)
+
+
+
         #fix_list = list()
         #for fix in fixes:
         #    fix_list=fix_list+fix
@@ -340,7 +347,7 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         #    fixings = row['id']
         #print(fixings)
 
-        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes}
+        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes, 'topic_list': topic_list}
         return render(request, self.template_name, context)
 
 class PartCreateView(LoginRequiredMixin, View):
@@ -351,8 +358,8 @@ class PartCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         module = Module.objects.get(id=pk_modu)
-        form_data = {'name':'...', 'description':'...', 'module':module, 'thickness':0, 'minimal_draft_angle':0}
-        form = CreatePartForm(form_data)
+        form_data = {'name':'', 'description':'', 'module':module, 'thickness':0, 'minimal_draft_angle':0}
+        form = CreatePartForm(initial=form_data)
         
         #limit options in dropdown:
         form.fields['module'].queryset = Module.objects.filter(id=pk_modu)

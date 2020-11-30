@@ -49,16 +49,6 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
-class Topic(models.Model):
-    topic_title = models.CharField(
-            max_length=200,
-            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
-    
-    topic_description = models.TextField(max_length=255, null=True)
-
-    def __str__(self):
-        return self.topic_title
-        
 class Fixing(models.Model):
     name = models.CharField(
             max_length=200,
@@ -80,8 +70,6 @@ class Part(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
           
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=True, null=True)
-
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
     
     fixing_element = models.ManyToManyField(Fixing, through='Fix', related_name='fixing_project_view')
 
@@ -96,6 +84,18 @@ class Part(models.Model):
 
     def __str__(self):
         return self.name
+
+class Topic(models.Model):
+    title = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    
+    description = models.TextField(max_length=255, null=True)
+    part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    
+    def __str__(self):
+        return self.title
 
 
 # many to many:

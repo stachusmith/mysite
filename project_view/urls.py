@@ -28,6 +28,11 @@ urlpatterns = [
     path('module/<int:pk_modu>/part/<int:pk_part>/update', views.PartUpdateView.as_view(), name='part_update'),
     path('module/<int:pk_modu>/part/<int:pk_part>/delete', views.PartDeleteView.as_view(), name='part_delete'),
 
+    path('part/<int:pk_part>/topic/<int:pk_topi>', views.TopicDetailView.as_view(), name='topic_detail'),
+    path('part/<int:pk_part>/topic/create', views.TopicCreateView.as_view(), name='topic_create'),
+    path('part/<int:pk_part>/topic/<int:pk_topi>/update', views.TopicUpdateView.as_view(), name='topic_update'),
+    path('part/<int:pk_part>/topic/<int:pk_topi>/delete', views.TopicDeleteView.as_view(), name='topic_delete'),
+
     path('fixing_list', views.FixingListView.as_view(), name='fixing_list'),
     path('fixing/create', views.FixingCreateView.as_view(), name='fixing_create'),
     path('fixing/<int:pk>/update', views.FixingUpdateView.as_view(), name='fixing_update'),
@@ -36,6 +41,7 @@ urlpatterns = [
     path('part/<int:pk_part>/fix/create', views.FixCreateView.as_view(), name='fix_create'),
     path('part/<int:pk_part>/fix/<int:pk>/update', views.FixUpdateView.as_view(), name='fixing_update'),
     path('part/<int:pk_part>/fix/<int:pk>/delete', views.FixDeleteView.as_view(), name='fixing_delete'),
+
 ]
     
     

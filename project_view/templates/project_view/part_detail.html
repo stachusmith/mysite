@@ -5,17 +5,15 @@
 
 {% block head %}
 <style>
-.topic{
-  height: 7em;
-  width: 11em;
+
+#topic{
   padding: 5px;
-  margin: 5px;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  border-width: 5px;
+  margin-left: 0;
+  border-width: 1px;
   border-style: solid;
-  border-color: blue;
+  border-color: black;
+  border-radius: 5px;
+  background-color: rgb(246, 246, 246);
 }
 </style>
 {% endblock %}
@@ -73,12 +71,14 @@ fixing combinations:
 <p>
 <a href="{% url 'project_view:module_detail' module.id project.id %}">All parts</a>
 </p>
+
 <h2>Topics:</h2>
 
 <p>
-{% if topics %}
-<ul>
-  {% for topic in topics %}
+{% if topic_list %}
+
+<ul style="list-style: none; padding-left: 0;">
+  {% for topic in topic_list %}
     <div id="topic">
       <li>
           {{ topic.title }}
@@ -86,6 +86,7 @@ fixing combinations:
     </div>
   {% endfor %}
 </ul>
+
 </p>
 {% else %}
   <p>There are no topics in the database.</p>
