@@ -1,5 +1,5 @@
 from django import forms
-from project_view.models import Client, Project, Module, Part, Fixing, Fix
+from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
@@ -35,30 +35,35 @@ class CreateModuleForm(forms.ModelForm):
     class Meta:
         model = Module
         fields = ['name', 'project']
-    # Validate the size of the picture
-    #def clean(self):
-    #    cleaned_data = super().clean()
-    #    pic = cleaned_data.get('picture')
-    #    if pic is None:
-    #        return
-    #    if len(pic) > self.max_upload_limit:
-    #        self.add_error('picture', "File must be < "+self.max_upload_limit_text+" bytes")
+
+class CreateTopicForm(forms.ModelForm):
+    # Call this 'picture' so it gets copied from the form to the in-memory model
+    # It will not be the "bytes", it will be the "InMemoryUploadedFile"
+    # because we need to pull out things like content_type
+    picture = forms.FileField(required=False, label='File to Upload')
+    upload_field_name = 'picture'
+    
+    class Meta:
+        model = Topic
+        fields = ['title', 'description', 'part', 'picture']
+
+
 
     # Convert uploaded File object to a picture
-    #def save(self, commit=True):
-    #    instance = super(CreateForm, self).save(commit=False)
+    def save(self, commit=True):
+        instance = super(CreateTopicForm, self).save(commit=False)
 
         # We only need to adjust picture if it is a freshly uploaded file
-    #    f = instance.picture   # Make a copy
-    #    if isinstance(f, InMemoryUploadedFile):  # Extract data from the form to the model
-    #        bytearr = f.read()
-    #        instance.content_type = f.content_type
-    #        instance.picture = bytearr  # Overwrite with the actual image data
+        f = instance.picture   # Make a copy
+        if isinstance(f, InMemoryUploadedFile):  # Extract data from the form to the model
+            bytearr = f.read()
+            instance.content_type = f.content_type
+            instance.picture = bytearr  # Overwrite with the actual image data
 
-    #    if commit:
-    #        instance.save()
+        if commit:
+            instance.save()
 
-    #    return instance
+        return instance
 
 # https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
 # https://stackoverflow.com/questions/2472422/django-file-upload-size-limit

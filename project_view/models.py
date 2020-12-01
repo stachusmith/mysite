@@ -92,6 +92,10 @@ class Topic(models.Model):
     
     description = models.TextField(max_length=255, null=True)
     part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
+
+    picture = models.BinaryField(null=True, blank=True, editable=True)
+    content_type = models.CharField(max_length=256, null=True, blank=True, help_text='The MIMEType of the file')
+
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     
     def __str__(self):

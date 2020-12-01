@@ -1,0 +1,40 @@
+{% extends "base_menu.html" %}
+
+{% block head %}
+<style>
+#target {
+    width:30%;
+    height: 200px;
+    padding: 5px;
+    margin: 1em;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 5px;
+    background-color: rgb(246, 246, 246);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<input type="image" id=target value="paste picture here">
+
+
+
+<p>
+  <form action="" method="post" id="upload_form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:main' %}';return false;">
+  </form>
+</p>
+
+<script>
+$(window).on('paste', function() {
+    var x = 'hello';
+    console.log(x);
+});
+</script>
+{% endblock %}

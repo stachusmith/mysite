@@ -12,7 +12,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm
 
 #from project_view.utils import dump_queries
 
@@ -33,37 +33,33 @@ class TopicDetailView(View, LoginRequiredMixin):
         context = { 'part' : part, 'module': module}
         return render(request, self.template_name, context)
 
-class TopicCreateView(CreateView, LoginRequiredMixin):
+class TopicCreateView(View, LoginRequiredMixin):
+
+    template_name='project_view/topic_form.html'
     
-    template_name='project_view/fixing_form.html'
-    
-    def get(self, request):
-                
-        form_data = {'name':'...'}
-        form = CreateFixingForm(initial=form_data)
+    def get(self, request, pk_part):
+        part = Part.objects.get(id=pk_part)
         
+        form_data = { 'part':part }
+        form = CreateTopicForm(initial=form_data)
+        
+        #limit options in dropdown:
+        form.fields['part'].queryset = Part.objects.filter(id=pk_part)
         ctx= { 'form':form }
         return render(request, self.template_name, ctx)
-
-    def post(self, request):
         
-        #unused:
-        #pk=request.POST['client']
-        #print(pk)
+    def post(self, request, pk_part):
+        form = CreateTopicForm(request.POST, request.FILES or None)
         
-        form = CreateFixingForm(request.POST)
-        
-        #if not valid render the form again:
+        #part = Part.objects.get(id=pk_part)
         if not form.is_valid():
-            ctx = {'form': form}
+            ctx = {'form': form }
             return render(request, self.template_name, ctx)
 
-        #add user as owner before saving:
-        fixing = form.save(commit=False)
-        fixing.owner = self.request.user
-        fixing.save()
-
-        return redirect(reverse('project_view:main'))
+        pic = form.save(commit=False)
+        pic.owner = self.request.user
+        pic.save()
+        return redirect('project_view:main')
 
 class TopicUpdateView(UpdateView, LoginRequiredMixin):
     model = Fix
