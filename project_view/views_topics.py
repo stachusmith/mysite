@@ -50,7 +50,7 @@ class TopicCreateView(View, LoginRequiredMixin):
         
     def post(self, request, pk_part):
         form = CreateTopicForm(request.POST, request.FILES or None)
-        
+        print(request.POST)
         #part = Part.objects.get(id=pk_part)
         if not form.is_valid():
             ctx = {'form': form }

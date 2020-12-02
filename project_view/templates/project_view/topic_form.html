@@ -18,7 +18,7 @@
 
 {% block content %}
 
-<input type="image" id=target value="paste picture here">
+<img type="image" id=target value="paste picture here">
 
 
 
@@ -32,9 +32,29 @@
 </p>
 
 <script>
-$(window).on('paste', function() {
-    var x = 'hello';
-    console.log(x);
-});
+document.onpaste = function (pasteEvent) {
+    var items = pasteEvent.clipboardData.items;
+    for (var i=0; i<items.length; i++) {
+        console.log(items[i]);
+        typeCheck= /^image.*/;
+        test = typeCheck.test(items[i].type);
+        console.log(test);
+        if (test === true) {
+            var blob = items[i].getAsFile();
+            console.log(blob);
+            var reader = new FileReader();
+            reader.onload = function (loadEvent) {
+                document.getElementById("target").src = loadEvent.target.result;
+            }
+            reader.readAsDataURL(blob);
+            console.log(document.getElementById("target").src)
+
+        }
+        
+    }
+    
+
+};
+
 </script>
 {% endblock %}
