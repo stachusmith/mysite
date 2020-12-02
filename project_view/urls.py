@@ -33,6 +33,9 @@ urlpatterns = [
     path('part/<int:pk_part>/topic/<int:pk_topi>/update', views.TopicUpdateView.as_view(), name='topic_update'),
     path('part/<int:pk_part>/topic/<int:pk_topi>/delete', views.TopicDeleteView.as_view(), name='topic_delete'),
 
+    path('topic/<int:pk_topi>/add_pic', views.AddPictureView.as_view(), name='picture_add'),
+    path('topic/<int:pk_topi>/picture/<int:pk_pict>/del_pic', views.DeletePictureView.as_view(), name='picture_delete'),
+
     path('fixing_list', views.FixingListView.as_view(), name='fixing_list'),
     path('fixing/create', views.FixingCreateView.as_view(), name='fixing_create'),
     path('fixing/<int:pk>/update', views.FixingUpdateView.as_view(), name='fixing_update'),
@@ -41,7 +44,6 @@ urlpatterns = [
     path('part/<int:pk_part>/fix/create', views.FixCreateView.as_view(), name='fix_create'),
     path('part/<int:pk_part>/fix/<int:pk>/update', views.FixUpdateView.as_view(), name='fixing_update'),
     path('part/<int:pk_part>/fix/<int:pk>/delete', views.FixDeleteView.as_view(), name='fixing_delete'),
-
 ]
     
     

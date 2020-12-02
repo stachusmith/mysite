@@ -37,35 +37,13 @@ class CreateModuleForm(forms.ModelForm):
         fields = ['name', 'project']
 
 class CreateTopicForm(forms.ModelForm):
-    # Call this 'picture' so it gets copied from the form to the in-memory model
-    # It will not be the "bytes", it will be the "InMemoryUploadedFile"
-    # because we need to pull out things like content_type
-    picture = forms.FileField(required=False, label='File to Upload')
-    upload_field_name = 'picture'
     
     class Meta:
         model = Topic
-        fields = ['title', 'description', 'part', 'picture']
+        fields = ['title', 'part']
 
+class UpdateTopicForm(forms.ModelForm):
 
-
-    # Convert uploaded File object to a picture
-    def save(self, commit=True):
-        instance = super(CreateTopicForm, self).save(commit=False)
-
-        # We only need to adjust picture if it is a freshly uploaded file
-        f = instance.picture   # Make a copy
-        if isinstance(f, InMemoryUploadedFile):  # Extract data from the form to the model
-            bytearr = f.read()
-            instance.content_type = f.content_type
-            instance.picture = bytearr  # Overwrite with the actual image data
-
-        if commit:
-            instance.save()
-
-        return instance
-
-# https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
-# https://stackoverflow.com/questions/2472422/django-file-upload-size-limit
-# https://stackoverflow.com/questions/32007311/how-to-change-data-in-django-modelform
-# https://docs.djangoproject.com/en/3.0/ref/forms/validation/#cleaning-and-validating-fields-that-depend-on-each-other
+    class Meta:
+        model = Topic
+        fields = ['description']

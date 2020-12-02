@@ -1,60 +1,19 @@
 {% extends "base_menu.html" %}
 
-{% block head %}
-<style>
-#target {
-    width:30%;
-    height: 200px;
-    padding: 5px;
-    margin: 1em;
-    border-width: 1px;
-    border-style: solid;
-    border-color: black;
-    border-radius: 5px;
-    background-color: rgb(246, 246, 246);
-}
-</style>
-{% endblock %}
+
 
 {% block content %}
-
-<img type="image" id=target value="paste picture here">
-
-
 
 <p>
   <form action="" method="post" id="upload_form" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit">
+    <span style="float: right;">
     <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:main' %}';return false;">
-  </form>
+    <input type="submit" value="Continue">
+    </span>
+    </form>
 </p>
 
-<script>
-document.onpaste = function (pasteEvent) {
-    var items = pasteEvent.clipboardData.items;
-    for (var i=0; i<items.length; i++) {
-        console.log(items[i]);
-        typeCheck= /^image.*/;
-        test = typeCheck.test(items[i].type);
-        console.log(test);
-        if (test === true) {
-            var blob = items[i].getAsFile();
-            console.log(blob);
-            var reader = new FileReader();
-            reader.onload = function (loadEvent) {
-                document.getElementById("target").src = loadEvent.target.result;
-            }
-            reader.readAsDataURL(blob);
-            console.log(document.getElementById("target").src)
 
-        }
-        
-    }
-    
-
-};
-
-</script>
 {% endblock %}

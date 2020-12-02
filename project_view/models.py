@@ -90,17 +90,23 @@ class Topic(models.Model):
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
     
-    description = models.TextField(max_length=255, null=True)
-    part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
+    description = models.TextField(max_length=255, null=True, blank=True)
 
-    picture = models.BinaryField(null=True, blank=True, editable=True)
-    content_type = models.CharField(max_length=256, null=True, blank=True, help_text='The MIMEType of the file')
+    part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     
     def __str__(self):
         return self.title
 
+class Picture(models.Model):
+    picture = models.BinaryField(null=True, blank=True, editable=True)
+
+    content_type = models.CharField(max_length=256, null=True, blank=True, help_text='The MIMEType of the file')
+
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
 # many to many:
     
