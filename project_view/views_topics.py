@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 from django.views.generic import TemplateView
@@ -12,7 +13,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreatePictureForm
 
 #from project_view.utils import dump_queries
 
@@ -64,6 +65,16 @@ class TopicCreateView(View, LoginRequiredMixin):
 
 class TopicUpdateView(UpdateView, LoginRequiredMixin):
     template_name='project_view/update_topic_form.html'
+    
+    def get(self, request, pk_part, pk_topi):
+        part = Part.objects.get(id=pk_part)
+        topic = Topic.objects.get(id=pk_topi)
+        
+        form = UpdateTopicForm()
+        
+        
+        ctx= { 'form':form, 'topic':topic }
+        return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part):
         form = UpdateTopicForm(request.POST, request.FILES or None)
@@ -73,6 +84,7 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
             ctx = {'form': form }
             return render(request, self.template_name, ctx)
 
+        
         return redirect('project_view:main')
 
 
@@ -92,23 +104,37 @@ from django.db.utils import IntegrityError
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AddPictureView(LoginRequiredMixin, View):
-    def get(self, request, pk_topi):
-        topic = Topic.objects.filter(id=pk_topi)
-        print(topic)
-        ctx= { 'topic':topic }
-        return render(request, self.template_name, ctx)
-    
+
     def post(self, request, pk_topi) :
-        print("Add PK",pk_topi)
-        t = get_object_or_404(Topic, id=pk_topi)
-        picture = topic(user=request.user, picture=t)
+        #print("Add PK",pk_topi)
+        #print(request.FILES['inpFile'])
+        #t = get_object_or_404(Topic, id=pk_topi)
+        #picture = Topic(user=request.user, picture=t)
         
-        pic = form.save(commit=False)
-        pic.owner = self.request.user
-        try:
-            pic.save()  # In case of duplicate key
-        except IntegrityError as e:
-            pass # pass is like continue
+        pic_file = request.FILES['inpFile']
+        pic_bytearr = pic_file.read()
+        
+
+        #topic = Topic.objects.get(id=pk_topi)
+        #topic_id = pk_topi
+        form_data = {'topic':pk_topi, 'content_type': pic_file.content_type, 'picture':pic_bytearr}
+        #print(form_data)
+        
+
+
+        form = CreatePictureForm(form_data)
+        
+        form_save = form.save(commit=False)
+        print(form['topic'])
+        print(form['content_type'])
+        print(form['picture'])
+        form_save.owner = self.request.user
+        #form_save.picture = pic_file
+        #form_save.topic_id = pk_topi
+        #try:
+        form_save.save()  # In case of duplicate key (commit is true this time)
+        #except IntegrityError as e:
+        #    pass # pass is like continue
         return HttpResponse()
 
 @method_decorator(csrf_exempt, name='dispatch')

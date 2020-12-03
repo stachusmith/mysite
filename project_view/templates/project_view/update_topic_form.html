@@ -18,7 +18,7 @@
 
 {% block content %}
 
-<img type="image" id=target value="paste picture here" href="#" onpaste="PicturePost('{% url 'project_view:picture_add' topic.id %}', {{ topic.id }} );return false;">
+<img type="image" id=target value="paste picture here">
 
 
 
@@ -34,34 +34,35 @@
 <script>
 document.onpaste = function (pasteEvent) {
     var items = pasteEvent.clipboardData.items;
-    for (var i=0; i<items.length; i++) {
-        console.log(items[i]);
-        typeCheck= /^image.*/;
-        test = typeCheck.test(items[i].type);
-        console.log(test);
-        if (test === true) {
-            var blob = items[i].getAsFile();
-            console.log(blob);
-            var reader = new FileReader();
-            reader.onload = function (loadEvent) {
-                document.getElementById("target").src = loadEvent.target.result;
-            }
-            reader.readAsDataURL(blob);
-        }
-        
+    
+    console.log(items[0]);
+    var blob = items[0].getAsFile();
+    console.log(blob);
+    var reader = new FileReader();
+    reader.onload = function (loadEvent) {
+        document.getElementById("target").src = loadEvent.target.result;
     }
+    reader.readAsDataURL(blob);
+
+    var myForm = document.getElementById("target");
+    var formData = new FormData();
+    var myUrl = "{% url 'project_view:picture_add' topic.id %}";
+
+
+    formData.append("inpFile", blob);
+    //function picturePost (url, pk_topi) {
+    fetch(myUrl, {
+        method: "post",
+        body: formData
+    }).then(function(data){
+        console.log(data)
+    }).catch(console.log(myUrl, 'error'));
+    
+    //sendRequest = picturePost(myUrl, {{ topic.id }} )
+    
+    
+
+    
 };
-</script>
-
-<script>
-function PicturePost(url, topic_id) {
-    console.log('Requesting JSON');
-    $.post(url, {},  function(rowz){
-        console.log(url, 'finished');
-
-    }).fail(function(xhr) {
-        alert('Url failed with '+xhr.status+' '+url);
-    });
-}
 </script>
 {% endblock %}

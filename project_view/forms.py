@@ -1,5 +1,5 @@
 from django import forms
-from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic
+from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
@@ -47,3 +47,15 @@ class UpdateTopicForm(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ['description']
+
+class CreatePictureForm(forms.ModelForm):
+
+    
+
+    class Meta:
+        model = Picture
+        fields = ['topic', 'content_type', 'picture']
+
+    
+
+    
