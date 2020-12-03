@@ -113,33 +113,38 @@ from django.db.utils import IntegrityError
 class AddPictureView(LoginRequiredMixin, View):
 
     def post(self, request, pk_topi) :
-        #print("Add PK",pk_topi)
-        #print(request.FILES['inpFile'])
-        #t = get_object_or_404(Topic, id=pk_topi)
-        #picture = Topic(user=request.user, picture=t)
+        
         
         pic_file = request.FILES['inpFile']
-        pic_bytearr = pic_file.read()
+        print('pic_file:',pic_file)
         
-
-        #topic = Topic.objects.get(id=pk_topi)
-        #topic_id = pk_topi
-        form_data = {'topic':pk_topi, 'content_type': pic_file.content_type, 'picture':pic_bytearr}
-        #print(form_data)
+        #pic_file_1=request.FILES['inpFile'].file
+        #print('pic_file_1:',pic_file_1)
         
-
-
-        form = CreatePictureForm(form_data)
+        pic_bytearr=pic_file.read()
+        print('pic_bytearr:',pic_bytearr)
         
-        form_save = form.save(commit=False)
-        print(form['topic'])
-        print(form['content_type'])
-        print(form['picture'])
-        form_save.owner = self.request.user
-        #form_save.picture = pic_file
-        #form_save.topic_id = pk_topi
-        #try:
-        form_save.save()  # In case of duplicate key (commit is true this time)
+        Picture.objects.create(picture=pic_bytearr, owner = self.request.user, topic_id=pk_topi, content_type=pic_file.content_type)
+        #pic_bytearr_1=pic_file_1.read()
+        #print('pic_bytearr_1:',pic_bytearr_1)
+        
+#        form_data = {'topic':pk_topi, 'content_type': pic_file.content_type, 'picture':pic_bytearr}
+
+
+#        form = CreatePictureForm(form_data)
+        #form = CreatePictureForm(request.POST, request.FILES or None)
+        #print(form['topic'])
+        #print(form['content_type'])
+        #print(form['picture'])
+
+#        if not form.is_valid():
+#            print('form is invalid')
+
+#        pic = form.save(commit=False)
+        
+#        pic.owner = self.request.user
+        
+#        pic.save()  # In case of duplicate key (commit is true this time)
         #except IntegrityError as e:
         #    pass # pass is like continue
         return HttpResponse()

@@ -50,12 +50,28 @@ class UpdateTopicForm(forms.ModelForm):
 
 class CreatePictureForm(forms.ModelForm):
 
-    
+    picture = forms.FileField(required=False)
+    upload_field_name = 'picture'
 
     class Meta:
         model = Picture
         fields = ['topic', 'content_type', 'picture']
 
-    
+    def clean(self):
+        cleaned_data = super().clean()
+        pic = cleaned_data.get('picture')
+    # Convert uploaded File object to a picture
+    def save(self, commit=True):
+        instance = super(CreatePictureForm, self).save(commit=False)
 
-    
+        # We only need to adjust picture if it is a freshly uploaded file
+        f = instance.picture   # Make a copy
+        if isinstance(f, InMemoryUploadedFile):  # Extract data from the form to the model
+            bytearr = f.read()
+            instance.content_type = f.content_type
+            instance.picture = bytearr  # Overwrite with the actual image data
+
+        if commit:
+            instance.save()
+
+        return instance
