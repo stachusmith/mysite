@@ -12,7 +12,7 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreatePictureForm
 
 #from project_view.utils import dump_queries
@@ -29,9 +29,14 @@ class TopicDetailView(View, LoginRequiredMixin):
     template_name = 'project_view/topic_detail.html'
     def get(self, request, pk_part, pk_topi) :
         topic = self.model.objects.get(id=pk_topi)
-        part = topic.part.id
-        module = topic.part.module_id
-        context = { 'part' : part, 'module': module}
+        print(topic)
+        part = Part.objects.get(id=pk_part)
+        print(part)
+        module_number = part.module_id
+        module = Module.objects.get(id=module_number)
+        picture_list = Picture.objects.filter(topic_id=pk_topi)
+        
+        context = { 'part' : part, 'module': module, 'topic': topic, 'picture_list':picture_list}
         return render(request, self.template_name, context)
 
 class TopicCreateView(View, LoginRequiredMixin):
@@ -76,8 +81,8 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         ctx= { 'form':form, 'topic':topic }
         return render(request, self.template_name, ctx)
         
-    def post(self, request, pk_part):
-        form = UpdateTopicForm(request.POST, request.FILES or None)
+    def post(self, request, pk_part, pk_topi):
+        form = UpdateTopicForm(request.POST)
         print(request.POST)
         #part = Part.objects.get(id=pk_part)
         if not form.is_valid():
@@ -85,7 +90,7 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
             return render(request, self.template_name, ctx)
 
         
-        return redirect('project_view:main')
+        return redirect(reverse('project_view:topic_detail', args=[pk_part, pk_topi]))
 
 
 class TopicDeleteView(DeleteView, LoginRequiredMixin):
@@ -101,6 +106,8 @@ class TopicDeleteView(DeleteView, LoginRequiredMixin):
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.utils import IntegrityError
+
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AddPictureView(LoginRequiredMixin, View):
@@ -150,3 +157,10 @@ class DeletePictureView(LoginRequiredMixin, View):
         return HttpResponse()
 
 
+def stream_file(request, pk_topi, pk_pict):
+    pic = get_object_or_404(Picture, id=pk_pict)
+    response = HttpResponse()
+    response['Content-Type'] = pic.content_type
+    response['Content-Length'] = len(pic.picture)
+    response.write(pic.picture)
+    return response

@@ -34,6 +34,7 @@ urlpatterns = [
     path('part/<int:pk_part>/topic/<int:pk_topi>/delete', views.TopicDeleteView.as_view(), name='topic_delete'),
 
     path('topic/<int:pk_topi>/add_pic', views.AddPictureView.as_view(), name='picture_add'),
+    path('topic/<int:pk_topi>/picture/<int:pk_pict>', views.stream_file, name='picture_stream'),
     path('topic/<int:pk_topi>/picture/<int:pk_pict>/del_pic', views.DeletePictureView.as_view(), name='picture_delete'),
 
     path('fixing_list', views.FixingListView.as_view(), name='fixing_list'),
