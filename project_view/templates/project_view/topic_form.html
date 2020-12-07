@@ -9,7 +9,7 @@
     {% csrf_token %}
     {{ form.as_p }}
     <span style="float: right;">
-    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:main' %}';return false;">
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:part_detail' module.id part.id %}';return false;">
     <input type="submit" value="Continue">
     </span>
     </form>

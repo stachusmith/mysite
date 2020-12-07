@@ -83,7 +83,7 @@ fixing combinations:
   {% for topic in topic_list %}
     <div id="topic">
       <li>
-          {{ topic.title }}
+        <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
       </li>
     </div>
   {% endfor %}

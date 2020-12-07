@@ -20,7 +20,7 @@
 {% block content %}
 
 <span style="float: right;">
-({{ part.updated_at|naturaltime }})
+({{ topic.updated_at|naturaltime }})
 {% if part.owner == user %}
 <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
 <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
@@ -33,11 +33,11 @@
 </p>
 
 {% if picture_list %}
-<ul>
+
     {% for picture in picture_list %}
-        <li>
-            <img type="image" id=picture_box src="{% url 'project_view:picture_stream' topic.id picture.id %}">
-        </li>
+        
+        <img type="image" id=picture_box src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+        
     {% endfor %}
 </ul>
 {% else %}

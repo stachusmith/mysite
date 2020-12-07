@@ -45,13 +45,19 @@ class TopicCreateView(View, LoginRequiredMixin):
     
     def get(self, request, pk_part):
         part = Part.objects.get(id=pk_part)
+        print(part)
         
         form_data = { 'part':part }
         form = CreateTopicForm(initial=form_data)
+
+        #get module
+        module_number = part.module_id
+        module = Module.objects.get(id=module_number)
+        
         
         #limit options in dropdown:
         form.fields['part'].queryset = Part.objects.filter(id=pk_part)
-        ctx= { 'form':form }
+        ctx= { 'form':form, 'module':module, 'part':part }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part):
@@ -74,11 +80,14 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
     def get(self, request, pk_part, pk_topi):
         part = Part.objects.get(id=pk_part)
         topic = Topic.objects.get(id=pk_topi)
-        
+        #get module
+        module_number = part.module_id
+        module = Module.objects.get(id=module_number)
+
         form = UpdateTopicForm()
         
         
-        ctx= { 'form':form, 'topic':topic }
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):
@@ -93,13 +102,27 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         return redirect(reverse('project_view:topic_detail', args=[pk_part, pk_topi]))
 
 
-class TopicDeleteView(DeleteView, LoginRequiredMixin):
-    model = Fixing
-    success_url=reverse_lazy('project_view:fixing_list')
-    def get_queryset(self):
-        print('delete get_queryset called')
-        qs = super(FixingDeleteView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+class TopicDeleteView(LoginRequiredMixin, View):
+    
+    template_name='project_view/topic_confirm_delete.html'
+    def get (self, request, pk_part, pk_topi):
+        topic = get_object_or_404(Topic, pk=pk_topi, owner=self.request.user)
+        print(topic)
+        ctx = {'topic': topic}
+        return render(request, self.template_name, ctx)
+    
+#    def get_queryset(self):
+#        print('delete get_queryset called')
+#        qs = super(ModuleDeleteView, self).get_queryset()
+#        return qs.filter(owner=self.request.user)
+
+    def post(self, request, pk_part, pk_topi):
+        topic = get_object_or_404(Topic, pk=pk_topi)
+        arg = [topic.part.module_id, topic.part_id]
+        
+        topic.delete()
+        print(arg)
+        return redirect(reverse('project_view:part_detail', args=arg))
 
 # csrf exemption in class based views
 # https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
