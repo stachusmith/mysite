@@ -2,7 +2,17 @@
 
 {% block head %}
 <style>
-#target {
+.target {
+    width:30%;
+    height: 200px;
+    padding: 5px;
+    margin: 1em;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 5px;
+    background-color: rgb(246, 246, 246);
+}#picture_box {
     width:30%;
     height: 200px;
     padding: 5px;
@@ -13,14 +23,41 @@
     border-radius: 5px;
     background-color: rgb(246, 246, 246);
 }
+.picture_detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<div id="target_list">
+    {% if picture_list %}
 
-<img type="image" id=target value="paste picture here">
+        {% for picture in picture_list %}
+            
+            <a href="#"><img type="image" id=picture_box
+                src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
+            </a>
+
+            <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
+                <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+            </a></div>
+            
+        {% endfor %}
+
+    {% endif %}
 
 
+</div><img type="image" class="target" id="target" value="paste picture here">
 
 <p>
   <form action="" method="post" id="upload_form" enctype="multipart/form-data">
@@ -33,28 +70,30 @@
 
 <script>
 document.onpaste = function (pasteEvent) {
+    //create new target:
+    var t = document.getElementById("target")
+    var cloneT = t.cloneNode(true)
+    document.getElementById("target_list").appendChild(cloneT); 
+    //pull image items from clipboard:
     var items = pasteEvent.clipboardData.items;
-    console.log(items[0])
     typeCheck= /^image.*/;
     test = typeCheck.test(items[0].type);
-    console.log(test);
     if (test === true) {
-        console.log(items[0]);
         var blob = items[0].getAsFile();
-        console.log(blob);
+        //load to target:
         var reader = new FileReader();
         reader.onload = function (loadEvent) {
             document.getElementById("target").src = loadEvent.target.result;
         }
         reader.readAsDataURL(blob);
-
+        //send picture to db using fetch:
         var myForm = document.getElementById("target");
         var formData = new FormData();
         var myUrl = "{% url 'project_view:picture_add' topic.id %}";
 
 
         formData.append("inpFile", blob);
-        //function picturePost (url, pk_topi) {
+        
         fetch(myUrl, {
             method: "post",
             body: formData
@@ -62,7 +101,8 @@ document.onpaste = function (pasteEvent) {
             console.log(data)
         }).catch(console.log(myUrl, 'error'));
     }
-    //sendRequest = picturePost(myUrl, {{ topic.id }} )
+
+
     
     
 

@@ -83,11 +83,11 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         #get module
         module_number = part.module_id
         module = Module.objects.get(id=module_number)
-
+        picture_list = Picture.objects.filter(topic_id=pk_topi)
         form = UpdateTopicForm()
         
         
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part }
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):
@@ -124,6 +124,9 @@ class TopicDeleteView(LoginRequiredMixin, View):
         print(arg)
         return redirect(reverse('project_view:part_detail', args=arg))
 
+
+#Pictures--------------------------------------------------------------------------------------
+
 # csrf exemption in class based views
 # https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
 from django.views.decorators.csrf import csrf_exempt
@@ -141,35 +144,11 @@ class AddPictureView(LoginRequiredMixin, View):
         pic_file = request.FILES['inpFile']
         print('pic_file:',pic_file)
         
-        #pic_file_1=request.FILES['inpFile'].file
-        #print('pic_file_1:',pic_file_1)
-        
         pic_bytearr=pic_file.read()
         print('pic_bytearr:',pic_bytearr)
         
         Picture.objects.create(picture=pic_bytearr, owner = self.request.user, topic_id=pk_topi, content_type=pic_file.content_type)
-        #pic_bytearr_1=pic_file_1.read()
-        #print('pic_bytearr_1:',pic_bytearr_1)
         
-#        form_data = {'topic':pk_topi, 'content_type': pic_file.content_type, 'picture':pic_bytearr}
-
-
-#        form = CreatePictureForm(form_data)
-        #form = CreatePictureForm(request.POST, request.FILES or None)
-        #print(form['topic'])
-        #print(form['content_type'])
-        #print(form['picture'])
-
-#        if not form.is_valid():
-#            print('form is invalid')
-
-#        pic = form.save(commit=False)
-        
-#        pic.owner = self.request.user
-        
-#        pic.save()  # In case of duplicate key (commit is true this time)
-        #except IntegrityError as e:
-        #    pass # pass is like continue
         return HttpResponse()
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -187,6 +166,7 @@ class DeletePictureView(LoginRequiredMixin, View):
 
 def stream_file(request, pk_topi, pk_pict):
     pic = get_object_or_404(Picture, id=pk_pict)
+
     response = HttpResponse()
     response['Content-Type'] = pic.content_type
     response['Content-Length'] = len(pic.picture)

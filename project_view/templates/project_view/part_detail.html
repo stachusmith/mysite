@@ -1,5 +1,5 @@
-
 {% extends "base_menu.html" %}
+
 
 {% load humanize %}
 
@@ -84,6 +84,12 @@ fixing combinations:
     <div id="topic">
       <li>
         <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+          <span style="float: right;">
+            {% if part.owner == user %}
+              <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+              <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+            {% endif %}
+          </span>
       </li>
     </div>
   {% endfor %}

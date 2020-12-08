@@ -14,6 +14,16 @@
     border-radius: 5px;
     background-color: rgb(246, 246, 246);
 }
+.picture_detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+}
 </style>
 {% endblock %}
 
@@ -35,9 +45,15 @@
 {% if picture_list %}
 
     {% for picture in picture_list %}
-        
-        <img type="image" id=picture_box src="{% url 'project_view:picture_stream' topic.id picture.id %}">
-        
+        <a href="#"><img type="image" id=picture_box
+            src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+            onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
+        </a>
+
+        <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
+            <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+            style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+        </a></div>
     {% endfor %}
 </ul>
 {% else %}
