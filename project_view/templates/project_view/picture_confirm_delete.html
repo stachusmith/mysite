@@ -1,0 +1,16 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+
+<h1>Delete Picture</h1>
+
+<p>Are you sure you want to delete the following picture: {{ picture }}?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Yes, delete.">
+  <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_detail' picture.topic.part_id picture.topic_id %}'; return false;">
+
+</form>
+
+{% endblock %}

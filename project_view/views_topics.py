@@ -151,19 +151,25 @@ class AddPictureView(LoginRequiredMixin, View):
         
         return HttpResponse()
 
-@method_decorator(csrf_exempt, name='dispatch')
+#@method_decorator(csrf_exempt, name='dispatch')
 class DeletePictureView(LoginRequiredMixin, View):
-    def post(self, request, pk) :
-        print("Delete PK",pk)
-        t = get_object_or_404(Thing, id=pk)
-        try:
-            fav = Fav.objects.get(user=request.user, thing=t).delete()
-        except Fav.DoesNotExist as e:
-            pass
+    
+    template_name='project_view/picture_confirm_delete.html'
+    def get (self, request, pk_topi, pk_pict):
+        picture = get_object_or_404(Picture, pk=pk_pict, owner=self.request.user)
+        
+        ctx = {'picture': picture}
+        return render(request, self.template_name, ctx)
+    
+    def post(self, request, pk_topi, pk_pict):
+        picture = get_object_or_404(Picture, pk=pk_pict)
+        arg = [picture.topic.part_id, picture.topic_id]
+        
+        picture.delete()
+        print(arg)
+        return redirect(reverse('project_view:topic_detail', args=arg))
 
-        return HttpResponse()
-
-
+#stream picture----------------------------------------------------------------------------
 def stream_file(request, pk_topi, pk_pict):
     pic = get_object_or_404(Picture, id=pk_pict)
 
