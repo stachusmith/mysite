@@ -34,7 +34,6 @@ urlpatterns = [
     path('part/<int:pk_part>/topic/<int:pk_topi>/delete', views.TopicDeleteView.as_view(), name='topic_delete'),
     path('topic/<int:pk_topi>/cancel', views.TopicCancelView.as_view(), name='topic_cancel'),
 
-
     path('topic/<int:pk_topi>/add_pic', views.AddPictureView.as_view(), name='picture_add'),
     path('topic/<int:pk_topi>/picture/<int:pk_pict>', views.stream_file, name='picture_stream'),
     path('topic/<int:pk_topi>/picture/<int:pk_pict>/del_pic', views.DeletePictureView.as_view(), name='picture_delete'),
@@ -44,21 +43,19 @@ urlpatterns = [
     path('fixing/<int:pk>/update', views.FixingUpdateView.as_view(), name='fixing_update'),
     path('fixing/<int:pk>/delete', views.FixingDeleteView.as_view(), name='fixing_delete'),
 
+    path('participants', views.ParticipantListView.as_view(), name='participant_list'),
+    path('project/<int:pk_proj>/participant/create', views.ParticipantCreateView.as_view(), name='participant_create'),
+    path('project/<int:pk_proj>/participant/<int:pk>/update', views.ParticipantUpdateView.as_view(), name='participant_update'),
+    path('project/<int:pk_proj>/participant/<int:pk>/delete', views.ParticipantDeleteView.as_view(), name='participant_delete'),
+
+    path('entries', views.EntryListView.as_view(), name='entries_list'),
+    path('topic/<int:pk_topi>/create', views.EntryCreateView.as_view(), name='entry_create'),
+    path('entry/<int:pk>/update', views.EntryUpdateView.as_view(), name='entry_update'),
+    path('entry/<int:pk>/delete', views.EntryDeleteView.as_view(), name='entry_delete'),
+
     path('part/<int:pk_part>/fix/create', views.FixCreateView.as_view(), name='fix_create'),
     path('part/<int:pk_part>/fix/<int:pk>/update', views.FixUpdateView.as_view(), name='fixing_update'),
     path('part/<int:pk_part>/fix/<int:pk>/delete', views.FixDeleteView.as_view(), name='fixing_delete'),
+
+
 ]
-    
-    
-    
-    
-#References:
-#    path('ad/<int:pk>', views.AdDetailView.as_view(), name='ad_detail'),
-#    path('ad/create', views.AdCreateView.as_view(), name='ad_create'),
-#    path('ad/<int:pk>/update', views.AdUpdateView.as_view(), name='ad_update'),
-#    path('ad/<int:pk>/delete', views.AdDeleteView.as_view(success_url=reverse_lazy('ads:main')), name='ad_delete'),
-#    path('ad_picture/<int:pk>', views.stream_file, name='ad_picture'),
-#    path('ad/<int:pk>/comment', views.CommentCreateView.as_view(), name='ad_comment_create'),
-#    path('comment/<int:pk>/delete', views.CommentDeleteView.as_view(success_url=reverse_lazy('ads')), name='ad_comment_delete'),
-#    path('ad/<int:pk>/favorite', views.AddFavoriteView.as_view(), name='ad_favorite'),
-#    path('ad/<int:pk>/unfavorite', views.DeleteFavoriteView.as_view(), name='ad_unfavorite'),

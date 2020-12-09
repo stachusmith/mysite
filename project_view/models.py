@@ -56,6 +56,16 @@ class Fixing(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     def __str__(self):
         return self.name
+
+class Participant(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, default=1)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    def __str__(self):
+        return self.name
     
 
 # main model:
@@ -98,6 +108,16 @@ class Topic(models.Model):
     
     def __str__(self):
         return self.title
+
+class Entry(models.Model):
+    date_of_entry = models.DateField().auto_now_add
+    last_modified = models.DateField().auto_now
+    deadline = models.DateField()
+    problem_description = models.TextField()
+    problem_solution = models.TextField()
+    responsible = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='responsible_participants')
+    involved = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='involved_participants')
+    agreed_with = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='agreed_with_participants')
 
 class Picture(models.Model):
     picture = models.BinaryField(null=True, blank=True, editable=True)

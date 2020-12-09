@@ -17,7 +17,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreatePictureForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm
 
 #from project_view.utils import dump_queries
 

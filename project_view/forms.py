@@ -1,5 +1,5 @@
 from django import forms
-from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture
+from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture, Entry, Participant
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
@@ -48,30 +48,14 @@ class UpdateTopicForm(forms.ModelForm):
         model = Topic
         fields = ['description']
 
-class CreatePictureForm(forms.ModelForm):
-
-    picture = forms.FileField(required=False)
-    upload_field_name = 'picture'
-
+class CreateEntryForm(forms.ModelForm):
+    
     class Meta:
-        model = Picture
-        fields = ['topic', 'content_type', 'picture']
+        model = Entry
+        fields = ['problem_description', 'problem_solution', 'responsible', 'involved', 'agreed_with', 'deadline']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        pic = cleaned_data.get('picture')
-    # Convert uploaded File object to a picture
-    def save(self, commit=True):
-        instance = super(CreatePictureForm, self).save(commit=False)
-
-        # We only need to adjust picture if it is a freshly uploaded file
-        f = instance.picture   # Make a copy
-        if isinstance(f, InMemoryUploadedFile):  # Extract data from the form to the model
-            bytearr = f.read()
-            instance.content_type = f.content_type
-            instance.picture = bytearr  # Overwrite with the actual image data
-
-        if commit:
-            instance.save()
-
-        return instance
+class CreateParticipantForm(forms.ModelForm):
+    
+    class Meta:
+        model = Participant
+        fields = ['name', 'project']

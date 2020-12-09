@@ -16,35 +16,41 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participant
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreateParticipantForm
 
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q
 
-class EntryListView(ListView, LoginRequiredMixin):
-    model = Fixing
+class ParticipantListView(ListView):
+    model = Participant
 
-class EntryCreateView(CreateView, LoginRequiredMixin):
+class ParticipantCreateView(CreateView, LoginRequiredMixin):
     
-    template_name='project_view/fixing_form.html'
+    template_name='project_view/participant_form.html'
     
-    def get(self, request):
-                
-        form_data = {'name':''}
-        form = CreateFixingForm(initial=form_data)
+    def get(self, request, pk_proj):
         
+        project = Project.objects.get(id=pk_proj)
+        print(project)
+        
+        form_data = {'name':'', 'project':project}
+        form = CreateParticipantForm(initial=form_data)
+
+        #limit options in dropdown:
+        form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
+
         ctx= { 'form':form }
         return render(request, self.template_name, ctx)
 
-    def post(self, request):
-        
+    def post(self, request, pk_proj):
+        project = Project.objects.get(id=pk_proj)
         #unused:
         #pk=request.POST['client']
         #print(pk)
         
-        form = CreateFixingForm(request.POST)
+        form = CreateParticipantForm(request.POST)
         
         #if not valid render the form again:
         if not form.is_valid():
@@ -52,16 +58,19 @@ class EntryCreateView(CreateView, LoginRequiredMixin):
             return render(request, self.template_name, ctx)
 
         #add user as owner before saving:
-        fixing = form.save(commit=False)
-        fixing.owner = self.request.user
-        fixing.save()
+        Participant = form.save(commit=False)
+        Participant.owner = self.request.user
+        Participant.save()
 
-        return redirect(reverse('project_view:main'))
+        return redirect(reverse('project_view:project_detail', args=[project.client_id, project.id]))
 
-class EntryUpdateView(UpdateView, LoginRequiredMixin):
+class ParticipantUpdateView(UpdateView, LoginRequiredMixin):
+    
+    # not ready, needs to be changed similar to fixcreate
+    
     model = Fix
 
-    fields = ['name']
+    #fields = ['name']
     success_url=reverse_lazy('project_view:fixing_list')
     def get_queryset(self):
         print('update get_queryset called')
@@ -69,8 +78,8 @@ class EntryUpdateView(UpdateView, LoginRequiredMixin):
         qs = super(FixingUpdateView, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
-class EntryDeleteView(DeleteView, LoginRequiredMixin):
-    model = Fixing
+class ParticipantDeleteView(DeleteView, LoginRequiredMixin):
+    model = Fix
     success_url=reverse_lazy('project_view:fixing_list')
     def get_queryset(self):
         print('delete get_queryset called')

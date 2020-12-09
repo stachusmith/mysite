@@ -15,6 +15,8 @@ from project_view.models import Part, Client, Project, Module, Supplier, Topic, 
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm #, CommentForm
 from project_view.views_fixing import *
 from project_view.views_topics import *
+from project_view.views_entries import *
+from project_view.views_participants import *
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q
@@ -82,9 +84,10 @@ class ProjectDetailView(View, LoginRequiredMixin):
     def get(self, request, pk, pk_proj) :
         x = Project.objects.get(id=pk_proj)
         module_list = Module.objects.filter(project_id=x)
+        participant_list = Participant.objects.filter(project_id=x)
         client = Client.objects.get(id=pk)
         print(client)
-        ctx = {'project' : x, 'module_list' : module_list, 'client': client}
+        ctx = {'project' : x, 'module_list' : module_list, 'client': client, 'participant_list':participant_list}
         return render(request, self.template_name, ctx)
 
 class ProjectCreateView(LoginRequiredMixin, View):
