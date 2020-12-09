@@ -108,6 +108,8 @@ class Picture(models.Model):
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
+    session = models.IntegerField(null=True)
+
 # many to many:
     
 class Fix(models.Model):
