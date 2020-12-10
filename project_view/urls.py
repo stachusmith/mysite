@@ -49,7 +49,7 @@ urlpatterns = [
     path('participant/<int:pk>/delete', views.ParticipantDeleteView.as_view(), name='participant_delete'),
 
     path('participation', views.ParticipationListView.as_view(), name='participation_list'),
-    path('participation/create', views.ParticipationCreateView.as_view(), name='participation_create'),
+    path('participant/<int:pk>/participation/create', views.ParticipationCreateView.as_view(), name='participation_create'),
     path('participation/<int:pk>/update', views.ParticipationUpdateView.as_view(), name='participation_update'),
     path('participation/<int:pk>/delete', views.ParticipationDeleteView.as_view(), name='participation_delete'),
 

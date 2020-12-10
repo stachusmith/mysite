@@ -1,18 +1,35 @@
 {% extends "base_menu.html" %}
 {% block content %}
 
-<h2>All Participants:</h2>
+<h1>All Participants:</h1>
 
 <p>
     {% if project_collection %}
         <ul>
         
-        {% for person, projects in project_collection.items %}
+        {% for person, participation_list in project_collection.items %}
         <li>
-            {{ person }}'s projects:
-            {% for project in projects %}
-                {{ project }}
+            {% if person.owner == user %}
+                <h3><a href="{% url 'project_view:participant_update' person.id %}">{{ person.name }}'s</a> projects:</h3>
+            {% endif %}
+            
+            {% for participation in participation_list %}
+            
+                <p>
+                    {{ participation.project.name }}
+                
+                {% if participation.owner == user %}
+                    
+                    (<a href="{% url 'project_view:participation_update' participation.id %}">edit</a> |
+                    <a href="{% url 'project_view:participation_delete' participation.id %}">remove user from project</a>)
+                    
+                {% endif %}
+                </p>
             {% endfor %}
+            <p>
+                <a href="{% url 'project_view:participation_create' person.id %}">add project</a>
+            </p>
+            
         </li>    
             
         {% endfor %}
@@ -23,5 +40,5 @@
     {% endif %}
 </p>
 
-<a href="{% url 'project_view:participation_create' %}">Add participation</a>
+<a href="{% url 'project_view:participant_create' %}">Add participant</a>
 {% endblock %}

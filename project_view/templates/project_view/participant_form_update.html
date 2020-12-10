@@ -14,6 +14,7 @@
 
     <input type="submit" value="Submit">
     <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:participation_list' %}'; return false;">
+    <input id="delete_button" type="submit" value="Delete participant from database" onclick="window.location.href='{% url 'project_view:participant_delete' participant.id %}'; return false;">
   </form>
 </p>
 {% endblock %}

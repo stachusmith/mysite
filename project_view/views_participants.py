@@ -59,25 +59,46 @@ class ParticipantCreateView(CreateView, LoginRequiredMixin):
         Participant.owner = self.request.user
         Participant.save()
 
-        return redirect(reverse('project_view:participant_list'))
+        return redirect(reverse('project_view:participation_list'))
 
 class ParticipantUpdateView(UpdateView, LoginRequiredMixin):
     
-    # not ready, needs to be changed similar to fixcreate
+    template_name='project_view/participant_form_update.html'
     
-    model = Participant
+    def get(self, request, pk):
+        
+        participant=get_object_or_404(Participant, owner=self.request.user, id=pk)
+        form = CreateParticipantForm(instance=participant)
 
-    #fields = ['name']
-    success_url=reverse_lazy('project_view:participant_list')
-    def get_queryset(self):
-        print('update get_queryset called')
-        #Limit a User to only modifying their own data
-        qs = super(ParticipantUpdateView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+        #limit options in dropdown:
+        #form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
+
+        ctx= { 'form':form, 'participant':participant }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk):
+        
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
+        
+        form = CreateParticipantForm(request.POST)
+        
+        #if not valid render the form again:
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+
+        #add user as owner before saving:
+        Participant = form.save(commit=False)
+        Participant.owner = self.request.user
+        Participant.save()
+
+        return redirect(reverse('project_view:participation_list'))
 
 class ParticipantDeleteView(DeleteView, LoginRequiredMixin):
     model = Participant
-    success_url=reverse_lazy('project_view:participant_list')
+    success_url=reverse_lazy('project_view:participation_list')
     def get_queryset(self):
         print('delete get_queryset called')
         qs = super(ParticipantDeleteView, self).get_queryset()
@@ -91,13 +112,14 @@ class ParticipationListView(ListView):
         
         project_collection=dict()
         for participant in participant_list:
+            participant_info=list()
             #pulling each participant's projects:
             project_query=Participation.objects.filter(participant_id=participant.id)
             project_list=list()
             for item in project_query:
                 #extracting projects from query list:
-                project_list.append(item.project.name)
-            project_collection[participant.name]=project_list
+                project_list.append(item)
+            project_collection[participant]=project_list
         print(project_collection)
 
         ctx= { 'project_collection':project_collection }
@@ -107,10 +129,44 @@ class ParticipationCreateView(CreateView, LoginRequiredMixin):
     
     template_name='project_view/participation_form.html'
     
-    def get(self, request):
+    def get(self, request, pk):
+        
+        #for link from projects
+        form_data = {'participant':pk}
+        participant=Participant.objects.get(id=pk)
+        form = CreateParticipationForm(initial=form_data)
+
+        #limit options in dropdown:
+        form.fields['participant'].queryset = Participant.objects.filter(id=pk)
+
+        ctx= { 'form':form }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk):
+              
+        form = CreateParticipationForm(request.POST)
+        
+        #if not valid render the form again:
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+
+        #add user as owner before saving:
+        Participation = form.save(commit=False)
+        Participation.owner = self.request.user
+        Participation.save()
+
+        return redirect(reverse('project_view:participation_list'))
+
+class ParticipationUpdateView(UpdateView, LoginRequiredMixin):
+    
+    template_name='project_view/participation_form.html'
+    
+    def get(self, request, pk):
         
         #for link from projects -> form_data = {'participant':1, 'project':project}
-        form = CreateParticipationForm()
+        participation=get_object_or_404(Participation, owner=self.request.user, id=pk)
+        form = CreateParticipationForm(instance=participation)
 
         #limit options in dropdown:
         #form.fields['part'].queryset = Part.objects.filter(id=pk_part)
@@ -134,23 +190,9 @@ class ParticipationCreateView(CreateView, LoginRequiredMixin):
 
         return redirect(reverse('project_view:participant_list'))
 
-class ParticipationUpdateView(UpdateView, LoginRequiredMixin):
-    
-    # not ready, needs to be changed similar to fixcreate
-    
-    model = Participation
-
-    #fields = ['name']
-    success_url=reverse_lazy('project_view:participant_list')
-    def get_queryset(self):
-        print('update get_queryset called')
-        #Limit a User to only modifying their own data
-        qs = super(ParticipationUpdateView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
-
 class ParticipationDeleteView(DeleteView, LoginRequiredMixin):
     model = Participation
-    success_url=reverse_lazy('project_view:fixing_list')
+    success_url=reverse_lazy('project_view:participation_list')
     def get_queryset(self):
         print('delete get_queryset called')
         qs = super(ParticipationDeleteView, self).get_queryset()
