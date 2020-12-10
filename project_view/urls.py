@@ -44,9 +44,14 @@ urlpatterns = [
     path('fixing/<int:pk>/delete', views.FixingDeleteView.as_view(), name='fixing_delete'),
 
     path('participants', views.ParticipantListView.as_view(), name='participant_list'),
-    path('project/<int:pk_proj>/participant/create', views.ParticipantCreateView.as_view(), name='participant_create'),
-    path('project/<int:pk_proj>/participant/<int:pk>/update', views.ParticipantUpdateView.as_view(), name='participant_update'),
-    path('project/<int:pk_proj>/participant/<int:pk>/delete', views.ParticipantDeleteView.as_view(), name='participant_delete'),
+    path('participant/create', views.ParticipantCreateView.as_view(), name='participant_create'),
+    path('participant/<int:pk>/update', views.ParticipantUpdateView.as_view(), name='participant_update'),
+    path('participant/<int:pk>/delete', views.ParticipantDeleteView.as_view(), name='participant_delete'),
+
+    path('participation', views.ParticipationListView.as_view(), name='participation_list'),
+    path('participation/create', views.ParticipationCreateView.as_view(), name='participation_create'),
+    path('participation/<int:pk>/update', views.ParticipationUpdateView.as_view(), name='participation_update'),
+    path('participation/<int:pk>/delete', views.ParticipationDeleteView.as_view(), name='participation_delete'),
 
     path('entries', views.EntryListView.as_view(), name='entries_list'),
     path('topic/<int:pk_topi>/create', views.EntryCreateView.as_view(), name='entry_create'),

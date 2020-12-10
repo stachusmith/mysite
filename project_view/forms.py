@@ -1,5 +1,5 @@
 from django import forms
-from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture, Entry, Participant
+from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture, Entry, Participant, Participation
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
@@ -58,4 +58,10 @@ class CreateParticipantForm(forms.ModelForm):
     
     class Meta:
         model = Participant
-        fields = ['name', 'project']
+        fields = ['name']
+
+class CreateParticipationForm(forms.ModelForm):
+    
+    class Meta:
+        model = Participation
+        fields = ['participant', 'project']

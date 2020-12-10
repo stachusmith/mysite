@@ -6,6 +6,15 @@ from django.conf import settings
 
 # one to many:
 
+class Participant(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    def __str__(self):
+        return self.name
+
 class Client(models.Model):
     name = models.CharField(
             max_length=200,
@@ -24,7 +33,7 @@ class Project(models.Model):
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
-
+    participant = models.ManyToManyField(Participant, through='Participation', related_name='participation_project_view')
 
     def __str__(self):
         return self.name
@@ -57,15 +66,7 @@ class Fixing(models.Model):
     def __str__(self):
         return self.name
 
-class Participant(models.Model):
-    name = models.CharField(
-            max_length=200,
-            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
-    
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, default=1)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
-    def __str__(self):
-        return self.name
+
     
 
 # main model:
@@ -131,7 +132,13 @@ class Picture(models.Model):
     session = models.IntegerField(null=True)
 
 # many to many:
-    
+
+class Participation(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
+
 class Fix(models.Model):
     
     number_of_elements = models.IntegerField(null=True)

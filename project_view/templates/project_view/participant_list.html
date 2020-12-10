@@ -7,21 +7,27 @@
   <ul>
     {% for participant in participant_list %}
       <li>
-          {{ participant.name }} in {{participant.project}}
+          {{ participant.name }} in:
+          {% if participation_list %}
+            {% for participantion in participation_list %}
+                {{ participation.project }}
+            {% endfor %}
+          {% endif %}
           
           {% if participant.owner == user %}
-          (<a href="{% url 'project_view:participant_update' project.id participant.id %}">Edit</a> |
-          <a href="{% url 'project_view:participant_delete' project.id participant.id %}">Delete</a>)
+          (<a href="{% url 'project_view:participant_update' participant.id %}">Edit</a> |
+          <a href="{% url 'project_view:participation_create' %}">Manage participation</a> |
+          <a href="{% url 'project_view:participant_delete' participant.id %}">Delete</a>)
           {% endif %}
       </li>
     {% endfor %}
     
   </ul>
   {% if project.owner == user %}
-    <a href="{% url 'project_view:participant_create' project.id %}">Add participant</a>
+    <a href="{% url 'project_view:participation_create' %}">Add participant</a>
   {% endif %}
   {% else %}
-    <p>There are no participants in this project.</p>
+    <p>There are no participants in the db.</p>
 {% endif %}
 </p>
 {% endblock %}
