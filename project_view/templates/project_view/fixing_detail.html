@@ -13,11 +13,20 @@
 {% endif %}
 </span>
 <h1>{{ fixing.name }}</h1>
-
-
+<p>
+    <a href="{% url 'project_view:fixing_list' %}">Back to fixing elements</a>
+</p>
+<p>
+    used in:
+</p>
 
 <p>
-<a href="{% url 'project_view:fixing_list' %}">Back to fixing elements</a>
+{% if fix_list %}
+    {% for fix in fix_list %}
+        <a href="{% url 'project_view:part_detail' fix.part.module.id fix.part.id %}">{{ fix.part.name }}</a>
+        in {{ fix.part.module.project.client.name }} {{ fix.part.module.project.name }}
+    {% endfor%}
+{% endif %}
 </p>
 
 {% endblock %}

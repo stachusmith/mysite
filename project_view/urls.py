@@ -39,6 +39,7 @@ urlpatterns = [
     path('topic/<int:pk_topi>/picture/<int:pk_pict>/del_pic', views.DeletePictureView.as_view(), name='picture_delete'),
 
     path('fixing_list', views.FixingListView.as_view(), name='fixing_list'),
+    path('fixing/<int:pk>', views.FixingDetailView.as_view(), name='fixing_detail'),
     path('fixing/create', views.FixingCreateView.as_view(), name='fixing_create'),
     path('fixing/<int:pk>/update', views.FixingUpdateView.as_view(), name='fixing_update'),
     path('fixing/<int:pk>/delete', views.FixingDeleteView.as_view(), name='fixing_delete'),

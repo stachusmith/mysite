@@ -10,7 +10,7 @@
 <ul>
   {% for fixing in fixing_list %}
     <li>
-        {{ fixing.name }}
+      <a href="{% url 'project_view:fixing_detail' fixing.id %}">{{ fixing.name }}</a>
         {% if fixing.owner == user %}
         (<a href="{% url 'project_view:fixing_update' fixing.id %}">Edit</a> |
         <a href="{% url 'project_view:fixing_delete' fixing.id %}">Delete</a>)

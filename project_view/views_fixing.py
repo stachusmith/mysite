@@ -24,6 +24,19 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 class FixingListView(ListView, LoginRequiredMixin):
     model = Fixing
 
+class FixingDetailView(View, LoginRequiredMixin):
+
+    template_name='project_view/fixing_detail.html'
+
+    def get(self, request, pk):
+
+        fix_list = Fix.objects.filter(fixing_id=pk)
+        print(fix_list)
+        fixing= Fixing.objects.get(id=pk)
+        ctx= { 'fixing':fixing, 'fix_list':fix_list }
+        return render(request, self.template_name, ctx)
+        
+
 class FixingCreateView(CreateView, LoginRequiredMixin):
     
     template_name='project_view/fixing_form.html'
@@ -54,10 +67,10 @@ class FixingCreateView(CreateView, LoginRequiredMixin):
         fixing.owner = self.request.user
         fixing.save()
 
-        return redirect(reverse('project_view:main'))
+        return redirect(reverse('project_view:fixing_list'))
 
 class FixingUpdateView(UpdateView, LoginRequiredMixin):
-    model = Fix
+    model = Fixing
 
     fields = ['name']
     success_url=reverse_lazy('project_view:fixing_list')
@@ -87,14 +100,13 @@ class FixCreateView(CreateView, LoginRequiredMixin):
         part = Part.objects.get(id=pk_part)
         print(part)
         
-        initial={'tank': 123}
         form_data = {'number_of_elements':1, 'part':part}
         form = CreateFixForm(initial=form_data)
 
         #limit options in dropdown:
         form.fields['part'].queryset = Part.objects.filter(id=pk_part)
 
-        ctx= { 'form':form }
+        ctx= { 'form':form, 'part':part }
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk_part):
