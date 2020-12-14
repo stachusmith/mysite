@@ -1,10 +1,10 @@
 {% extends "base_menu.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 <p>
   <form action="" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
     <input type="submit" value="Submit">
     <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:project_detail' project.client_id project.id %}'; return false;">
   </form>

@@ -1,5 +1,5 @@
 {% extends "base_menu.html" %}
-
+{% load crispy_forms_tags %}
 {% block head %}
 <style>
 :root {
@@ -77,10 +77,20 @@
 <p>
   <form action="" method="post" id="upload_form" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
+    
     <input type="submit" value="Submit">
     <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_cancel' topic.id %}';return false;">
   </form>
+</p>
+
+<p>
+
+    <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form">
+      {% csrf_token %}
+      {{ entry_form|crispy }}
+      <input type="submit" for="entry_form" value="Save entry">
+    </form>
 </p>
 
 <script>

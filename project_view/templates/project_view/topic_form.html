@@ -1,13 +1,14 @@
 {% extends "base_menu.html" %}
 
 
-
+{% load crispy_forms_tags %}
 {% block content %}
 
 <p>
   <form action="" method="post" id="upload_form" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
+    
     <span style="float: right;">
     <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:part_detail' module.id part.id %}';return false;">
     <input type="submit" value="Continue">

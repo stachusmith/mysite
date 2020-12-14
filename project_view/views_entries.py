@@ -17,7 +17,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm
+from project_view.forms import *
 
 #from project_view.utils import dump_queries
 
@@ -27,40 +27,27 @@ class EntryListView(ListView, LoginRequiredMixin):
     model = Entry
 
 class EntryCreateView(CreateView, LoginRequiredMixin):
-
     
-    template_name='project_view/participant_form.html'
-    
-    def get(self, request):
-        
-        form_data = {'name':''}
-        form = CreateParticipantForm(initial=form_data)
+    #get request happens in topic view
 
-        #limit options in dropdown:
-        #form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
-
-        ctx= { 'form':form }
-        return render(request, self.template_name, ctx)
-
-    def post(self, request):
+    def post(self, request, pk_topi):
         
-        #unused:
-        #pk=request.POST['client']
-        #print(pk)
+        print(request.POST)
+        entry_form = CreateEntryForm(request.POST)
+        topic = get_object_or_404(Topic, id=pk_topi)
+        entry= Entry(solution=request.POST['solution'],
+                responsible_id=request.POST['responsible'],
+                involved_id=request.POST['involved'],
+                agreed_with_id=request.POST['agreed_with'],
+                deadline=request.POST['deadline'],
+                topic_id=pk_topi)
+        #form validation happens in topic view
         
-        form = CreateParticipantForm(request.POST)
-        
-        #if not valid render the form again:
-        if not form.is_valid():
-            ctx = {'form': form}
-            return render(request, self.template_name, ctx)
 
         #add user as owner before saving:
-        Participant = form.save(commit=False)
-        Participant.owner = self.request.user
-        Participant.save()
+        entry.save()
 
-        return redirect(reverse('project_view:participation_list'))
+        return redirect(reverse('project_view:topic_update', args=[topic.part.id, topic.id]))
 
 class EntryUpdateView(UpdateView, LoginRequiredMixin):
     model = Fix

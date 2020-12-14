@@ -115,10 +115,11 @@ class Entry(models.Model):
     last_modified = models.DateField().auto_now
     deadline = models.DateField()
     problem_description = models.TextField()
-    problem_solution = models.TextField()
+    solution = models.TextField()
     responsible = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='responsible_participants')
     involved = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='involved_participants')
     agreed_with = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='agreed_with_participants')
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
 
 class Picture(models.Model):
     picture = models.BinaryField(null=True, blank=True, editable=True)

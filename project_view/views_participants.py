@@ -17,14 +17,11 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participant, Participation
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreateParticipantForm, CreateParticipationForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, CreateParticipantForm, CreateParticipationForm
 
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q
-
-class ParticipantListView(ListView):
-    model = Participant
 
 class ParticipantCreateView(CreateView, LoginRequiredMixin):
     

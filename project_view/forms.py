@@ -52,7 +52,7 @@ class CreateEntryForm(forms.ModelForm):
     
     class Meta:
         model = Entry
-        fields = ['problem_description', 'problem_solution', 'responsible', 'involved', 'agreed_with', 'deadline']
+        fields = ['solution', 'responsible', 'involved', 'agreed_with', 'deadline']
 
 class CreateParticipantForm(forms.ModelForm):
     

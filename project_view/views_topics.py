@@ -17,7 +17,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreateEntryForm
 
 #from project_view.utils import dump_queries
 
@@ -84,9 +84,10 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         module = Module.objects.get(id=module_number)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
         form = UpdateTopicForm()
+        entry_form = CreateEntryForm()
         
         
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list }
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):
@@ -100,6 +101,8 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         
         topic = form.save(commit=False)
         topic.owner = self.request.user
+
+        #as not to discard the picture on save (change 'session' for 1 to 0)
         for picture in picture_list:
             picture.session = 0
             print(picture.session)
