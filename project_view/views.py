@@ -84,10 +84,10 @@ class ProjectDetailView(View, LoginRequiredMixin):
     def get(self, request, pk, pk_proj) :
         x = Project.objects.get(id=pk_proj)
         module_list = Module.objects.filter(project_id=x)
-        participant_list = Participant.objects.filter(project_id=x)
+        project_list = Participation.objects.filter(project_id=x)
         client = Client.objects.get(id=pk)
         print(client)
-        ctx = {'project' : x, 'module_list' : module_list, 'client': client, 'participant_list':participant_list}
+        ctx = {'project' : x, 'module_list' : module_list, 'client': client, 'project_list':project_list}
         return render(request, self.template_name, ctx)
 
 class ProjectCreateView(LoginRequiredMixin, View):

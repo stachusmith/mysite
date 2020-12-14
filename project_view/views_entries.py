@@ -24,17 +24,21 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 #from django.db.models import Q
 
 class EntryListView(ListView, LoginRequiredMixin):
-    model = Fixing
+    model = Entry
 
 class EntryCreateView(CreateView, LoginRequiredMixin):
+
     
-    template_name='project_view/fixing_form.html'
+    template_name='project_view/participant_form.html'
     
     def get(self, request):
-                
-        form_data = {'name':''}
-        form = CreateFixingForm(initial=form_data)
         
+        form_data = {'name':''}
+        form = CreateParticipantForm(initial=form_data)
+
+        #limit options in dropdown:
+        #form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
+
         ctx= { 'form':form }
         return render(request, self.template_name, ctx)
 
@@ -44,7 +48,7 @@ class EntryCreateView(CreateView, LoginRequiredMixin):
         #pk=request.POST['client']
         #print(pk)
         
-        form = CreateFixingForm(request.POST)
+        form = CreateParticipantForm(request.POST)
         
         #if not valid render the form again:
         if not form.is_valid():
@@ -52,11 +56,11 @@ class EntryCreateView(CreateView, LoginRequiredMixin):
             return render(request, self.template_name, ctx)
 
         #add user as owner before saving:
-        fixing = form.save(commit=False)
-        fixing.owner = self.request.user
-        fixing.save()
+        Participant = form.save(commit=False)
+        Participant.owner = self.request.user
+        Participant.save()
 
-        return redirect(reverse('project_view:main'))
+        return redirect(reverse('project_view:participation_list'))
 
 class EntryUpdateView(UpdateView, LoginRequiredMixin):
     model = Fix
