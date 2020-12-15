@@ -16,7 +16,7 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participation
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreateEntryForm
 
 #from project_view.utils import dump_queries
@@ -83,13 +83,19 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         #get module
         module_number = part.module_id
         module = Module.objects.get(id=module_number)
+              
         picture_list = Picture.objects.filter(topic_id=pk_topi)
+        
         form = UpdateTopicForm()
         entry_form = CreateEntryForm()
+        
         entries_list = Entry.objects.filter(topic_id=pk_topi)
+        update=0
+        #print(update)
+
         
         
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list }
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list, 'update':update }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):
@@ -113,6 +119,29 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
 
         
         return redirect(reverse('project_view:topic_detail', args=[pk_part, pk_topi]))
+
+class TopicEntryUpdateView(TopicUpdateView):
+    template_name='project_view/update_topic_form.html'
+    
+    def get(self, request, pk_part, pk_topi, pk):
+        print(pk)
+        part = Part.objects.get(id=pk_part)
+        topic = Topic.objects.get(id=pk_topi)
+        #get module
+        module_number = part.module_id
+        module = Module.objects.get(id=module_number)
+        picture_list = Picture.objects.filter(topic_id=pk_topi)
+        form = UpdateTopicForm()
+        entry = get_object_or_404(Entry, owner=self.request.user, id=pk)
+        entry_form = CreateEntryForm(instance=entry)
+        #entries_list = Entry.objects.filter(topic_id=pk_topi)
+        update=1
+        print(update)
+        
+        
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'update':update, 'entry':entry }
+        return render(request, self.template_name, ctx)
+
 
 class TopicCancelView(LoginRequiredMixin, View):
 

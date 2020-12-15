@@ -33,6 +33,8 @@ urlpatterns = [
     path('part/<int:pk_part>/topic/<int:pk_topi>/update', views.TopicUpdateView.as_view(), name='topic_update'),
     path('part/<int:pk_part>/topic/<int:pk_topi>/delete', views.TopicDeleteView.as_view(), name='topic_delete'),
     path('topic/<int:pk_topi>/cancel', views.TopicCancelView.as_view(), name='topic_cancel'),
+    path('part/<int:pk_part>/topic/<int:pk_topi>/entry/<int:pk>/update', views.TopicEntryUpdateView.as_view(), name='topic_entry_update'),
+
 
     path('topic/<int:pk_topi>/add_pic', views.AddPictureView.as_view(), name='picture_add'),
     path('topic/<int:pk_topi>/picture/<int:pk_pict>', views.stream_file, name='picture_stream'),

@@ -21,7 +21,7 @@ class CreatePartForm(forms.ModelForm):
 
     class Meta:
         model = Part
-        fields = ['name', 'description', 'module', 'supplier', 'thickness', 'minimal_draft_angle']  # Picture is manual
+        fields = ['name', 'description', 'module', 'supplier', 'thickness', 'minimal_draft_angle']
 
 
 # Create the form class.
@@ -48,19 +48,27 @@ class UpdateTopicForm(forms.ModelForm):
         model = Topic
         fields = ['description']
 
+#----------------------------------------------------------------------
 # for the calendar widget you need to change
 # the input type of the inherited DateInput class 
 # to date (instead of text):
 class DateInput(forms.DateInput):
     input_type='date'
 
+#class PersonInput(forms.MultipleChoiceField):
+
 
 class CreateEntryForm(forms.ModelForm):
-    deadline = forms.DateField(widget=DateInput)
+    # when form specific:
+    #deadline = forms.DateField(widget=DateInput)
+
+    #responsible = forms.MultipleChoiceField()
     
     class Meta:
         model = Entry
-        fields = ['solution', 'responsible', 'involved', 'agreed_with']
+        fields = ['solution', 'responsible', 'involved', 'agreed_with', 'deadline']
+        widgets = {'deadline': DateInput}
+#----------------------------------------------------------------------
 
 class CreateParticipantForm(forms.ModelForm):
     

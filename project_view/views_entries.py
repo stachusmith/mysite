@@ -35,30 +35,39 @@ class EntryCreateView(CreateView, LoginRequiredMixin):
         print(request.POST)
         entry_form = CreateEntryForm(request.POST)
         topic = get_object_or_404(Topic, id=pk_topi)
-        entry= Entry(solution=request.POST['solution'],
-                responsible_id=request.POST['responsible'],
-                involved_id=request.POST['involved'],
-                agreed_with_id=request.POST['agreed_with'],
-                deadline=request.POST['deadline'],
-                topic_id=pk_topi)
-        #form validation happens in topic view
-        
+        print(entry_form)
+        if not entry_form.is_valid():
+            ctx = {'entry_form': entry_form}
+            return render(request, self.template_name, ctx)
 
-        #add user as owner before saving:
+        entry = entry_form.save(commit=False)
+        entry.owner = self.request.user
+        entry.topic_id = pk_topi
         entry.save()
 
         return redirect(reverse('project_view:topic_update', args=[topic.part.id, topic.id]))
 
 class EntryUpdateView(UpdateView, LoginRequiredMixin):
-    model = Fix
+    
+    #get request happens in topic view
 
-    fields = ['name']
-    success_url=reverse_lazy('project_view:fixing_list')
-    def get_queryset(self):
-        print('update get_queryset called')
-        #Limit a User to only modifying their own data
-        qs = super(FixingUpdateView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+    def post(self, request, pk):
+        
+        print(request.POST)
+        entry = get_object_or_404(Entry, owner=self.request.user, id=pk)
+        print(entry.deadline)
+        entry_form = CreateEntryForm(request.POST, instance=entry)
+        print(entry_form)
+        if not entry_form.is_valid():
+            ctx = {'entry_form': entry_form}
+            return render(request, self.template_name, ctx)
+        
+
+        
+        entry_form.save()
+
+        return redirect(reverse('project_view:topic_update', args=[entry.topic.part.id, entry.topic.id]))
+
 
 class EntryDeleteView(DeleteView, LoginRequiredMixin):
     model = Fixing

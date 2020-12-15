@@ -120,7 +120,8 @@ class Entry(models.Model):
     involved = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='involved_participants')
     agreed_with = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='agreed_with_participants')
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
-
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    
 class Picture(models.Model):
     picture = models.BinaryField(null=True, blank=True, editable=True)
 

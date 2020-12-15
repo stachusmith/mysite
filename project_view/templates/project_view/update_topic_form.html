@@ -89,19 +89,22 @@
 {% if entries_list %}
 
     {% for entry in entries_list %}
-        {{ entry.date_of_entry }}
-        {{ entry.solution }}
-        {{ entry.responsible }}
-        {{ entry.involved }}
-        {{ entry.agreed_with}}
-        {{ entry.deadline }}
-        <span style="float: right;">
-        {% if topic.owner == user %}
+        <p>
+            {{ entry.date_of_entry }}
+            {{ entry.solution }}
+            {{ entry.responsible }}
+            {{ entry.involved }}
+            {{ entry.agreed_with}}
+            {{ entry.deadline }}
+            <span style="float: right;">
+            {% if topic.owner == user %}
+                <a href="{% url 'project_view:topic_entry_update' entry.topic.part.id entry.topic.id entry.id %}"><i class="fa fa-pencil"></i></a> 
                 <a href="{% url 'project_view:entry_delete' entry.id %}"><i class="fa fa-trash"></i></a>
-        {% endif %}
-        </span>
+            {% endif %}
+            </span>
+        </p>
     {% endfor %}
-
+</p>
 </p>
 {% else %}
 <p>
@@ -111,14 +114,25 @@
 {% endif %}
 </p></div>
 
-<p>
 
-    <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form">
-      {% csrf_token %}
-      {{ entry_form|crispy }}
-      <input type="submit" for="entry_form" value="Save entry">
-    </form>
-</p>
+{% if update == 1 %}
+    <p>
+
+        <form action="{% url 'project_view:entry_update' entry.id %}" method="post" id="entry_form">
+        {% csrf_token %}
+        {{ entry_form|crispy }}
+        <input type="submit" for="entry_form" value="Save entry">
+        </form>
+    </p>
+{% else %}
+    <p>
+        <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form">
+        {% csrf_token %}
+        {{ entry_form|crispy }}
+        <input type="submit" for="entry_form" value="Save entry">
+        </form>
+    </p>
+{% endif %}
 
 <script>
 document.onpaste = function (pasteEvent) {
