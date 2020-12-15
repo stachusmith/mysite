@@ -16,7 +16,7 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreateEntryForm
 
 #from project_view.utils import dump_queries
@@ -34,8 +34,9 @@ class TopicDetailView(View, LoginRequiredMixin):
         module_number = part.module_id
         module = Module.objects.get(id=module_number)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
+        entries_list = Entry.objects.filter(topic_id=pk_topi)
         
-        context = { 'part' : part, 'module': module, 'topic': topic, 'picture_list':picture_list}
+        context = { 'part' : part, 'module': module, 'topic': topic, 'picture_list':picture_list, 'entries_list': entries_list }
         return render(request, self.template_name, context)
 
 class TopicCreateView(View, LoginRequiredMixin):
@@ -85,9 +86,10 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         picture_list = Picture.objects.filter(topic_id=pk_topi)
         form = UpdateTopicForm()
         entry_form = CreateEntryForm()
+        entries_list = Entry.objects.filter(topic_id=pk_topi)
         
         
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form }
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):

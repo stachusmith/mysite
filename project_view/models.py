@@ -111,8 +111,8 @@ class Topic(models.Model):
         return self.title
 
 class Entry(models.Model):
-    date_of_entry = models.DateField().auto_now_add
-    last_modified = models.DateField().auto_now
+    date_of_entry = models.DateField(auto_now_add=True)
+    last_modified = models.DateField(auto_now=True)
     deadline = models.DateField()
     problem_description = models.TextField()
     solution = models.TextField()

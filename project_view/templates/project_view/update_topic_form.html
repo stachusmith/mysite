@@ -84,6 +84,33 @@
   </form>
 </p>
 
+<div><p>
+    
+{% if entries_list %}
+
+    {% for entry in entries_list %}
+        {{ entry.date_of_entry }}
+        {{ entry.solution }}
+        {{ entry.responsible }}
+        {{ entry.involved }}
+        {{ entry.agreed_with}}
+        {{ entry.deadline }}
+        <span style="float: right;">
+        {% if topic.owner == user %}
+                <a href="{% url 'project_view:entry_delete' entry.id %}"><i class="fa fa-trash"></i></a>
+        {% endif %}
+        </span>
+    {% endfor %}
+
+</p>
+{% else %}
+<p>
+    there are no entries for this topic
+</p>
+
+{% endif %}
+</p></div>
+
 <p>
 
     <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form">

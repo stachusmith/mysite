@@ -48,11 +48,19 @@ class UpdateTopicForm(forms.ModelForm):
         model = Topic
         fields = ['description']
 
+# for the calendar widget you need to change
+# the input type of the inherited DateInput class 
+# to date (instead of text):
+class DateInput(forms.DateInput):
+    input_type='date'
+
+
 class CreateEntryForm(forms.ModelForm):
+    deadline = forms.DateField(widget=DateInput)
     
     class Meta:
         model = Entry
-        fields = ['solution', 'responsible', 'involved', 'agreed_with', 'deadline']
+        fields = ['solution', 'responsible', 'involved', 'agreed_with']
 
 class CreateParticipantForm(forms.ModelForm):
     

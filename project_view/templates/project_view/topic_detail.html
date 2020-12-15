@@ -77,13 +77,35 @@
                 <a class="trash-text" href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
         {% endif %}
     {% endfor %}
-</ul>
+
 {% else %}
 <p>
     there are no pictures for this topic
 </p>
 {% endif %}
 
+<p>
+<div>
+{% if entries_list %}
+
+    {% for entry in entries_list %}
+        {{ entry.date_of_entry }}
+        {{ entry.last_modified }}
+        {{ entry.solution }}
+        {{ entry.responsible }}
+        {{ entry.involved }}
+        {{ entry.agreed_with}}
+        {{ entry.deadline }}
+        
+    {% endfor %}
+
+</p>
+{% else %}
+<p>
+    there are no entries for this topic
+</p>
+</div>
+{% endif %}
 
 
 
