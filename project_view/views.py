@@ -98,12 +98,12 @@ class ProjectCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         client = Client.objects.get(id=pk)
-        form_data = {'name':'', 'client':client}
+        form_data = {'client':client}
         form = CreateProjectForm(initial=form_data)
-        
+        print(form)
         #limit options in dropdown:
         form.fields['client'].queryset = Client.objects.filter(id=pk)
-
+        
         ctx= { 'form':form, 'client':client}
         return render(request, self.template_name, ctx)
 
