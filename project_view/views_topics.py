@@ -36,7 +36,8 @@ class TopicDetailView(View, LoginRequiredMixin):
         picture_list = Picture.objects.filter(topic_id=pk_topi)
         entries_list = Entry.objects.filter(topic_id=pk_topi)
         
-        context = { 'part' : part, 'module': module, 'topic': topic, 'picture_list':picture_list, 'entries_list': entries_list }
+        context = { 'part' : part, 'module': module, 'topic': topic, 'picture_list':picture_list,
+                    'entries_list': entries_list }
         return render(request, self.template_name, context)
 
 class TopicCreateView(View, LoginRequiredMixin):
@@ -90,22 +91,13 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         entry_form = CreateEntryForm()
         
         entries_list = Entry.objects.filter(topic_id=pk_topi)
-        reponsibilities_lists=list()
-        for entry in entries_list:
-            responsible_list = Responsibility.objects.filter(entry_id=entry.id)
-            
-            reponsibilities_lists.append(responsible_list)
-        print(reponsibilities_lists)
-        
+
+        #parameter telling template which link to follow (create entry = 0 / update entry = 1):
         update=0
-        #print(update)
 
-        
-        
-
-        
-        
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list, 'update':update, 'reponsibilities_lists':reponsibilities_lists }
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part,
+                'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list,
+                'update':update }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):
@@ -130,6 +122,9 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         
         return redirect(reverse('project_view:topic_detail', args=[pk_part, pk_topi]))
 
+#---------------------------------------------------------------------------------
+#the view below is an instance of TopicUpdateView with a modified get request!!!
+#---------------------------------------------------------------------------------
 class TopicEntryUpdateView(TopicUpdateView):
     template_name='project_view/update_topic_form.html'
     
@@ -144,15 +139,15 @@ class TopicEntryUpdateView(TopicUpdateView):
         form = UpdateTopicForm()
         entry = get_object_or_404(Entry, owner=self.request.user, id=pk)
         entry_form = CreateEntryForm(instance=entry)
-        
-        #entries_list = Entry.objects.filter(topic_id=pk_topi)
+        entries_list = Entry.objects.filter(topic_id=pk_topi)
+
+        # parameter telling template which link to follow 
+        # after pressing "save entry" (create entry -> 0 / update entry -> 1):
         update=1
-        print(update)
-        
-        
+
         ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part,
                 'picture_list': picture_list, 'entry_form':entry_form, 'update':update,
-                'entry':entry }
+                'entry':entry, 'entries_list': entries_list }
         return render(request, self.template_name, ctx)
 
 
