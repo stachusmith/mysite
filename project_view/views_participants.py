@@ -161,7 +161,7 @@ class ParticipationUpdateView(UpdateView, LoginRequiredMixin):
     
     def get(self, request, pk):
         
-        #for link from projects -> form_data = {'participant':1, 'project':project}
+        
         participation=get_object_or_404(Participation, owner=self.request.user, id=pk)
         form = CreateParticipationForm(instance=participation)
 

@@ -44,7 +44,8 @@ class EntryCreateView(CreateView, LoginRequiredMixin):
         entry.owner = self.request.user
         entry.topic_id = pk_topi
         entry.save()
-
+        #saves many2many table
+#        entry_form.save_m2m()
         return redirect(reverse('project_view:topic_update', args=[topic.part.id, topic.id]))
 
 class EntryUpdateView(UpdateView, LoginRequiredMixin):
@@ -65,6 +66,7 @@ class EntryUpdateView(UpdateView, LoginRequiredMixin):
 
         
         entry_form.save()
+#        entry_form.save_m2m()
 
         return redirect(reverse('project_view:topic_update', args=[entry.topic.part.id, entry.topic.id]))
 

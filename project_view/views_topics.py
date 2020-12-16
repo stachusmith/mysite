@@ -16,7 +16,7 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participation
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participation, Responsibility
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreateEntryForm
 
 #from project_view.utils import dump_queries
@@ -90,12 +90,22 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         entry_form = CreateEntryForm()
         
         entries_list = Entry.objects.filter(topic_id=pk_topi)
+        reponsibilities_lists=list()
+        for entry in entries_list:
+            responsible_list = Responsibility.objects.filter(entry_id=entry.id)
+            
+            reponsibilities_lists.append(responsible_list)
+        print(reponsibilities_lists)
+        
         update=0
         #print(update)
 
         
         
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list, 'update':update }
+
+        
+        
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list, 'update':update, 'reponsibilities_lists':reponsibilities_lists }
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):
@@ -134,12 +144,15 @@ class TopicEntryUpdateView(TopicUpdateView):
         form = UpdateTopicForm()
         entry = get_object_or_404(Entry, owner=self.request.user, id=pk)
         entry_form = CreateEntryForm(instance=entry)
+        
         #entries_list = Entry.objects.filter(topic_id=pk_topi)
         update=1
         print(update)
         
         
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part, 'picture_list': picture_list, 'entry_form':entry_form, 'update':update, 'entry':entry }
+        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part,
+                'picture_list': picture_list, 'entry_form':entry_form, 'update':update,
+                'entry':entry }
         return render(request, self.template_name, ctx)
 
 

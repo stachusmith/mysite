@@ -92,7 +92,12 @@
         <p>
             {{ entry.date_of_entry }}
             {{ entry.solution }}
-            {{ entry.responsible }}
+            
+            {% for responsible_list in reponsibilities_lists %}
+                {% for person in responsible_list %}
+                    {{ person.participant.name }}
+                {% endfor %}
+            {% endfor %}
             {{ entry.involved }}
             {{ entry.agreed_with}}
             {{ entry.deadline }}

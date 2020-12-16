@@ -144,7 +144,6 @@ class Participation(models.Model):
 class Responsibility(models.Model):
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
 
 class Fix(models.Model):
