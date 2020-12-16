@@ -26,16 +26,7 @@ class CreatePartForm(forms.ModelForm):
 
 # Create the form class.
 class CreateProjectForm(forms.ModelForm):
-    choice_opts=Participant.objects.all()
-    print(choice_opts)
-    choice_list=list()
-    for choice in choice_opts:
-        print(choice.name)
-        choice_list.append(choice.name)
-    print(choice_list)
-    
-    #participant = forms.MultipleChoiceField(choices=Participant.objects.all())
-    
+        
     class Meta:
         model = Project
         fields = ['name', 'client', 'participant']

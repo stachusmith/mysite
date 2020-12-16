@@ -116,7 +116,8 @@ class Entry(models.Model):
     deadline = models.DateField()
     problem_description = models.TextField()
     solution = models.TextField()
-    responsible = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='responsible_participants')
+    responsible = models.ManyToManyField(Participant, through='Responsibility', related_name='responsible_participants')
+    #responsible = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='responsible_participants')
     involved = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='involved_participants')
     agreed_with = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='agreed_with_participants')
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
@@ -137,6 +138,11 @@ class Picture(models.Model):
 
 class Participation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
+class Responsibility(models.Model):
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
