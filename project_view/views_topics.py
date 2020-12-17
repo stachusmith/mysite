@@ -94,7 +94,9 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         for participation in participations:
             print(participation.participant.id)
             participation_ids.append(participation.participant.id)
-        participants = Participant.objects.filter(id__in=participation_ids) #participants with participation in that project
+        # participants with participation in that project
+        # __in accepts list, or querysets
+        participants = Participant.objects.filter(id__in=participation_ids)
                
         print(participants)
         
