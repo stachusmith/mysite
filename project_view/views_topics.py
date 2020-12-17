@@ -16,7 +16,7 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participation, Responsibility
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participation, Participant, Responsibility
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, UpdateTopicForm, CreateEntryForm
 
 #from project_view.utils import dump_queries
@@ -81,15 +81,28 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
     def get(self, request, pk_part, pk_topi):
         part = Part.objects.get(id=pk_part)
         topic = Topic.objects.get(id=pk_topi)
+        picture_list = Picture.objects.filter(topic_id=pk_topi)
         #get module
         module_number = part.module_id
         module = Module.objects.get(id=module_number)
-              
-        picture_list = Picture.objects.filter(topic_id=pk_topi)
+        
+        project_number=module.project_id
+        
+        participations = Participation.objects.filter(project_id=project_number) #participations with this project
+        print(participations)
+        participation_ids=list()
+        for participation in participations:
+            print(participation.participant.id)
+            participation_ids.append(participation.participant.id)
+        participants = Participant.objects.filter(id__in=participation_ids) #participants with participation in that project
+               
+        print(participants)
         
         form = UpdateTopicForm()
         entry_form = CreateEntryForm()
-        
+        #limit options in form field:
+        #print(entry_form.fields['responsible'].participant)
+        entry_form.fields['responsible'].queryset = participants
         entries_list = Entry.objects.filter(topic_id=pk_topi)
 
         #parameter telling template which link to follow (create entry = 0 / update entry = 1):
