@@ -115,7 +115,7 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
                 'update':update }
         return render(request, self.template_name, ctx)
         
-    def post(self, request, pk_part, pk_topi):
+    def post(self, request, pk_part, pk_topi, pk=None):
         topic = get_object_or_404(Topic, id=pk_topi, owner=self.request.user)
         form = UpdateTopicForm(request.POST, instance=topic)
         print(request.POST)
