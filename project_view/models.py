@@ -118,8 +118,8 @@ class Entry(models.Model):
     solution = models.TextField()
     responsible = models.ManyToManyField(Participant, through='Responsibility', related_name='responsible_participants')
     #responsible = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='responsible_participants')
-    involved = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='involved_participants')
-    agreed_with = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='agreed_with_participants')
+    involved = models.ManyToManyField(Participant, related_name='involved_participants')
+    agreed_with = models.ManyToManyField(Participant, related_name='agreed_with_participants')
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     

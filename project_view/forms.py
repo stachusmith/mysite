@@ -60,7 +60,7 @@ class DateInput(forms.DateInput):
 
 
 class CreateEntryForm(forms.ModelForm):
-    # when form specific:
+    # when not model form:
     #deadline = forms.DateField(widget=DateInput)
 
     #responsible = forms.MultipleChoiceField()
@@ -68,7 +68,14 @@ class CreateEntryForm(forms.ModelForm):
     class Meta:
         model = Entry
         fields = ['solution', 'responsible', 'involved', 'agreed_with', 'deadline']
-        widgets = {'deadline': DateInput}
+        widgets = {
+            'deadline': DateInput(attrs={'style': 'width: 12em;'}),
+            'responsible': forms.SelectMultiple(attrs={'style': 'width: 12em;'}),
+            'solution': forms.Textarea(attrs={'style': 'width: 12em;'}),
+            'involved': forms.SelectMultiple(attrs={'style': 'width: 12em;'}),
+            'agreed_with': forms.SelectMultiple(attrs={'style': 'width: 12em;'}),
+
+        }
 #----------------------------------------------------------------------
 
 class CreateParticipantForm(forms.ModelForm):

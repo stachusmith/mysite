@@ -45,6 +45,10 @@
 {% endblock %}
 
 {% block content %}
+
+<H1>{{ topic.title }}</H1>
+
+
 <div id="target_list">
     {% if picture_list %}
 
@@ -84,7 +88,7 @@
   </form>
 </p>
 
-<div><p>
+<div id="entry_list"><p>
     
 {% if entries_list %}
 
@@ -93,6 +97,12 @@
             {{ entry.date_of_entry }}
             {{ entry.solution }}
             {% for person in entry.responsible.all %}
+                {{ person }}
+            {% endfor %}
+            {% for person in entry.involved.all %}
+                {{ person }}
+            {% endfor %}
+            {% for person in entry.agreed_with.all %}
                 {{ person }}
             {% endfor %}
             
@@ -123,7 +133,8 @@
         <form action="{% url 'project_view:entry_update' entry.id %}" method="post" id="entry_form">
         {% csrf_token %}
         {{ entry_form|crispy }}
-        <input type="submit" for="entry_form" value="Save entry">
+        <input type="submit" for="entry_form" value="Update entry">
+        <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_update' part.id topic.id %}'; return false;">
         </form>
     </p>
 {% else %}
@@ -131,7 +142,7 @@
         <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form">
         {% csrf_token %}
         {{ entry_form|crispy }}
-        <input type="submit" for="entry_form" value="Save entry">
+        <input type="submit" for="entry_form" value="Create entry">
         </form>
     </p>
 {% endif %}
@@ -159,9 +170,9 @@ document.onpaste = function (pasteEvent) {
         var formData = new FormData();
         var myUrl = "{% url 'project_view:picture_add' topic.id %}";
 
-
+        /*prepare data to be sent to server*/
         formData.append("inpFile", blob);
-        
+        /*send the data using fetch method:*/
         fetch(myUrl, {
             method: "post",
             body: formData
@@ -169,12 +180,9 @@ document.onpaste = function (pasteEvent) {
             console.log(data)
         }).catch(console.log(myUrl, 'error'));
     }
-
-
-    
-    
-
-    
 };
+window.onload = function () {
+    document.getElementById('entry_list').scrollIntoView();
+}
 </script>
 {% endblock %}

@@ -80,33 +80,33 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
     
     def get(self, request, pk_part, pk_topi):
         part = Part.objects.get(id=pk_part)
-        topic = Topic.objects.get(id=pk_topi)
+        topic = get_object_or_404(Topic, id=pk_topi, owner=self.request.user)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
         #get module
         module_number = part.module_id
         module = Module.objects.get(id=module_number)
         
+        #entries:--------------------------------------------------------------------
         project_number=module.project_id
-        
         participations = Participation.objects.filter(project_id=project_number) #participations with this project
         print(participations)
+        #createing a list of participants' ids in that project
         participation_ids=list()
         for participation in participations:
             print(participation.participant.id)
             participation_ids.append(participation.participant.id)
         # participants with participation in that project
         # __in accepts list, or querysets
+        # participants is a queryset, which will be used to reduce options in select field
         participants = Participant.objects.filter(id__in=participation_ids)
-               
-        print(participants)
-        
-        form = UpdateTopicForm()
         entry_form = CreateEntryForm()
-        #limit options in form field:
-        #print(entry_form.fields['responsible'].participant)
+        #limit options in form field to this project's participants:
         entry_form.fields['responsible'].queryset = participants
+        entry_form.fields['involved'].queryset = participants
+        entry_form.fields['agreed_with'].queryset = participants
         entries_list = Entry.objects.filter(topic_id=pk_topi)
-
+        #/entries:--------------------------------------------------------------------
+        form = UpdateTopicForm(instance=topic)
         #parameter telling template which link to follow (create entry = 0 / update entry = 1):
         update=0
 
@@ -116,7 +116,8 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi):
-        form = UpdateTopicForm(request.POST)
+        topic = get_object_or_404(Topic, id=pk_topi, owner=self.request.user)
+        form = UpdateTopicForm(request.POST, instance=topic)
         print(request.POST)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
         #part = Part.objects.get(id=pk_part)
@@ -125,7 +126,7 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
             return render(request, self.template_name, ctx)
         
         topic = form.save(commit=False)
-        topic.owner = self.request.user
+        
 
         #as not to discard the picture on save (change 'session' for 1 to 0)
         for picture in picture_list:
@@ -151,7 +152,7 @@ class TopicEntryUpdateView(TopicUpdateView):
         module_number = part.module_id
         module = Module.objects.get(id=module_number)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
-        form = UpdateTopicForm()
+        form = UpdateTopicForm(instance=topic)
         entry = get_object_or_404(Entry, owner=self.request.user, id=pk)
         entry_form = CreateEntryForm(instance=entry)
         entries_list = Entry.objects.filter(topic_id=pk_topi)
