@@ -25,3 +25,6 @@ admin.site.register(Fixing)
 
 from project_view.models import Fix
 admin.site.register(Fix)
+
+from project_view.models import Status
+admin.site.register(Status)

@@ -53,7 +53,7 @@
     {% if picture_list %}
 
         {% for picture in picture_list %}
-            
+            {{ picture.id }}
             <a href="#"><img type="image" id=picture_box
                 src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
                 onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
@@ -154,10 +154,6 @@ document.onpaste = function (pasteEvent) {
     var t = document.getElementById("target")
     var cloneT = t.cloneNode(true)
     document.getElementById("target_list").appendChild(cloneT); 
-    
-    //input for desired picture with. further resize operations
-    //below at reSize function
-    var resize_width=1000 // no px
 
     //pull image items from clipboard:
     var items = pasteEvent.clipboardData.items;
@@ -166,92 +162,110 @@ document.onpaste = function (pasteEvent) {
     test = typeCheck.test(items[0].type);
     console.log(items[0]);
     if (test === true) {
-        var blob = items[0].getAsFile();//get the image as a file
+        var blob = items[0].getAsFile();//returns the item's file object
         console.log(blob)
-        /*load to target html element and turn image
-        to base64-encoded Data URI*/
+        
+        //set up a new file-reader
         var reader = new FileReader();
 
-        //reading/rendering the content of the the blob is triggered:
+        //reading/rendering the content of the the file object is triggered:
         reader.readAsDataURL(blob);
-        reader.name = blob.name
-        //upon loading the reader, the resize function is triggered
-        reader.onload = function (theBlobLoad) {
-            var img = new Image(); //set up new image
-            img.src = theBlobLoad.target.result //set src of new image to base64-encoded Data URI 
-            img.name = theBlobLoad.target.name
-            img.size = theBlobLoad.target.size
-            img.onload = function reSize(image) {
-                var myCanvas = document.createElement('canvas');//create a canvas
-                originalWidth=image.srcElement.naturalWidth;
-                originalHeight=image.srcElement.naturalHeight;
-                var picRatio = resize_width / originalWidth;
-                myCanvas.width = resize_width;
-                myCanvas.height = originalHeight * picRatio;
-                console.log(myCanvas.width, myCanvas.height, picRatio, originalWidth)
-
-                //draw in canvas
-                var myCanvasContent = myCanvas.getContext('2d');
-                myCanvasContent.drawImage(image.target, 0, 0, myCanvas.width, myCanvas.height);
-                console.log(myCanvasContent)
-                //get the base64-encoded Data URI from the resize image
-                var srcEncoded = myCanvasContent.canvas.toDataURL(image.target, 'image/jpeg', 0);
-                console.log(srcEncoded)
-                
-                //upon loading the file-reader the target html element's src attribute is set
-                //the file reader will now knows where render the image
-                //result is base64-encoded Data URI
-                document.getElementById("target").src = srcEncoded;
-                var resized = document.getElementById("target").src;
-                console.log("resized:",resized); //correct dims but only base64
-                
-
-                function dataURLtoFile(dataurl, filename) {
- 
-                var arr = dataurl.split(','),
-                    mime = arr[0].match(/:(.*?);/)[1],
-                    bstr = atob(arr[1]), 
-                    n = bstr.length, 
-                    u8arr = new Uint8Array(n);
-                    
-                while(n--){
-                    u8arr[n] = bstr.charCodeAt(n);
-                }
-                
-                return new File([u8arr], filename, {type:mime});
-                }
-                //image.target.src = srcEncoded
-                var file = dataURLtoFile(srcEncoded, 'reducedImage.png')
-                console.log('newFile:',file)
-                console.log('image.target', image.target.width);
-                console.log('image.srcElement',image.srcElement.width);
-                
-                /*prepare data to be sent to server*/
-                var formData = new FormData();
-                var myUrl = "{% url 'project_view:picture_add' topic.id %}";//target url on server side
-                formData.append("inpFile", file); //(name of data, data)
-                /*prepare data to be sent to server*/
-
-                /*send the data using fetch method:*/
-                fetch(myUrl, {
-                    method: "post",
-                    body: formData
-                }).then(function(data){
-                    console.log(data)
-                }).catch(console.log(myUrl, 'error'));
-                
-            }
-            
-            
-        }
-        //console.log("resized_outside_2:",resized);
-
-
-        console.log('target_element',document.getElementById('target').src)
-        var resizedImg = document.getElementById('target').src;
-        console.log('resizedImg',resizedImg)
-
+        reader.name = blob.name;//set name
         
+        //upon loading the reader (reading the file), an image is created:
+        reader.onload = function (theBlobLoad) {
+            //set up a new image
+            var img = new Image();
+            //get properties of new image from file that's being read:
+            img.src = theBlobLoad.target.result //get src of new image from file (result is a base64-encoded Data URI)
+            img.name = theBlobLoad.target.name //get name of new image from file
+            img.size = theBlobLoad.target.size //get size of new image from file
+
+            //upon loading the image draw a resized version:
+            img.onload = function reSize(image) {
+                
+                //desired picture width
+                var resize_width=1700; // no px
+                
+                originalWidth=image.target.naturalWidth;//get width of src
+                originalHeight=image.target.naturalHeight;//get height of src
+                if (originalWidth>resize_width) {
+                    var myCanvas = document.createElement('canvas');//create a canvas
+                    var picRatio = resize_width / originalWidth;//set image ratio
+                    myCanvas.width = resize_width;//new width
+                    myCanvas.height = originalHeight * picRatio;//new height
+                    
+
+                    //draw in canvas
+                    var myCanvasContent = myCanvas.getContext('2d');
+                    myCanvasContent.drawImage(image.target, 0, 0, myCanvas.width, myCanvas.height);
+
+                    //get the base64-encoded Data URI of the drawn image
+                    var srcEncoded = myCanvasContent.canvas.toDataURL(image.target, 'image/jpeg', 0);
+                    
+                    //upon loading the new image in file-reader, the target html element's src attribute is set,
+                    //the file-reader will now know where to render the image
+                    document.getElementById("target").src = srcEncoded;
+                    
+                    
+                    
+                    // found this on stackoverflow - changes base64 back into file:
+                    function dataURLtoFile(dataurl, filename) {
+
+                    var arr = dataurl.split(','),
+                        mime = arr[0].match(/:(.*?);/)[1],
+                        bstr = atob(arr[1]), 
+                        n = bstr.length, 
+                        u8arr = new Uint8Array(n);
+                        
+                    while(n--){
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+                    
+                    return new File([u8arr], filename, {type:mime});
+                    }
+                    
+
+                    //execute changing base64 back into file
+                    var file = dataURLtoFile(srcEncoded, 'reducedImage.png')
+
+                    
+                    /*prepare data to be sent to server*/
+                    var formData = new FormData();
+                    var myUrl = "{% url 'project_view:picture_add' topic.id %}";//target url on server side
+                    formData.append("inpFile", file); //(name of data, data)
+                    /*prepare data to be sent to server*/
+
+                    /*send the data using fetch method:*/
+                    fetch(myUrl, {
+                        method: "post",
+                        body: formData
+                    }).then(function(data){
+                        console.log(data)
+                    }).catch(console.log(myUrl, 'error'));
+                }
+                else {
+                    //upon loading the new image in file-reader, the target html element's src attribute is set,
+                    //the file-reader will now know where to render the image
+                    document.getElementById("target").src = img.src; //(img.src = theBlobLoad.target.result)
+
+                    /*prepare data to be sent to server*/
+                    var formData = new FormData();
+                    var myUrl = "{% url 'project_view:picture_add' topic.id %}";//target url on server side
+                    formData.append("inpFile", blob); //(name of data, data)
+                    /*prepare data to be sent to server*/
+
+                    /*send the data using fetch method:*/
+                    fetch(myUrl, {
+                        method: "post",
+                        body: formData
+                    }).then(function(data){
+                        console.log(data)
+                    }).catch(console.log(myUrl, 'error'));
+                }
+                
+            }    
+        }
     }
 };
 //position window to list of entries upon page load:

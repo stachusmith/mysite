@@ -66,6 +66,13 @@ class Fixing(models.Model):
     def __str__(self):
         return self.name
 
+class Status(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    def __str__(self):
+        return self.name
+
 
     
 
@@ -84,9 +91,9 @@ class Part(models.Model):
     
     fixing_element = models.ManyToManyField(Fixing, through='Fix', related_name='fixing_project_view')
 
-    thickness = models.IntegerField(null=True)
+    thickness = models.FloatField(null=True)
 
-    minimal_draft_angle = models.IntegerField(null=True)
+    minimal_draft_angle = models.FloatField(null=True)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -104,6 +111,8 @@ class Topic(models.Model):
     description = models.TextField(max_length=255, null=True, blank=True)
 
     part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
+
+    status = models.ForeignKey(Status, on_delete=models.CASCADE, null=True)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     

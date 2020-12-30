@@ -334,23 +334,11 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         fixes = Fix.objects.filter(part_id=part)
         
         topic_list = Topic.objects.filter(part_id=part)
-        print(topic_list)
-
-
-
-        #fix_list = list()
-        #for fix in fixes:
-        #    fix_list=fix_list+fix
-        #print(fix_list)
-        #fixing_types = Fix.objects.filter(part_id=pk_part)
         
-        #rows = part.fixing_project_view.values('id')
-        #print(rows)
-        #for row in rows:
-        #    fixings = row['id']
-        #print(fixings)
-
-        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes, 'topic_list': topic_list}
+        for topic in topic_list:
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:2]
+        
+        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes, 'topic_list': topic_list }
         return render(request, self.template_name, context)
 
 class PartCreateView(LoginRequiredMixin, View):

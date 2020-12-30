@@ -83,13 +83,29 @@ fixing combinations:
   {% for topic in topic_list %}
     <div id="topic">
       <li>
+        {% if topic.status.id == 1 %}
+        <i class="fa fa-cog" style="font-size:20px;color:red"></i>
+        {% elif topic.status.id == 2 %}
+          <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
+        {% else %}
+        <i class='fas fa-check-circle' style='font-size:20px;color:green'></i>
+        {% endif %}
         <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+        <p></p>
+          {% if topic.pic_list %}
+            {% for picture in topic.pic_list %}
+              <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+            {% endfor %}
+          {% else %}
+            there are no pictures for this topic
+          {% endif %}
           <span style="float: right;">
             {% if part.owner == user %}
               <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
               <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
             {% endif %}
           </span>
+        </p>
       </li>
     </div>
   {% endfor %}

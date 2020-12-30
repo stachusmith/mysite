@@ -63,6 +63,7 @@
 {% if picture_list %}
 
     {% for picture in picture_list %}
+        {{ picture.id }}
         <a href="#"><img type="image" id=picture_box
             src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
             onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
@@ -75,8 +76,9 @@
 
         {% if part.owner == user %}
                 <a class="trash-text" href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
-        {% endif %}
-    {% endfor %}
+        
+    {% endif %}
+{% endfor %}
 
 {% else %}
 <p>
@@ -85,28 +87,39 @@
 {% endif %}
 
 <p>
-<div>
-{% if entries_list %}
-
-    {% for entry in entries_list %}
-        {{ entry.date_of_entry }}
-        {{ entry.last_modified }}
-        {{ entry.solution }}
-        {{ entry.responsible }}
-        {{ entry.involved }}
-        {{ entry.agreed_with}}
-        {{ entry.deadline }}
+    <div id="entry_list"><p>
+    
+        {% if entries_list %}
         
-    {% endfor %}
-
+            {% for entry in entries_list %}
+                <p>
+                    {{ entry.date_of_entry }}
+                    {{ entry.solution }}
+                    {% for person in entry.responsible.all %}
+                        {{ person }}
+                    {% endfor %}
+                    {% for person in entry.involved.all %}
+                        {{ person }}
+                    {% endfor %}
+                    {% for person in entry.agreed_with.all %}
+                        {{ person }}
+                    {% endfor %}
+                    
+        
+                    {{ entry.deadline }}
+                    
+                </p>
+            {% endfor %}
+        </p>
+        </p>
+        {% else %}
+        <p>
+            there are no entries for this topic
+        </p>
+        
+        {% endif %}
+    </div>
 </p>
-{% else %}
-<p>
-    there are no entries for this topic
-</p>
-</div>
-{% endif %}
-
 
 
 <p>

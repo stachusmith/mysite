@@ -47,7 +47,7 @@ class UpdateTopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        fields = ['description']
+        fields = ['description', 'status']
 
 #----------------------------------------------------------------------
 # for the calendar widget you need to change
