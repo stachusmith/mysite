@@ -1,0 +1,56 @@
+#topic {
+  padding: 5px;
+  margin-bottom: 3px;
+  margin-left: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: gray;
+  border-radius: 5px;
+  background-color: rgb(246, 246, 246);
+}
+
+.topics_container {
+  padding: 5px;
+  margin-top: 10px;
+  margin-left: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(220, 220, 220);
+  border-radius: 5px;
+  background-color:white;
+}
+
+.fixing_container {
+  width: 33%;
+  padding: 5px;
+  margin-left: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(220, 220, 220);
+  border-radius: 5px;
+  background-color:white;
+}
+
+.part_properties {
+  width: 33%;
+  padding: 5px;
+  margin-left: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(220, 220, 220);
+  border-radius: 5px;
+  background-color:white;
+}
+
+.part_container {
+  display: flex;
+  justify-content: space-between;
+  width:100%;
+  /*padding: 5px;*/
+  margin-left: 0;
+  /*border-width: 1px;
+  border-style: solid;
+  border-color: rgb(220, 220, 220);
+  border-radius: 5px;*/
+  background-color:white;
+}

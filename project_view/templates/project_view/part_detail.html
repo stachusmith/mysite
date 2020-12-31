@@ -1,25 +1,10 @@
 {% extends "base_menu.html" %}
-
-
 {% load humanize %}
+{% load static %}
 
-{% block head %}
-<style>
-
-#topic{
-  padding: 5px;
-  margin-left: 0;
-  border-width: 1px;
-  border-style: solid;
-  border-color: black;
-  border-radius: 5px;
-  background-color: rgb(246, 246, 246);
-}
-</style>
-{% endblock %}
 
 {% block content %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/part.css' %}">
 <span style="float: right;">
 ({{ part.updated_at|naturaltime }})
 {% if part.owner == user %}
@@ -27,94 +12,147 @@
 <a href="{% url 'project_view:part_delete' module.id part.id %}"><i class="fa fa-trash"></i></a>
 {% endif %}
 </span>
+
 <h1>{{ part.name }}</h1>
-
 <p>
-description: {{ part.description }}
+  <a href="{% url 'project_view:module_detail' module.id project.id %}">back to all parts</a>
 </p>
-<p>
-OEM: {{ part.module.project.client }}
-</p>
-<p>
-project: {{ part.module.project }}
-</p>
-<p>
-module: {{ part.module }}
-</p>
-<p>
-supplier: {{ part.supplier }}
-</p>
-<p>
-thickness: {{ part.thickness }}mm
-</p>
-<p>
-fixing combinations:
-    {% if fixes %}
-    <ul>
-      {% for fix in fixes %}
-        <li>
-            {{ fix.number_of_elements }} {{ fix.fixing.name }}s
-        </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-      <p>There are no fixing combinations in the database.</p>
-    {% endif %}
+<div class='part_container'>
+  <div class='part_properties'>
     <p>
-      <a href="{% url 'project_view:fix_create' part.id %}">add new combination</a>
+    description: {{ part.description }}
     </p>
     <p>
-      <a href="{% url 'project_view:fixing_create' %}">create new fixing elements</a>
+    OEM: {{ part.module.project.client }}
     </p>
-</p>
-
-<p>
-<a href="{% url 'project_view:module_detail' module.id project.id %}">All parts</a>
-</p>
-
-<h2>Topics:</h2>
-
-<a href="{% url 'project_view:topic_create' part.id %}">New topic</a>
-
-<p>
-{% if topic_list %}
-
-<ul style="list-style: none; padding-left: 0;">
-  {% for topic in topic_list %}
-    <div id="topic">
-      <li>
-        {% if topic.status.id == 1 %}
-        <i class="fa fa-cog" style="font-size:20px;color:red"></i>
-        {% elif topic.status.id == 2 %}
-          <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
+    <p>
+    project: {{ part.module.project }}
+    </p>
+    <p>
+    module: {{ part.module }}
+    </p>
+    <p>
+    supplier: {{ part.supplier }}
+    </p>
+    <p>
+    thickness: {{ part.thickness }}mm
+    </p>
+  </div>
+  <div class='fixing_container'>
+    <p>
+    fixing combinations:
+        {% if fixes %}
+        <ul>
+          {% for fix in fixes %}
+            <li>
+                {{ fix.number_of_elements }} {{ fix.fixing.name }}s
+            </li>
+          {% endfor %}
+        </ul>
         {% else %}
-        <i class='fas fa-check-circle' style='font-size:20px;color:green'></i>
+          <p>There are no fixing combinations in the database.</p>
         {% endif %}
-        <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
-        <p></p>
-          {% if topic.pic_list %}
-            {% for picture in topic.pic_list %}
-              <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
-            {% endfor %}
-          {% else %}
-            there are no pictures for this topic
-          {% endif %}
-          <span style="float: right;">
-            {% if part.owner == user %}
-              <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
-              <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
-            {% endif %}
-          </span>
+        <p>
+          <a href="{% url 'project_view:fix_create' part.id %}">add new combination</a>
         </p>
-      </li>
-    </div>
-  {% endfor %}
-</ul>
+        <p>
+          <a href="{% url 'project_view:fixing_create' %}">create new fixing elements</a>
+        </p>
+    </p>
+  </div>
+</div>
 
-</p>
-{% else %}
-  <p>There are no topics in the database.</p>
-{% endif %}
+
+<div class="topics_container">
+  <h2>Topics:</h2>
+
+  <a href="{% url 'project_view:topic_create' part.id %}">New topic</a>
+
+  <p>
+    {% if new_topics_list %}
+
+      <ul style="list-style: none; padding-left: 0;">
+        {% for topic in new_topics_list %}
+          <div id="topic">
+            <li>
+              <i class="fa fa-cog" style="font-size:20px;color:red"></i>
+              <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+              {% if topic.pic_list %}
+                  {% for picture in topic.pic_list %}
+                    <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+                  {% endfor %}
+                {% else %}
+                  there are no pictures for this topic
+              {% endif %}
+              <span style="float: right;">
+                {% if part.owner == user %}
+                  <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+                  <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %}
+              </span>
+            </li>
+          </div>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>There are no new topics in the database.</p>
+    {% endif %}
+    {% if in_process_topics_list %}
+      <ul style="list-style: none; padding-left: 0;">
+        {% for topic in in_process_topics_list %}
+          <div id="topic">
+            <li>
+              <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
+              <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+              {% if topic.pic_list %}
+                  {% for picture in topic.pic_list %}
+                    <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+                  {% endfor %}
+                {% else %}
+                  there are no pictures for this topic
+              {% endif %}
+              <span style="float: right;">
+                {% if part.owner == user %}
+                  <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+                  <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %}
+              </span>
+            </li>
+          </div>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>There are no "in process" topics in the database.</p>
+    {% endif %}
+    {% if settled_topics_list %}
+      <ul style="list-style: none; padding-left: 0;">
+        {% for topic in settled_topics_list %}
+          <div id="topic">
+            <li>
+              <i class='fas fa-check-circle' style='font-size:20px;color:green'></i>
+              <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+              {% if topic.pic_list %}
+                  {% for picture in topic.pic_list %}
+                    <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+                  {% endfor %}
+                {% else %}
+                  there are no pictures for this topic
+              {% endif %}
+              <span style="float: right;">
+                {% if part.owner == user %}
+                  <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+                  <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %}
+              </span>
+            </li>
+          </div>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>There are no settled topics in the database.</p>
+    {% endif %}
+  </p>
+</div>
 
 
 {% endblock %}

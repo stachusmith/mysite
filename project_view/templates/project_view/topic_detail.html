@@ -48,13 +48,20 @@
 {% block content %}
 
 <span style="float: right;">
-({{ topic.updated_at|naturaltime }})
+({{ topic.last_modified }})
 {% if part.owner == user %}
 <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
 <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
 {% endif %}
 </span>
-<h1>{{ topic.title }}</h1>
+{% if topic.status.id == 1 %}
+        <i class="fa fa-cog" style="font-size:20px;color:red"></i>
+        {% elif topic.status.id == 2 %}
+          <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
+        {% else %}
+        <i class='fas fa-check-circle' style='font-size:20px;color:green'></i>
+        {% endif %}
+        <h1>{{ topic.title }}</h1>
 
 <p>
     pictures:

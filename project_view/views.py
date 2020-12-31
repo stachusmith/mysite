@@ -333,12 +333,26 @@ class PartDetailView(DetailView, LoginRequiredMixin):
 
         fixes = Fix.objects.filter(part_id=part)
         
-        topic_list = Topic.objects.filter(part_id=part)
+        new_topics_list = Topic.objects.filter(part_id=part, status_id=1).order_by('-last_modified') #minus make reverse order
+        in_process_topics_list = Topic.objects.filter(part_id=part, status_id=2).order_by('-last_modified')
+        settled_topics_list = Topic.objects.filter(part_id=part, status_id=3).order_by('-last_modified')
+        print(new_topics_list) 
+        print(in_process_topics_list)
+        print(settled_topics_list)
         
-        for topic in topic_list:
+        for topic in new_topics_list:
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:2]
+            
+
+        for topic in in_process_topics_list:
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:2]
+
+        for topic in settled_topics_list:
             topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:2]
         
-        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes, 'topic_list': topic_list }
+        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes,
+                    'new_topics_list': new_topics_list, 'in_process_topics_list':in_process_topics_list,
+                    'settled_topics_list':settled_topics_list }
         return render(request, self.template_name, context)
 
 class PartCreateView(LoginRequiredMixin, View):
