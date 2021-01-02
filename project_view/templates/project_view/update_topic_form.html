@@ -45,7 +45,10 @@
 {% endblock %}
 
 {% block content %}
-{% if topic.status.id == 1 %}
+You are editing the following topic:
+
+
+<h1 style='margin-bottom: 30px;'>{% if topic.status.id == 1 %}
         <i class="fa fa-cog" style="font-size:20px;color:red"></i>
         {% elif topic.status.id == 2 %}
           <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
@@ -54,7 +57,11 @@
         {% else %}
         topic status hasn't beed saved yet
         {% endif %}
-        <h1>{{ topic.title }}</h1>
+        {{ topic.title }}</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form_topic_create|crispy }}
 
 
 <div id="target_list">
@@ -87,7 +94,7 @@
 <p><img type="image" class="target" id="target" value="paste picture here"></p>
 
 <p>
-  <form action="" method="post" id="upload_form" enctype="multipart/form-data">
+  <form action="" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     

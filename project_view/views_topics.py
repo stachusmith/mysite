@@ -62,7 +62,7 @@ class TopicCreateView(View, LoginRequiredMixin):
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part):
-        form = CreateTopicForm(request.POST, request.FILES or None)
+        form = CreateTopicForm(request.POST)
         pk_topic=request.POST['title']
         print(pk_topic)
         #part = Part.objects.get(id=pk_part)
@@ -106,11 +106,16 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
         entry_form.fields['agreed_with'].queryset = participants
         entries_list = Entry.objects.filter(topic_id=pk_topi)
         #/entries:--------------------------------------------------------------------
+
         form = UpdateTopicForm(instance=topic)
+        form_topic_create = CreateTopicForm(instance=topic)
+        #limit options in dropdown:
+        form_topic_create.fields['part'].queryset = Part.objects.filter(id=pk_part)
+
         #parameter telling template which link to follow (create entry = 0 / update entry = 1):
         update=0
 
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part,
+        ctx= { 'form':form, 'form_topic_create':form_topic_create,'topic':topic, 'module':module, 'part':part,
                 'picture_list': picture_list, 'entry_form':entry_form, 'entries_list': entries_list,
                 'update':update }
         return render(request, self.template_name, ctx)
@@ -118,6 +123,7 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
     def post(self, request, pk_part, pk_topi, pk=None):
         topic = get_object_or_404(Topic, id=pk_topi, owner=self.request.user)
         form = UpdateTopicForm(request.POST, instance=topic)
+        form_topic_create = CreateTopicForm(request.POST, instance=topic)
         print(request.POST)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
         #part = Part.objects.get(id=pk_part)
@@ -126,7 +132,7 @@ class TopicUpdateView(UpdateView, LoginRequiredMixin):
             return render(request, self.template_name, ctx)
         
         topic = form.save(commit=False)
-        
+        form_topic_create.save() #just saving the new name
 
         #as not to discard the picture on save (change 'session' for 1 to 0)
         for picture in picture_list:

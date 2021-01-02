@@ -64,11 +64,13 @@
 
 
 <div class="topics_container">
-  <h2>Topics:</h2>
+  <a id="topic" style='float: right;' href="{% url 'project_view:topic_create' part.id %}">Create new topic...</a>
 
-  <a href="{% url 'project_view:topic_create' part.id %}">New topic</a>
+
+
 
   <p>
+    <h4>new topics:</h4>
     {% if new_topics_list %}
 
       <ul style="list-style: none; padding-left: 0;">
@@ -82,7 +84,8 @@
                     <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
                   {% endfor %}
                 {% else %}
-                  there are no pictures for this topic
+                  <img src="{% static 'project_view/my_block.png' %}"
+                    style="width: 100px; height: 100px; border-style: solid; border-width: 1px;" alt="no pictures in database">
               {% endif %}
               <span style="float: right;">
                 {% if part.owner == user %}
@@ -97,6 +100,7 @@
     {% else %}
       <p>There are no new topics in the database.</p>
     {% endif %}
+    <h4>topics in process:</h4>
     {% if in_process_topics_list %}
       <ul style="list-style: none; padding-left: 0;">
         {% for topic in in_process_topics_list %}
@@ -109,7 +113,8 @@
                     <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
                   {% endfor %}
                 {% else %}
-                  there are no pictures for this topic
+                  <img src="{% static 'project_view/my_block.png' %}"
+                    style="width: 100px; height: 100px; border-style: solid; border-width: 1px;" alt="no pictures in database">
               {% endif %}
               <span style="float: right;">
                 {% if part.owner == user %}
@@ -124,6 +129,7 @@
     {% else %}
       <p>There are no "in process" topics in the database.</p>
     {% endif %}
+    <h4>settled topics:</h4>
     {% if settled_topics_list %}
       <ul style="list-style: none; padding-left: 0;">
         {% for topic in settled_topics_list %}
@@ -136,7 +142,8 @@
                     <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
                   {% endfor %}
                 {% else %}
-                  there are no pictures for this topic
+                  <img src="{% static 'project_view/my_block.png' %}"
+                    style="width: 100px; height: 100px; border-style: solid; border-width: 1px;" alt="no pictures in database">
               {% endif %}
               <span style="float: right;">
                 {% if part.owner == user %}
