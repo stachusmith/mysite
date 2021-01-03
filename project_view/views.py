@@ -336,19 +336,21 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         new_topics_list = Topic.objects.filter(part_id=part, status_id=1).order_by('-last_modified') #minus make reverse order
         in_process_topics_list = Topic.objects.filter(part_id=part, status_id=2).order_by('-last_modified')
         settled_topics_list = Topic.objects.filter(part_id=part, status_id=3).order_by('-last_modified')
-        print(new_topics_list) 
-        print(in_process_topics_list)
-        print(settled_topics_list)
+        #print(new_topics_list) 
+        #print(in_process_topics_list)
+        #print(settled_topics_list)
         
         for topic in new_topics_list:
-            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:2]
-            
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:3]
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')[:3]
 
         for topic in in_process_topics_list:
-            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:2]
-
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:3]
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')[:5]
+            print(topic.entry_list)
         for topic in settled_topics_list:
-            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:2]
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:3]
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')[:3]
         
         context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes,
                     'new_topics_list': new_topics_list, 'in_process_topics_list':in_process_topics_list,

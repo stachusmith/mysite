@@ -1,4 +1,6 @@
 #topic {
+  display: flex;
+  justify-content: space-between;
   padding: 5px;
   margin-bottom: 3px;
   margin-left: 0;
@@ -7,6 +9,42 @@
   border-color: gray;
   border-radius: 5px;
   background-color: rgb(246, 246, 246);
+}
+.topic_left{
+  display: flex;
+}
+.topic_right{
+  display: flex;
+}
+
+.icon {
+  width: 25px;
+}
+
+.topic_title {
+  border-width: 1px;
+  font-weight: bold;
+}
+.entries{
+  font-weight: normal;
+  height: 80px;
+  overflow: auto;
+}
+
+.pic_list {
+  display: grid;
+  width: 320px;
+  grid-template-columns: 1fr 1fr 1fr;
+  direction: rtl;
+
+}
+
+.edit_delete_icons{
+  width: 40px;
+  padding-left: 5px;
+  align-self: flex-start;
+  padding-top: 10px;
+
 }
 
 .topics_container {
@@ -54,3 +92,4 @@
   border-radius: 5px;*/
   background-color:white;
 }
+

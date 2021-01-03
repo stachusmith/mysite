@@ -95,6 +95,7 @@ You are editing the following topic:
 
 <p>
   <form action="" method="post">
+    
     {% csrf_token %}
     {{ form|crispy }}
     
@@ -141,26 +142,26 @@ You are editing the following topic:
 {% endif %}
 </p></div>
 
-
-{% if update == 1 %}
-    <p>
-
-        <form action="{% url 'project_view:entry_update' entry.id %}" method="post" id="entry_form">
-        {% csrf_token %}
-        {{ entry_form|crispy }}
-        <input type="submit" for="entry_form" value="Update entry">
-        <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_update' part.id topic.id %}'; return false;">
-        </form>
-    </p>
-{% else %}
-    <p>
-        <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form">
-        {% csrf_token %}
-        {{ entry_form|crispy }}
-        <input type="submit" for="entry_form" value="Create entry">
-        </form>
-    </p>
-{% endif %}
+<div class="form_container" style="border-style: solid; border-width: 1px;">
+    {% if update == 1 %}
+        <p>
+            <form action="{% url 'project_view:entry_update' entry.id %}" method="post" id="entry_form">
+            {% csrf_token %}
+            {{ entry_form|crispy }}
+            <input type="submit" for="entry_form" value="Update entry">
+            <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_update' part.id topic.id %}'; return false;">
+            </form>
+        </p>
+    {% else %}
+        <p>
+            <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form">
+            {% csrf_token %}
+            {{ entry_form|crispy }}
+            <input type="submit" for="entry_form" value="Create entry">
+            </form>
+        </p>
+    {% endif %}
+</div>
 
 <script>
 document.onpaste = function (pasteEvent) {
