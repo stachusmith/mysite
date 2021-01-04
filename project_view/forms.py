@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core import validators
 
 
+
 class CreateFixingForm(forms.ModelForm):
     class Meta:
         model = Fixing
@@ -64,18 +65,18 @@ class CreateEntryForm(forms.ModelForm):
     #deadline = forms.DateField(widget=DateInput)
 
     #responsible = forms.MultipleChoiceField()
-    
+
     class Meta:
         model = Entry
-        fields = ['solution', 'responsible', 'involved', 'agreed_with', 'deadline']
+        fields = [ 'solution', 'responsible', 'involved', 'agreed_with', 'deadline']
         widgets = {
-            'deadline': DateInput(attrs={'style': 'width: 12em;'}),
-            'responsible': forms.SelectMultiple(attrs={'style': 'width: 12em;'}),
-            'solution': forms.Textarea(attrs={'style': 'width: 12em;'}),
-            'involved': forms.SelectMultiple(attrs={'style': 'width: 12em;'}),
-            'agreed_with': forms.SelectMultiple(attrs={'style': 'width: 12em;'}),
-
+            'deadline': DateInput(attrs={'class':'form_control'}),
+            'responsible': forms.SelectMultiple(attrs={'class':'form_control'}),
+            'solution': forms.Textarea(attrs={'class':'form_control'}),
+            'involved': forms.SelectMultiple(attrs={'class':'form_control'}),
+            'agreed_with': forms.SelectMultiple(attrs={'class':'form_control'}),
         }
+        
 #----------------------------------------------------------------------
 
 class CreateParticipantForm(forms.ModelForm):

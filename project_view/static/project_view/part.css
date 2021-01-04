@@ -35,7 +35,7 @@
   display: grid;
   width: 320px;
   grid-template-columns: 1fr 1fr 1fr;
-  direction: rtl;
+  direction: rtl; /*changes direction of grid filling*/
 
 }
 
