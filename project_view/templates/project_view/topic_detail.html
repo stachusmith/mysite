@@ -1,51 +1,10 @@
 
 {% extends "base_menu.html" %}
 {% load humanize %}
-{% block head %}
-<style>
-    :root {
-            --box-width: 28%;
-            --box-height: 200px;
-        }
-    .target {
-        width: var(--box-width);
-        height: var(--box-height);
-        padding: 5px;
-        margin: 1em;
-        border-width: 1px;
-        border-style: solid;
-        border-color: black;
-        border-radius: 5px;
-        background-color: rgb(246, 246, 246);
-    }#picture_box {
-        width: var(--box-width);
-        height: var(--box-height);
-        padding: 5px;
-        margin: 1em;
-        border-width: 1px;
-        border-style: solid;
-        border-color: black;
-        border-radius: 5px;
-        background-color: rgb(246, 246, 246);
-    }
-    .picture_detail {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 10;
-        display: none;
-        background-color: rgba(0,0,0,0.5);
-    }
-    .trash-text {
-        position: absolute;
-        transform: translate(-12px, calc(var(--box-height) * 0.95));
-    }
-    </style>
-{% endblock %}
+{% load static %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/topic_update.css' %}">
 
 <span style="float: right;">
 ({{ topic.last_modified }})
@@ -93,40 +52,63 @@
 </p>
 {% endif %}
 
-<p>
-    <div id="entry_list"><p>
-    
-        {% if entries_list %}
+{% if entries_list %}
+
+    {% for entry in entries_list %}
+            <div id="entry_list_container">
+                <div class="entry_list_left">
+                    <div class="entry_list_date_of_entry">
+                        {{ entry.date_of_entry }}
+                    </div>
+                    <div class="entry_list_solution">
+                        {{ entry.solution }}
+                    </div>
+                </div>
+                <div class="entry_list_middle">
+                    <div class="entry_list_person">
+                        {% for person in entry.responsible.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.involved.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.agreed_with.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="entry_list_right">
+                    <div class="entry_list_deadline">
+                        {{ entry.deadline }}
+                    </div>
+                    <div class="entry_list_edit_delete_icons">
+                        {% if topic.owner == user %}
+                            <a href="{% url 'project_view:topic_entry_update' entry.topic.part.id entry.topic.id entry.id %}"><i class="fa fa-pencil"></i></a> 
+                            <a href="{% url 'project_view:entry_delete' entry.id %}"><i class="fa fa-trash"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         
-            {% for entry in entries_list %}
-                <p>
-                    {{ entry.date_of_entry }}
-                    {{ entry.solution }}
-                    {% for person in entry.responsible.all %}
-                        {{ person }}
-                    {% endfor %}
-                    {% for person in entry.involved.all %}
-                        {{ person }}
-                    {% endfor %}
-                    {% for person in entry.agreed_with.all %}
-                        {{ person }}
-                    {% endfor %}
-                    
-        
-                    {{ entry.deadline }}
-                    
-                </p>
-            {% endfor %}
-        </p>
-        </p>
-        {% else %}
-        <p>
-            there are no entries for this topic
-        </p>
-        
-        {% endif %}
-    </div>
-</p>
+    {% endfor %}
+
+
+{% else %}
+    <p>
+        there are no entries for this topic
+    </p>
+
+{% endif %}
 
 
 <p>

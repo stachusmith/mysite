@@ -40,6 +40,9 @@
     transform: translate(-12px, calc(var(--box-height) * 0.95));
 }
 
+
+
+
 /*entry form--------------------------*/
 .form-container {
     display: flex;
@@ -49,84 +52,94 @@
 .submit{
     padding-top: 1.5em;
 }
+
+
+
+
+
+
+
 /*entry list--------------------------*/
 #entry_list_container {
-    border-width: 1px;
+    border-color: gray;
     border-style: solid;
-    border-color: black;
+    border-width: 1px;
+    background-color: rgb(246, 246, 246);
+    border-radius: 5px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 10px;
+
 }
 
 .entry_list_left {
-    border-width: 1px;
-    border-style: solid;
-    border-color: yellow;
+    /*border-color: yellow;*/
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-}
-
-.entry_list_right {
-    border-width: 1px;
-    border-style: solid;
-    border-color: red;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    
 }
 
 .entry_list_middle {
     width: 100%;
-    border-width: 1px;
-    border-style: solid;
-    border-color: lightgray;
+    /*border-color: lightgray;*/
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    
+}
+
+.entry_list_right {
+    /*border-color: red;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
 }
 
 
+
+
+/*left*/
 
 .entry_list_date_of_entry {
     width: 120px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: green;
-}
-
-.entry_list_deadline {
-    width: 120px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: blue;
+    /*border-color: green;*/
+    overflow: auto;
+    flex-shrink: 1;
 }
 
 .entry_list_solution {
-    border-width: 1px;
-    border-style: solid;
-    border-color: violet;
     width: 400px;
-    height: 100px;
+    /*border-color: violet;*/
+    max-height: 100px;
     overflow: auto;
+    flex-shrink: 2;
 }
+
+/*middle*/
 
 .entry_list_person {
     width: 100%;
-    border-width: 1px;
-    border-style: solid;
-    border-color: orange;
+    /*border-color: orange;*/
     overflow: auto;
     
 }
 
+/*right*/
+
+.entry_list_deadline {
+    width: 120px;
+    /*border-color: blue;*/
+    overflow: auto;
+}
+
 .entry_list_edit_delete_icons {
     width: 50px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: lightseagreen;
+    /*border-color: lightseagreen;*/
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    overflow: auto;
 }
