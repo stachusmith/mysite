@@ -24,35 +24,52 @@ You are editing the following topic:
             {{ form_topic_create|crispy }}
 
 
-<div id="target_list">
+<div class="picture_container" id="target_list">
+    <h2 style="padding-left: 10px;">Pictures:</h2>
     {% if picture_list %}
+        <div class="picture_grid">
+            {% for picture in picture_list %}
+                <div class="pic_area">
+                    <div class="pic_description">
+                        <div class="pic_desc_left">
+                            picture: {{ picture.id }}
+                        </div>
+                        <div class="pic_desc_right">
+                            {% if part.owner == user %}
+                            <a href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="pic">
+                        <a href="#"><img type="image" id=picture_box
+                            src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                            onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
+                        </a>
 
-        {% for picture in picture_list %}
-            {{ picture.id }}
-            <a href="#"><img type="image" id=picture_box
-                src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
-                onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
-            </a>
+                        <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
+                            <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                            style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+                        </a></div>
+                    </div>
+                </div>
+                
+            {% endfor %}
+            
+        </div>
+        <div>
+            paste more images...
+        </div>
 
-            <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
-                <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
-                style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
-            </a></div>
-            
-            
-            {% if part.owner == user %}
-                <a class="trash-text" href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
-            {% endif %}
-            
-        {% endfor %}
-
+        <div id="target_area">
+            <img type="image" class="target" id="target"></img>
+        </div>
+    {% else %}
+    <p>
+        there are no pictures for this topic
+    </p>
     {% endif %}
 
-
 </div>
-<p style="margin-left: 1em;">paste image here:</p>
-<p><img type="image" class="target" id="target" value="paste picture here"></p>
-
 <p>
   <form action="" method="post">
     
@@ -162,8 +179,12 @@ document.onpaste = function (pasteEvent) {
     
     //create new target html element for next picture:
     var t = document.getElementById("target")
+    //document.getElementById("target").hidden = false
     var cloneT = t.cloneNode(true)
-    document.getElementById("target_list").appendChild(cloneT); 
+    //document.getElementById("target").setAttribute('id', 'target_used')
+    //cloneT.setAttribute('id', 'target_renamed')
+    document.getElementById("target_area").append(cloneT); 
+
 
     //pull image items from clipboard:
     var items = pasteEvent.clipboardData.items;
@@ -216,6 +237,7 @@ document.onpaste = function (pasteEvent) {
                     //upon loading the new image in file-reader, the target html element's src attribute is set,
                     //the file-reader will now know where to render the image
                     document.getElementById("target").src = srcEncoded;
+                    document.getElementById('target').setAttribute('id', 'target_used')
                     
                     
                     
@@ -258,6 +280,7 @@ document.onpaste = function (pasteEvent) {
                     //upon loading the new image in file-reader, the target html element's src attribute is set,
                     //the file-reader will now know where to render the image
                     document.getElementById("target").src = img.src; //(img.src = theBlobLoad.target.result)
+                    document.getElementById('target').setAttribute('id', 'target_used')
 
                     /*prepare data to be sent to server*/
                     var formData = new FormData();
