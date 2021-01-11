@@ -34,22 +34,25 @@
     --box-height: 200px;
 }
 .target {
-    width: var(--box-width);
-    height: var(--box-height);
-    border-width: 1px;
-    border-style: solid;
-    border-color: lightgray;
-    border-radius: 5px;
+    width: 100%;
+    max-height: var(--box-height);
+    border-radius: 7px;
     background-color: rgb(246, 246, 246);
+    padding: 2px;
 }
 
 .more_pics_text{
     display: flex;
 }
 
-.target_area {
+#target_area {
+    border-width: 1px;
+    border-style: solid;
+    border-color: orange;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 
@@ -57,7 +60,6 @@
     width: var(--box-width);
     height: auto;
     max-height: 200px;
-    padding: 2px;
     border-width: 1px;
     border-style: solid;
     border-color: gray;
@@ -139,6 +141,14 @@
 }
 /*------------------------------------*/
 
+.problem_area {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border-color: lightgrey;
+    border-style: solid;
+    border-width: 1px;
+}
 
 /*entry list--------------------------*/
 #entry_list_title_container {

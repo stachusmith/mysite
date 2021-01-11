@@ -341,16 +341,16 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         #print(settled_topics_list)
         
         for topic in new_topics_list:
-            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:3]
-            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')[:3]
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('-id')#[:3]
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')
 
         for topic in in_process_topics_list:
-            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:3]
-            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')[:5]
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('-id')
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')
             print(topic.entry_list)
         for topic in settled_topics_list:
-            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('id')[:3]
-            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')[:3]
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('-id')
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')
         
         context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes,
                     'new_topics_list': new_topics_list, 'in_process_topics_list':in_process_topics_list,

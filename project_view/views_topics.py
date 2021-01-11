@@ -34,7 +34,7 @@ class TopicDetailView(View, LoginRequiredMixin):
         module_number = part.module_id
         module = Module.objects.get(id=module_number)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
-        entries_list = Entry.objects.filter(topic_id=pk_topi)
+        entries_list = Entry.objects.filter(topic_id=pk_topi).order_by('-date_of_entry')
         
         context = { 'part' : part, 'module': module, 'topic': topic, 'picture_list':picture_list,
                     'entries_list': entries_list }
@@ -180,11 +180,13 @@ class TopicCancelView(LoginRequiredMixin, View):
         topic = get_object_or_404(Topic, pk=pk_topi)
         part = topic.part.id
         
-        arg = [topic.part.module_id, topic.part_id]
+        arg = [topic.part_id, topic.id]
         picture_list = Picture.objects.filter(session=1, owner=self.request.user)
         print(picture_list)
+        #if there is no picture list, proceed back to topic view,
+        #otherwise ask if new pics shoul be discarded
         if not picture_list:
-            return redirect(reverse('project_view:part_detail', args=arg))
+            return redirect(reverse('project_view:topic_detail', args=arg))
         ctx = {'picture_list': picture_list, 'topic':topic, 'part':part}
         return render(request, self.template_name, ctx)
 

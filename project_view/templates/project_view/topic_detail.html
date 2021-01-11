@@ -9,7 +9,7 @@
     <div class="title_area_left">
         <div class="icon">
             {% if topic.status.id == 1 %}
-                <i class="fa fa-cog" style="font-size:30px;color:red"></i>
+                <i class="fas fa-exclamation" style="font-size:30px;color:orange"></i>
             {% elif topic.status.id == 2 %}
                 <i class="fa fa-cog fa-spin" style="font-size:30px"></i>
             {% else %}
@@ -68,83 +68,91 @@
     </p>
     {% endif %}
 </div>
-{% if entries_list %}
-    <div id="entry_list_title_container">
-        <div class="entry_list_left">
-            <div class="entry_list_date_of_entry">
-                date of entry:
-            </div>
-            <div class="entry_list_solution">
-                solution:
-            </div>
-        </div>
-        <div class="entry_list_middle">
-            <div class="entry_list_person">
-                people responsible:
-            </div>
-            <div class="entry_list_person">
-                people involved:
-            </div>
-            <div class="entry_list_person">
-                agreed with:
-            </div>
-        </div>
-        <div class="entry_list_right">
-            <div class="entry_list_deadline_for_topic_detail">
-                deadline:
-            </div>
-        </div>
-    </div>
+<div class="problem_area">
+    <h2>Problem description:</h2>
 
-    {% for entry in entries_list %}
-        <div id="entry_list_container">
+    <h3 style="margin-bottom: 40px;">{{ topic.description }}</h3>
+
+
+
+    {% if entries_list %}
+        <div id="entry_list_title_container">
             <div class="entry_list_left">
                 <div class="entry_list_date_of_entry">
-                    {{ entry.date_of_entry }}
+                    date of entry:
                 </div>
                 <div class="entry_list_solution">
-                    {{ entry.solution }}
+                    solution:
                 </div>
             </div>
             <div class="entry_list_middle">
                 <div class="entry_list_person">
-                    {% for person in entry.responsible.all %}
-                        <p>
-                            {{ person }}
-                        </p>
-                    {% endfor %}
+                    people responsible:
                 </div>
                 <div class="entry_list_person">
-                    {% for person in entry.involved.all %}
-                        <p>
-                            {{ person }}
-                        </p>
-                    {% endfor %}
+                    people involved:
                 </div>
                 <div class="entry_list_person">
-                    {% for person in entry.agreed_with.all %}
-                        <p>
-                            {{ person }}
-                        </p>
-                    {% endfor %}
+                    agreed with:
                 </div>
             </div>
             <div class="entry_list_right">
                 <div class="entry_list_deadline_for_topic_detail">
-                    {{ entry.deadline }}
+                    deadline:
                 </div>
             </div>
         </div>
-        
-    {% endfor %}
+
+        {% for entry in entries_list %}
+            <div id="entry_list_container">
+                <div class="entry_list_left">
+                    <div class="entry_list_date_of_entry">
+                        {{ entry.date_of_entry }}
+                    </div>
+                    <div class="entry_list_solution">
+                        {{ entry.solution }}
+                    </div>
+                </div>
+                <div class="entry_list_middle">
+                    <div class="entry_list_person">
+                        {% for person in entry.responsible.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.involved.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.agreed_with.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="entry_list_right">
+                    <div class="entry_list_deadline_for_topic_detail">
+                        {{ entry.deadline }}
+                    </div>
+                </div>
+            </div>
+            
+        {% endfor %}
 
 
-{% else %}
-    <p>
-        there are no entries for this topic
-    </p>
+    {% else %}
+        <p>
+            there are no entries for this topic
+        </p>
 
-{% endif %}
+    {% endif %}
+</div>
 
 
 <p>
