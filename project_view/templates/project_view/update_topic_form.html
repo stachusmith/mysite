@@ -9,11 +9,11 @@ You are editing the following topic:
 
 
 <h1 style='margin-bottom: 30px;'>{% if topic.status.id == 1 %}
-        <i class="fa fa-cog" style="font-size:20px;color:red"></i>
+        <i class="fas fa-exclamation" style="font-size:30px;color:orange"></i>
         {% elif topic.status.id == 2 %}
-          <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
+          <i class="fa fa-cog fa-spin" style="font-size:30px"></i>
         {% elif topic.status.id == 3 %}
-        <i class='fas fa-check-circle' style='font-size:20px;color:green'></i>
+        <i class='fas fa-check-circle' style='font-size:30px;color:green'></i>
         {% else %}
         topic status hasn't beed saved yet
         {% endif %}
@@ -56,19 +56,19 @@ You are editing the following topic:
             {% endfor %}
             
         </div>
-        <div>
-            paste more images...
-        </div>
-
-        <div id="target_area">
-            <img type="image" class="target" id="target"></img>
-        </div>
+        
     {% else %}
     <p>
         there are no pictures for this topic
     </p>
     {% endif %}
+    <div>
+        paste more images...
+    </div>
 
+    <div id="target_area">
+        <img type="image" class="target" id="target"></img>
+    </div>
 </div>
 <p>
   <form action="" method="post">

@@ -64,7 +64,7 @@
 
 
 <div class="topics_container">
-  <input type="submit" style='float: right;' href="{% url 'project_view:topic_create' part.id %}" value="Create new topic..."></input>
+  <a href="{% url 'project_view:topic_create' part.id %}"><input type="submit" style='float: right;'  value="Create new topic..."></input></a>
   <input id="normal_view" type="submit" href="#" style='float: right; margin-right: 5px;'
     onclick="document.getElementById('stylesheet').href = '{% static 'project_view/part_print.css' %}'; //change css file for print view
               document.getElementById('print_view').hidden=false; //hide button for print
@@ -82,7 +82,7 @@
 
 
 
-  <h4>new topics:</h4>
+  <h4>Topics:</h4>
   {% if new_topics_list %}
     
     {% for topic in new_topics_list %}
@@ -102,10 +102,34 @@
                   {% for entry in topic.entry_list %}
                   <div class="entry">
                       <div class="entry_date">
-                      {{ entry.date_of_entry }}
+                        {{ entry.date_of_entry }}
                       </div>
                       <div class="entry_solution">
-                      {{ entry.solution }}
+                        {{ entry.solution }}
+                      </div>
+                      <div class="entry_responsible">
+                        {% for person in entry.responsible.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_involved">
+                        {% for person in entry.involved.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_agreed_with">
+                        {% for person in entry.agreed_with.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_deadline">
+                        {{ entry.deadline }}
                       </div>
                   </div>
                   {% endfor %}
@@ -121,7 +145,7 @@
                       <img class="pic" type="image" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
                   {% endfor %}
                   {% else %}
-                  <img src="{% static 'project_view/my_block.png' %}"
+                    <img src="{% static 'project_view/my_block.png' %}"
                       style="width: 100px; height: 100px;" alt="no pictures in database">
               {% endif %}
             </div>
@@ -143,7 +167,7 @@
 
 
 
-  <h4>topics in process:</h4>
+  <!--<h4>topics in process:</h4>-->
   {% if in_process_topics_list %}
     {% for topic in in_process_topics_list %}
     <div id="topic">
@@ -166,6 +190,30 @@
                       </div>
                       <div class="entry_solution">
                         {{ entry.solution }}
+                      </div>
+                      <div class="entry_responsible">
+                        {% for person in entry.responsible.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_involved">
+                        {% for person in entry.involved.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_agreed_with">
+                        {% for person in entry.agreed_with.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_deadline">
+                        {{ entry.deadline }}
                       </div>
                   </div>
                 {% endfor %}
@@ -218,7 +266,7 @@
 
 
 
-  <h4>settled topics:</h4>
+  <!--<h4>settled topics:</h4>-->
   {% if settled_topics_list %}
     
     {% for topic in settled_topics_list %}
@@ -242,6 +290,30 @@
                   </div>
                   <div class="entry_solution">
                     {{ entry.solution }}
+                  </div>
+                  <div class="entry_responsible">
+                    {% for person in entry.responsible.all %}
+                      <div class="person">
+                        {{ person }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="entry_involved">
+                    {% for person in entry.involved.all %}
+                      <div class="person">
+                        {{ person }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="entry_agreed_with">
+                    {% for person in entry.agreed_with.all %}
+                      <div class="person">
+                        {{ person }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="entry_deadline">
+                    {{ entry.deadline }}
                   </div>
                 </div>
               {% endfor %}
