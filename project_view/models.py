@@ -95,6 +95,8 @@ class Part(models.Model):
 
     minimal_draft_angle = models.FloatField(null=True)
 
+    my_parts = models.ManyToManyField(settings.AUTH_USER_MODEL, through='My_part', related_name='my_parts_project_view')
+
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -177,6 +179,16 @@ class Fix(models.Model):
         #string in admin
         return '%s has %s %s'%(self.part, self.number_of_elements, self.fixing.name)
 
+class My_part(models.Model):
+    part = models.ForeignKey(Part, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    # https://docs.djangoproject.com/en/3.0/ref/models/options/#unique-together
+    class Meta:
+        unique_together = ('part', 'user')
+
+    def __str__(self) :
+        return '%s likes %s'%(self.user.username, self.ad.title[:10])
 
 
 

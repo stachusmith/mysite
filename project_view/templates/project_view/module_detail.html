@@ -1,19 +1,38 @@
 {% extends "base_menu_project_view.html" %}
 {% block content %}
+{% load static %}
+<link id="stylesheet" rel="stylesheet" type="text/css" href="{% static 'project_view/structure.css' %}">
+
 
 <h1><a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }}</a>
    / <a href="{% url 'project_view:project_detail'  client.id project.id %}">{{ project.name }}</a> / {{ module.name }}:</h1>
 
 <p>
 {% if part_list %}
-<ul>
+<ul style="list-style: none;">
   {% for part in part_list %}
     <li>
-        <a href="{% url 'project_view:part_detail' module.id part.id %}">{{ part.name }}</a>
-        {% if client.owner == user %}
-        (<a href="{% url 'project_view:part_update' module.id part.id %}">Edit</a> |
-        <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>)
-        {% endif %}
+        <div class="list">
+          <div class="name">
+            <a href="{% url 'project_view:part_detail' module.id part.id %}">{{ part.name }}</a>
+          </div>
+          <div class="edit_delete">
+            {% if client.owner == user %}
+              (<a href="{% url 'project_view:part_update' module.id part.id %}">Edit</a> |
+              <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>)
+            {% endif %}
+          </div>
+          <div id="my_cog{{ part.id }}">
+            <a href="#"><i class="fa fa-cog" title="add to my parts" style="color: lightgray; font-size: 20px;" 
+              onclick="document.getElementById('my_cog{{ part.id }}').hidden=true;
+                        document.getElementById('my_cog_blue{{ part.id }}').hidden=false"></i></a>
+          </div>
+          <div id="my_cog_blue{{ part.id }}" hidden>
+            <a href="#"><i class="fa fa-cog" title="remove from my parts" style="color: blue; font-size: 20px;" 
+              onclick="document.getElementById('my_cog{{ part.id }}').hidden=false;
+                        document.getElementById('my_cog_blue{{ part.id }}').hidden=true"></i></a>
+          </div>
+        </div>
     </li>
   {% endfor %}
 </ul>
