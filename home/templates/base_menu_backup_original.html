@@ -15,11 +15,23 @@
     <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
         <li>
-            <a href="{% url 'logout' %}?next={% url 'home:main' %}">Logout</a>
+            <a href="{% url 'project_view:fixing_list' %}">Manage fixing elements</a>
+        </li>
+        <li>
+            <a href="{% url 'project_view:participation_list' %}">Manage project participants</a>
+        </li>
+        <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                <img style="width: 25px;" src="{{ user|gravatar:60 }}"/><b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a></li>
+            </ul>
         </li>
         {% else %}
         <li>
-            <a href="{% url 'login' %}?next={% url 'home:main' %}">Login</a>
+        <a href="{% url 'login' %}?next={% url 'project_view:main' %}">Login</a>
+        </li>
         {% endif %}
     </ul>
   </div>

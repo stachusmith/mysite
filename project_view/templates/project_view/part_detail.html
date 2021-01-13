@@ -1,4 +1,4 @@
-{% extends "base_menu.html" %}
+{% extends "base_menu_project_view.html" %}
 {% load humanize %}
 {% load static %}
 
@@ -6,7 +6,7 @@
 {% block content %}
 <link id="stylesheet" rel="stylesheet" type="text/css" href="{% static 'project_view/part.css' %}">
 <span style="float: right;">
-({{ part.updated_at|naturaltime }})
+({{ part.updated_at }})
 {% if part.owner == user %}
 <a href="{% url 'project_view:part_update' module.id part.id %}"><i class="fa fa-pencil"></i></a>
 <a href="{% url 'project_view:part_delete' module.id part.id %}"><i class="fa fa-trash"></i></a>
@@ -56,7 +56,7 @@
           <a href="{% url 'project_view:fix_create' part.id %}">add new combination</a>
         </p>
         <p>
-          <a href="{% url 'project_view:fixing_create' %}">create new fixing elements</a>
+          <a href="{% url 'project_view:fixing_create' %}" target="_blank" rel="noopener noreferrer">create new fixing elements</a>
         </p>
     </p>
   </div>

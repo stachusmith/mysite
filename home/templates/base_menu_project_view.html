@@ -1,0 +1,56 @@
+{% extends "base_bootstrap.html" %}
+{% block navbar %}
+{% load app_tags %} <!--gravatar (templatetags folder)-->
+<style>
+    .subnav_el_1, .subnav_el_1:focus{
+        text-decoration: none;
+        color: white;
+        margin-left: 150px;
+        margin-right: 20px;
+    }
+    .subnav_el_1:hover{
+        text-decoration: none;
+        color: orange;
+    }
+    .subnav_el_2, .subnav_el_2:focus{
+        text-decoration: none;
+        color: white; 
+    }
+    .subnav_el_2:hover {
+        text-decoration: none;
+        color: orange;
+    }
+    #log-button {
+        background-color: transparent;
+    }
+</style>
+
+<nav class="navbar navbar-default navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">{{ settings.APP_NAME }}</a>
+        </div>
+        <!-- https://stackoverflow.com/questions/22047251/django-dynamically-get-view-url-and-check-if-its-the-current-page -->
+        <ul class="nav navbar-nav">
+        {% url 'project_view' as project_view %}
+        <li {% if request.get_full_path == project_view %}class="active"{% endif %}>
+            <a href="{% url 'project_view:main' %}">ProjectView</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <li>
+                    <a href="{% url 'logout' %}?next={% url 'home:main' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'login' %}?next={% url 'home:main' %}">Login</a>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="subnav" style="width: 100%; height: 30px; background-color: gray; padding-top: 5px;">
+        <a href="{% url 'project_view:fixing_list' %}" class="subnav_el_1" target="_blank" rel="noopener noreferrer">Manage fixing elements</a>
+        <a href="{% url 'project_view:participation_list' %}" class="subnav_el_2" target="_blank" rel="noopener noreferrer">Manage project participants</a>
+    </div>
+</nav>
+
+{% endblock %}

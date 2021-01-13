@@ -46,9 +46,6 @@
 }
 
 #target_area {
-    border-width: 1px;
-    border-style: solid;
-    border-color: orange;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     padding-left: 10px;
@@ -86,23 +83,14 @@
 }
 
 .picture_grid {
-    border-width: 1px;
-    border-style: solid;
-    border-color: red;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     padding-left: 10px;
     padding-right: 10px;
 }
 .pic_area {
-    border-width: 1px;
-    border-style: solid;
-    border-color: green;
 }
 .pic_description{
-    border-width: 1px;
-    border-style: solid;
-    border-color: yellow;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
