@@ -22,7 +22,7 @@ class CreatePartForm(forms.ModelForm):
 
     class Meta:
         model = Part
-        fields = ['name', 'description', 'module', 'supplier', 'thickness', 'minimal_draft_angle']
+        fields = ['name', 'material', 'module', 'supplier', 'thickness', 'minimal_draft_angle']
 
 
 # Create the form class.

@@ -22,15 +22,26 @@
               <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>)
             {% endif %}
           </div>
+
+
+
+
+
           <div id="my_cog{{ part.id }}">
-            <a href="#"><i class="fa fa-cog" title="add to my parts" style="color: lightgray; font-size: 20px;" 
-              onclick="document.getElementById('my_cog{{ part.id }}').hidden=true;
-                        document.getElementById('my_cog_blue{{ part.id }}').hidden=false"></i></a>
+            <a href="#"><i class="fa fa-cog" title="add to my parts"
+              onclick="myPartPost('{% url 'project_view:mypart' part.id %}', {{ part.id }}); return false;"
+              {% if part.id in my_parts %} style="display: none; color: lightgray; font-size: 20px;"
+              {% else %} style="color: lightgray; font-size: 20px;"
+              {% endif %}></i>
+            </a>
           </div>
-          <div id="my_cog_blue{{ part.id }}" hidden>
-            <a href="#"><i class="fa fa-cog" title="remove from my parts" style="color: blue; font-size: 20px;" 
-              onclick="document.getElementById('my_cog{{ part.id }}').hidden=false;
-                        document.getElementById('my_cog_blue{{ part.id }}').hidden=true"></i></a>
+          <div id="my_cog_blue{{ part.id }}">
+            <a href="#"><i class="fa fa-cog" title="remove from my parts"
+              onclick="myPartPost('{% url 'project_view:unmypart' part.id %}', {{ part.id }}); return false;"
+              {% if part.id not in my_parts %} style="display: none; color: blue; font-size: 20px;"
+              {% else %} style="color: blue; font-size: 20px;"
+              {% endif %}></i>
+            </a>
           </div>
         </div>
     </li>
@@ -48,4 +59,22 @@
 <a href="{% url 'login' %}?next={% url 'project_view:main' %}">Login</a>
 {% endif %}
 </p>
+
+<script>
+function myPartPost(myUrl, part_id) {
+  /*prepare data to be sent to server*/
+  var formData = new FormData();
+  formData.append("inpFile", part_id); //(name of data, data)
+  /*prepare data to be sent to server*/
+
+  /*send the data using fetch method:*/
+  fetch(myUrl, {
+      method: "post",
+      body: formData
+  }).then(function(data){
+      console.log(data)
+  }).catch(console.log(myUrl, 'error'));
+}
+</script>
+
 {% endblock %}

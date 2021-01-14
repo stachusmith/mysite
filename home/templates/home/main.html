@@ -1,14 +1,50 @@
 {% extends "base_menu.html" %}
 {% block content %}
 
+<style>
+    .app_block{
+        border-style: solid;
+        border-color: gray;
+        border-width: 1px;
+        /*text-align: center;*/
+        
+    }
+    .app_block:before{  /*before -> before content is added,
+        so that the padding doesn't include the content (won't be a ratio of 1:1)*/
+        content: "";
+        /*display: block;*/
+        float:left; /*this way the width will be known?*/
+        padding-top: 100%;
+    }
+    .app_grid{
+        margin-top: 40px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-gap: 20px;
+    }
+    .content{
+        text-align: center;
+        padding-top: 85%;
+    }
+</style>
+
 
 <head>
     <title>{{ settings.APP_NAME }}</title>
 </head>
 <body>
     <h1>Welcome to {{ settings.APP_NAME }}</h1>
-    <p><a href="/project_view">ProjectView App</a></p>
-
+    <div class="app_grid">
+        <a href="/project_view">
+            <div class="app_block">
+                <div class="content">ProjectView App</div>
+            </div>
+        </a>
+        <div class="app_block">
+            <div class="content">SpotifyRandomizer</div>
+        </div>
+    </div>
 </body>
 
 

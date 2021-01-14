@@ -17,6 +17,7 @@ from project_view.views_fixing import *
 from project_view.views_topics import *
 from project_view.views_entries import *
 from project_view.views_participants import *
+from project_view.views_mypart import *
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q
@@ -213,7 +214,9 @@ class ModuleDetailView(View, LoginRequiredMixin):
         client = Client.objects.get(id=client_number)
         print(client)
         
-        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list}
+        my_parts = My_part.objects.all()
+
+        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list, 'my_parts': my_parts }
         print(ctx)
         return render(request, self.template_name, ctx)
 
