@@ -77,7 +77,7 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
 # Projects
 #-------------------------------------------------------------------------------
 
-class ProjectDetailView(View, LoginRequiredMixin):
+class ProjectDetailView(LoginRequiredMixin, View):
     model = Project
     
     # By convention:
@@ -214,9 +214,12 @@ class ModuleDetailView(View, LoginRequiredMixin):
         client = Client.objects.get(id=client_number)
         print(client)
         
-        my_parts = My_part.objects.all()
-
-        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list, 'my_parts': my_parts }
+        all_my_parts = My_part.objects.all()
+        my_parts_ids = list()
+        for part in all_my_parts:
+            my_parts_ids.append(part.part_id)
+        print(my_parts_ids)
+        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list, 'my_parts_ids': my_parts_ids }
         print(ctx)
         return render(request, self.template_name, ctx)
 

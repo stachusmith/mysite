@@ -22,27 +22,21 @@
               <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>)
             {% endif %}
           </div>
-
-
-
-
-
-          <div id="my_cog{{ part.id }}">
-            <a href="#"><i class="fa fa-cog" title="add to my parts"
-              onclick="myPartPost('{% url 'project_view:mypart' part.id %}', {{ part.id }}); return false;"
-              {% if part.id in my_parts %} style="display: none; color: lightgray; font-size: 20px;"
-              {% else %} style="color: lightgray; font-size: 20px;"
-              {% endif %}></i>
-            </a>
-          </div>
-          <div id="my_cog_blue{{ part.id }}">
-            <a href="#"><i class="fa fa-cog" title="remove from my parts"
-              onclick="myPartPost('{% url 'project_view:unmypart' part.id %}', {{ part.id }}); return false;"
-              {% if part.id not in my_parts %} style="display: none; color: blue; font-size: 20px;"
-              {% else %} style="color: blue; font-size: 20px;"
-              {% endif %}></i>
-            </a>
-          </div>
+          {% if user.is_authenticated %}
+            <div href="#" id="my_cog{{ part.id }}" title="add to my parts" 
+                  onclick="myPartPost('{% url 'project_view:mypart' part.id %}', {{ part.id }}); return false;"
+                  {% if part.id in my_parts_ids %} style="display: none;"
+                  {% else %}
+                    style="display: block;"
+                  {% endif %}><a href="#"><i class="fa fa-cog" style="color: lightgray; font-size: 20px;"></i></a></div>
+            
+            <div  id="my_cog_blue{{ part.id }}" title="remove from my parts"
+                  onclick="myPartPost('{% url 'project_view:unmypart' part.id %}', {{ part.id }}); return false;"
+                  {% if part.id not in my_parts_ids %} style="display: none;"
+                  {% else %}
+                    style="display: block;"
+                  {% endif %}><a href="#"><i class="fa fa-cog" style="color: blue; font-size: 20px;"></i></a></div>
+          {% endif %}
         </div>
     </li>
   {% endfor %}
@@ -61,20 +55,34 @@
 </p>
 
 <script>
-function myPartPost(myUrl, part_id) {
-  /*prepare data to be sent to server*/
-  var formData = new FormData();
-  formData.append("inpFile", part_id); //(name of data, data)
-  /*prepare data to be sent to server*/
-
-  /*send the data using fetch method:*/
-  fetch(myUrl, {
-      method: "post",
-      body: formData
-  }).then(function(data){
-      console.log(data)
-  }).catch(console.log(myUrl, 'error'));
-}
-</script>
+  function myPartPost(myUrl, part_id) {
+    /*prepare data to be sent to server*/
+    var formData = new FormData();
+    formData.append("inpFile", part_id); //(name of data, data)
+    /*prepare data to be sent to server*/
+  
+    /*send the data using fetch method:*/
+    fetch(myUrl, {
+        method: "post",
+        body: formData
+    }).then(function(data){
+        console.log(data)
+    }).catch(console.log(myUrl, 'error'));
+    var grayCog = document.getElementById("my_cog"+part_id);
+    if (grayCog.style.display=="none") {
+      grayCog.style.display="block";
+    }
+    else {
+      grayCog.style.display="none";
+    }
+    var blueCog = document.getElementById("my_cog_blue"+part_id);
+    if (blueCog.style.display=="none") {
+      blueCog.style.display="block";
+    }
+    else {
+      blueCog.style.display="none"
+    }
+  }
+  </script>
 
 {% endblock %}
