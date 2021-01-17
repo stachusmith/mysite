@@ -78,6 +78,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.settings',
+                #https://stackoverflow.com/questions/29451783/django-base-template-view-method
+                'project_view.context_processors.my_parts',
                 
             ],
 

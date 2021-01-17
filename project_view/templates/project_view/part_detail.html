@@ -5,6 +5,20 @@
 
 {% block content %}
 <link id="stylesheet" rel="stylesheet" type="text/css" href="{% static 'project_view/part.css' %}">
+<style>
+  .properties{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .properties:nth-child(odd){
+    background-color: rgb(246, 246, 246);
+  }
+  .fixing_list:nth-child(odd){
+    background-color: rgb(246, 246, 246);
+  }
+</style>
 <span style="float: right;">
 ({{ part.updated_at }})
 {% if part.owner == user %}
@@ -19,46 +33,82 @@
 </p>
 <div class='part_container'>
   <div class='part_properties'>
-    <p>
-    description: {{ part.description }}
-    </p>
-    <p>
-    OEM: {{ part.module.project.client }}
-    </p>
-    <p>
-    project: {{ part.module.project }}
-    </p>
-    <p>
-    module: {{ part.module }}
-    </p>
-    <p>
-    supplier: {{ part.supplier }}
-    </p>
-    <p>
-    thickness: {{ part.thickness }}mm
-    </p>
+    <ul style="list-style: none; padding-left: 0;">
+      
+      <li class="properties">
+        <div>
+          OEM:
+        </div>
+        <div>
+          <a href="{% url 'project_view:client_detail'  part.module.project.client.id %}">{{ part.module.project.client }}</a>
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          project:
+        </div>
+        <div>
+          <a href="{% url 'project_view:client_detail'  part.module.project.id %}">{{ part.module.project }}</a>
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          module
+        </div>
+        <div>
+          <a href="{% url 'project_view:client_detail'  part.module.id %}">{{ part.module }}</a>
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          supplier:
+        </div>
+        <div>
+          {{ part.supplier }}
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          material:
+        </div>
+        <div>
+          {{ part.material }}
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          thickness:
+        </div>
+        <div>
+          {{ part.thickness }}mm
+        </div>
+      </li>
+    </ul>
   </div>
   <div class='fixing_container'>
-    <p>
-    fixing combinations:
-        {% if fixes %}
-        <ul>
-          {% for fix in fixes %}
-            <li>
-                {{ fix.number_of_elements }} {{ fix.fixing.name }}s
-            </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-          <p>There are no fixing combinations in the database.</p>
-        {% endif %}
-        <p>
-          <a href="{% url 'project_view:fix_create' part.id %}">add new combination</a>
-        </p>
-        <p>
-          <a href="{% url 'project_view:fixing_create' %}" target="_blank" rel="noopener noreferrer">create new fixing elements</a>
-        </p>
-    </p>
+    <p style="font-weight: bold;">fixing combinations:</p>
+          {% if fixes %}
+          <ul style="list-style: none; padding-left: 10px;">
+            {% for fix in fixes %}
+              <li class="fixing_list">
+                  {{ fix.number_of_elements }} {{ fix.fixing.name }}s
+                  <div style="float: right;">
+                    <a href="{% url 'project_view:fix_update' part.id fix.id %}"><i class="fa fa-pencil"></i></a>
+                    <a href="{% url 'project_view:fix_delete' part.id fix.id %}"><i class="fa fa-trash"></i></a>
+                  </div>
+              </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+            <p>There are no fixing combinations in the database.</p>
+          {% endif %}
+          <p>
+            <a href="{% url 'project_view:fix_create' part.id %}">add new combination</a>
+          </p>
+          <p>
+            <a href="{% url 'project_view:fixing_create' %}" target="_blank" rel="noopener noreferrer">create new fixing elements</a>
+          </p>
+    
   </div>
 </div>
 

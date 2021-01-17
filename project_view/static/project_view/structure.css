@@ -1,5 +1,56 @@
+
+/*use this, when favorites*/
 .list{
     width: 33%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+}
+
+.left_block{
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 5px;
+    width: 33%;
+    padding: 10px;
+}
+
+.page {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#participants{
+    align-self: flex-start;
+}
+.right_block {
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 5px;
+    width: 33%;
+    padding: 10px;
+}
+
+.item_list{
+    list-style: none;
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+.items_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+.items_container:nth-child(odd){
+    background-color: rgb(246, 246, 246);
+}
+
+#edit_delete_myparts{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 110px;
 }

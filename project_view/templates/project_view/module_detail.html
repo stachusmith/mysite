@@ -3,56 +3,51 @@
 {% load static %}
 <link id="stylesheet" rel="stylesheet" type="text/css" href="{% static 'project_view/structure.css' %}">
 
+<div class="left_block">
+  <h4><a href="{% url 'project_view:main' %}">OEMs /</a></h4>
+  <h3><a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }} /</a></h3>
+  <h2><a href="{% url 'project_view:project_detail'  client.id project.id %}">{{ project.name }} /</a></h2>
+  <h1>{{ module.name }}:</h1>
 
-<h1><a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }}</a>
-   / <a href="{% url 'project_view:project_detail'  client.id project.id %}">{{ project.name }}</a> / {{ module.name }}:</h1>
-
-<p>
-{% if part_list %}
-<ul style="list-style: none;">
-  {% for part in part_list %}
-    <li>
-        <div class="list">
-          <div class="name">
-            <a href="{% url 'project_view:part_detail' module.id part.id %}">{{ part.name }}</a>
-          </div>
+  <p>
+  {% if part_list %}
+  <ul class="item_list">
+    {% for part in part_list %}
+      <div class="items_container">
+        <a href="{% url 'project_view:part_detail' module.id part.id %}">{{ part.name }}</a>
+        <div id="edit_delete_myparts">
           <div class="edit_delete">
             {% if client.owner == user %}
-              (<a href="{% url 'project_view:part_update' module.id part.id %}">Edit</a> |
-              <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>)
+              <a href="{% url 'project_view:part_update' module.id part.id %}">Edit</a> |
+              <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>
             {% endif %}
           </div>
           {% if user.is_authenticated %}
-            <div href="#" id="my_cog{{ part.id }}" title="add to my parts" 
-                  onclick="myPartPost('{% url 'project_view:mypart' part.id %}', {{ part.id }}); return false;"
-                  {% if part.id in my_parts_ids %} style="display: none;"
-                  {% else %}
-                    style="display: block;"
-                  {% endif %}><a href="#"><i class="fa fa-cog" style="color: lightgray; font-size: 20px;"></i></a></div>
-            
-            <div  id="my_cog_blue{{ part.id }}" title="remove from my parts"
-                  onclick="myPartPost('{% url 'project_view:unmypart' part.id %}', {{ part.id }}); return false;"
-                  {% if part.id not in my_parts_ids %} style="display: none;"
-                  {% else %}
-                    style="display: block;"
-                  {% endif %}><a href="#"><i class="fa fa-cog" style="color: blue; font-size: 20px;"></i></a></div>
-          {% endif %}
+          <div href="#" id="my_cog{{ part.id }}" title="add to my parts" 
+                onclick="myPartPost('{% url 'project_view:mypart' part.id %}', {{ part.id }}); return false;"
+                {% if part.id in my_parts_ids %} style="display: none;"
+                {% else %}
+                  style="display: block;"
+                {% endif %}><a href="#"><i class="fa fa-cog" style="color: lightgray; font-size: 20px;"></i></a></div>
+          
+          <div  id="my_cog_blue{{ part.id }}" title="remove from my parts"
+                onclick="myPartPost('{% url 'project_view:unmypart' part.id %}', {{ part.id }}); return false;"
+                {% if part.id not in my_parts_ids %} style="display: none;"
+                {% else %}
+                  style="display: block;"
+                {% endif %}><a href="#"><i class="fa fa-cog" style="color: blue; font-size: 20px;"></i></a></div>
+        {% endif %}
         </div>
-    </li>
-  {% endfor %}
-</ul>
-{% else %}
-  <p>There are no parts for this module.</p>
-{% endif %}
-</p>
-<p>
-<a href="{% url 'project_view:part_create' module.id %}">Add a Part</a> |
-{% if user.is_authenticated %}
-<a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a>
-{% else %}
-<a href="{% url 'login' %}?next={% url 'project_view:main' %}">Login</a>
-{% endif %}
-</p>
+      </div>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no parts for this module.</p>
+  {% endif %}
+  </p>
+  <p>
+  <a href="{% url 'project_view:part_create' module.id %}">Add a Part</a>
+  </p>
 
 <script>
   function myPartPost(myUrl, part_id) {

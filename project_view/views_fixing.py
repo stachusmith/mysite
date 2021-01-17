@@ -121,32 +121,69 @@ class FixCreateView(CreateView, LoginRequiredMixin):
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
-
-        #add user as owner before saving:
-        Fix = form.save(commit=False)
-        Fix.owner = self.request.user
-        Fix.save()
+        try:
+            #add user as owner before saving:
+            fix = form.save(commit=False)
+            fix.owner = self.request.user
+            fix.save()
+        except:
+            error = 1
+            ctx = {'form': form, 'error': error}
+            return render(request, self.template_name, ctx)
 
         return redirect(reverse('project_view:part_detail', args=[part.module.id, pk_part]))
 
 class FixUpdateView(UpdateView, LoginRequiredMixin):
     
-    # not ready, needs to be changed similar to fixcreate
+    template_name='project_view/fix_form.html'
     
-    model = Fix
+    def get(self, request, pk_part, pk):
+        
+        part = get_object_or_404(Part, id=pk_part, owner=self.request.user)
+        print(part)
+        fix = get_object_or_404(Fix, id=pk, owner=self.request.user)
+        
+        form = CreateFixForm(instance=fix)
 
-    #fields = ['name']
-    success_url=reverse_lazy('project_view:fixing_list')
-    def get_queryset(self):
-        print('update get_queryset called')
-        #Limit a User to only modifying their own data
-        qs = super(FixingUpdateView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+        #limit options in dropdown:
+        form.fields['part'].queryset = Part.objects.filter(id=pk_part)
+
+        ctx= { 'form':form, 'part':part }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk_part, pk):
+        part = get_object_or_404(Part, id=pk_part, owner=self.request.user)
+        #unused:
+        #pk=request.POST['client']
+        #print(pk)
+        fix = get_object_or_404(Fix, id=pk, owner=self.request.user)
+        form = CreateFixForm(request.POST, instance=fix)
+        
+        #if not valid render the form again:
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+        try:
+            fix.save()
+        except:
+            error = 1
+            ctx = {'form': form, 'error': error}
+            return render(request, self.template_name, ctx)
+
+        return redirect(reverse('project_view:part_detail', args=[part.module.id, pk_part]))
 
 class FixDeleteView(DeleteView, LoginRequiredMixin):
-    model = Fix
-    success_url=reverse_lazy('project_view:fixing_list')
-    def get_queryset(self):
-        print('delete get_queryset called')
-        qs = super(FixingDeleteView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+
+    template_name='project_view/fix_confirm_delete.html'
+    def get (self, request, pk_part, pk):
+        fix = get_object_or_404(Fix, id=pk, owner=self.request.user)
+        ctx = {'fix': fix}
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk_part, pk):
+        fix = get_object_or_404(Fix, id=pk)
+        arg = [fix.part.module.id, fix.part.id]
+        
+        fix.delete()
+        print(arg)
+        return redirect(reverse('project_view:part_detail', args=arg))

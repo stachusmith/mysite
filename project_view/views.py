@@ -398,7 +398,7 @@ class PartCreateView(LoginRequiredMixin, View):
         part.owner = self.request.user
         part.save()
 
-        return redirect(reverse('project_view:module_detail', args=[part.module.project_id, part.module_id]))
+        return redirect(reverse('project_view:part_detail', args=[part.module.id, part.id]))
 
 class PartUpdateView(LoginRequiredMixin, View):
     
@@ -437,7 +437,7 @@ class PartUpdateView(LoginRequiredMixin, View):
             return render(request, self.template_name, ctx)
 
         form.save()
-        return redirect(reverse('project_view:module_detail', args=[part.module.project_id, part.module_id]))
+        return redirect(reverse('project_view:part_detail', args=[part.module.id, part.id]))
 
 
 class PartDeleteView(LoginRequiredMixin, View):

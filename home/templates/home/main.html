@@ -16,6 +16,26 @@
         float:left; /*this way the width will be known?*/
         padding-top: 100%;
     }
+
+    .app_block, a:link {
+        text-decoration: none;
+    }
+
+    .app_block:focus{
+        color: #337ab7;
+    }
+    .app_block:hover {
+        background-color: rgb(246, 246, 246);
+        color: orange;
+        transform: scale(1.05);
+        font-weight: bold;
+    }
+
+    #app_block_s:hover{
+        color: #1DB954;
+        background-color: black;
+    }
+
     .app_grid{
         margin-top: 40px;
         width: 100%;
@@ -24,8 +44,26 @@
         grid-gap: 20px;
     }
     .content{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-content: center;
+        height: 100%;
+    }
+    
+    .icon{
+        width: 100%;
+        padding-top: 20%;
         text-align: center;
-        padding-top: 85%;
+    }
+    .app_name{
+        width: 100%;
+        padding-bottom: 10%;
+        text-align: center;
+        
+    }
+    .fa-cogs{
+        font-size: 100px;
     }
 </style>
 
@@ -36,14 +74,24 @@
 <body>
     <h1>Welcome to {{ settings.APP_NAME }}</h1>
     <div class="app_grid">
-        <a href="/project_view">
-            <div class="app_block">
-                <div class="content">ProjectView App</div>
+        <a href="/project_view" class="app_block">
+            <div class="content">
+                <div class="icon"><i class='fas fa-cogs'></i></div>
+                <div class="app_name">ProjectView App</div>
+                
             </div>
         </a>
-        <div class="app_block">
-            <div class="content">SpotifyRandomizer</div>
-        </div>
+        <a href="#" id="app_block_s" class="app_block"
+                        onmouseover="document.getElementById('under_construction').style.display='none';
+                        document.getElementById('under_construction_2').style.display='block';"
+                        onmouseout="document.getElementById('under_construction_2').style.display='none';
+                        document.getElementById('under_construction').style.display='block';">
+            <div class="content">
+                <div class="icon"><i class='fas fa-cogs'></i></div>
+                <div id="under_construction" class="app_name">SpotifyRandomizer</div>
+                <div id="under_construction_2" class="app_name" style="display: none;">still under contruction</div>
+            </div>
+        </a>
     </div>
 </body>
 

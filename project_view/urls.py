@@ -62,8 +62,8 @@ urlpatterns = [
 
     
     path('part/<int:pk_part>/fix/create', views.FixCreateView.as_view(), name='fix_create'),
-    path('part/<int:pk_part>/fix/<int:pk>/update', views.FixUpdateView.as_view(), name='fixing_update'),
-    path('part/<int:pk_part>/fix/<int:pk>/delete', views.FixDeleteView.as_view(), name='fixing_delete'),
+    path('part/<int:pk_part>/fix/<int:pk>/update', views.FixUpdateView.as_view(), name='fix_update'),
+    path('part/<int:pk_part>/fix/<int:pk>/delete', views.FixDeleteView.as_view(), name='fix_delete'),
 
     path('part/<int:pk>/mypart', views.MypartView.as_view(), name='mypart'),
     path('part/<int:pk>/unmypart', views.UnmypartView.as_view(), name='unmypart'),
