@@ -23,7 +23,7 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 
 #from django.db.models import Q
 
-class TopicDetailView(View, LoginRequiredMixin):
+class TopicDetailView(LoginRequiredMixin, View):
     model = Topic
     template_name = 'project_view/topic_detail.html'
     def get(self, request, pk_part, pk_topi) :
@@ -40,7 +40,7 @@ class TopicDetailView(View, LoginRequiredMixin):
                     'entries_list': entries_list }
         return render(request, self.template_name, context)
 
-class TopicCreateView(View, LoginRequiredMixin):
+class TopicCreateView(LoginRequiredMixin, View):
 
     template_name='project_view/topic_form.html'
     
@@ -75,7 +75,7 @@ class TopicCreateView(View, LoginRequiredMixin):
         pk_topi=topic.id
         return redirect(reverse('project_view:topic_update', args=[pk_part, pk_topi]))
 
-class TopicUpdateView(UpdateView, LoginRequiredMixin):
+class TopicUpdateView(LoginRequiredMixin, UpdateView):
     template_name='project_view/update_topic_form.html'
     
     def get(self, request, pk_part, pk_topi):

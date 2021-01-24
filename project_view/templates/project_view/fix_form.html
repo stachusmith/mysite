@@ -5,9 +5,7 @@
   <a href="{% url 'project_view:fixing_create'  %}" target="_blank" rel="noopener noreferrer">add a fixing element to data base</a>
 </p>
 <p>
-  {% if error == 1 %}
-  <p>combination with this element already exists, please edit or delete the existing one</p>
-  {% endif %}
+
   <form action="" method="post">
     {% csrf_token %}
     {{ form|crispy }}

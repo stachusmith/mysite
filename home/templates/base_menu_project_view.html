@@ -58,7 +58,7 @@
                 {% if my_parts %}
                     {% for my_part in my_parts %}
                         <li>
-                            {{my_part.part.name}}
+                            <a href="{% url 'project_view:part_detail' my_part.part.module.id my_part.part.id %}">{{my_part.part.name}}</a>
                         </li>
                     {% endfor %}
                 {% else %}

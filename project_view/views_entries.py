@@ -23,10 +23,10 @@ from project_view.forms import *
 
 #from django.db.models import Q
 
-class EntryListView(ListView, LoginRequiredMixin):
+class EntryListView(LoginRequiredMixin, ListView):
     model = Entry
 
-class EntryCreateView(CreateView, LoginRequiredMixin):
+class EntryCreateView(LoginRequiredMixin, CreateView):
     
     #get request happens in topic view
 
@@ -48,7 +48,7 @@ class EntryCreateView(CreateView, LoginRequiredMixin):
         entry_form.save_m2m()
         return redirect(reverse('project_view:topic_update', args=[topic.part.id, topic.id]))
 
-class EntryUpdateView(UpdateView, LoginRequiredMixin):
+class EntryUpdateView(LoginRequiredMixin, UpdateView):
     
     #get request happens in topic view
 
@@ -71,7 +71,7 @@ class EntryUpdateView(UpdateView, LoginRequiredMixin):
         return redirect(reverse('project_view:topic_update', args=[entry.topic.part.id, entry.topic.id]))
 
 
-class EntryDeleteView(DeleteView, LoginRequiredMixin):
+class EntryDeleteView(LoginRequiredMixin, DeleteView):
     model = Fixing
     success_url=reverse_lazy('project_view:fixing_list')
     def get_queryset(self):

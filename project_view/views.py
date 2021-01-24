@@ -25,10 +25,10 @@ from project_view.views_mypart import *
 # Clients
 #-------------------------------------------------------------------------------
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
 
-class ClientDetailView(View, LoginRequiredMixin):
+class ClientDetailView(LoginRequiredMixin, View):
     model = Client
     
     # By convention:
@@ -194,7 +194,7 @@ class ProjectDeleteView(LoginRequiredMixin, View):
 # Modules
 #-------------------------------------------------------------------------------
 
-class ModuleDetailView(View, LoginRequiredMixin):
+class ModuleDetailView(LoginRequiredMixin, View):
     model = Module
     
     # By convention:
@@ -326,7 +326,7 @@ class ModuleDeleteView(LoginRequiredMixin, View):
 # Parts
 #-------------------------------------------------------------------------------
 
-class PartDetailView(DetailView, LoginRequiredMixin):
+class PartDetailView(LoginRequiredMixin, DetailView):
     model = Part
     template_name = "project_view/part_detail.html"
     def get(self, request, pk_modu, pk_part) :

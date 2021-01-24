@@ -21,10 +21,10 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 # Fixing elements
 #-------------------------------------------------------------------------------
 
-class FixingListView(ListView, LoginRequiredMixin):
+class FixingListView(LoginRequiredMixin, ListView):
     model = Fixing
 
-class FixingDetailView(View, LoginRequiredMixin):
+class FixingDetailView(LoginRequiredMixin, View):
 
     template_name='project_view/fixing_detail.html'
 
@@ -37,7 +37,7 @@ class FixingDetailView(View, LoginRequiredMixin):
         return render(request, self.template_name, ctx)
         
 
-class FixingCreateView(CreateView, LoginRequiredMixin):
+class FixingCreateView(LoginRequiredMixin, CreateView):
     
     template_name='project_view/fixing_form.html'
     
@@ -69,7 +69,7 @@ class FixingCreateView(CreateView, LoginRequiredMixin):
 
         return redirect(reverse('project_view:fixing_list'))
 
-class FixingUpdateView(UpdateView, LoginRequiredMixin):
+class FixingUpdateView(LoginRequiredMixin, UpdateView):
     model = Fixing
 
     fields = ['name']
@@ -80,7 +80,7 @@ class FixingUpdateView(UpdateView, LoginRequiredMixin):
         qs = super(FixingUpdateView, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
-class FixingDeleteView(DeleteView, LoginRequiredMixin):
+class FixingDeleteView(LoginRequiredMixin, DeleteView):
     model = Fixing
     success_url=reverse_lazy('project_view:fixing_list')
     def get_queryset(self):
@@ -91,7 +91,7 @@ class FixingDeleteView(DeleteView, LoginRequiredMixin):
 #Fix combination views:
 #--------------------------------------------------------
 
-class FixCreateView(CreateView, LoginRequiredMixin):
+class FixCreateView(LoginRequiredMixin, CreateView):
     
     template_name='project_view/fix_form.html'
     
@@ -119,21 +119,18 @@ class FixCreateView(CreateView, LoginRequiredMixin):
         
         #if not valid render the form again:
         if not form.is_valid():
-            ctx = {'form': form}
+            form.fields['part'].queryset = Part.objects.filter(id=pk_part)
+            ctx = {'form': form, 'part':part}
             return render(request, self.template_name, ctx)
-        try:
-            #add user as owner before saving:
-            fix = form.save(commit=False)
-            fix.owner = self.request.user
-            fix.save()
-        except:
-            error = 1
-            ctx = {'form': form, 'error': error}
-            return render(request, self.template_name, ctx)
+
+        #add user as owner before saving:
+        fix = form.save(commit=False)
+        fix.owner = self.request.user
+        fix.save()
 
         return redirect(reverse('project_view:part_detail', args=[part.module.id, pk_part]))
 
-class FixUpdateView(UpdateView, LoginRequiredMixin):
+class FixUpdateView(LoginRequiredMixin, UpdateView):
     
     template_name='project_view/fix_form.html'
     
@@ -161,18 +158,15 @@ class FixUpdateView(UpdateView, LoginRequiredMixin):
         
         #if not valid render the form again:
         if not form.is_valid():
-            ctx = {'form': form}
+            form.fields['part'].queryset = Part.objects.filter(id=pk_part)
+            ctx = {'form': form, 'part':part}
             return render(request, self.template_name, ctx)
-        try:
-            fix.save()
-        except:
-            error = 1
-            ctx = {'form': form, 'error': error}
-            return render(request, self.template_name, ctx)
+        
+        fix.save()
 
         return redirect(reverse('project_view:part_detail', args=[part.module.id, pk_part]))
 
-class FixDeleteView(DeleteView, LoginRequiredMixin):
+class FixDeleteView(LoginRequiredMixin, DeleteView):
 
     template_name='project_view/fix_confirm_delete.html'
     def get (self, request, pk_part, pk):

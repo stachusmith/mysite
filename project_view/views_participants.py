@@ -23,7 +23,7 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 
 #from django.db.models import Q
 
-class ParticipantCreateView(CreateView, LoginRequiredMixin):
+class ParticipantCreateView(LoginRequiredMixin, CreateView):
     
     template_name='project_view/participant_form.html'
     
@@ -58,7 +58,7 @@ class ParticipantCreateView(CreateView, LoginRequiredMixin):
 
         return redirect(reverse('project_view:participation_list'))
 
-class ParticipantUpdateView(UpdateView, LoginRequiredMixin):
+class ParticipantUpdateView(LoginRequiredMixin, UpdateView):
     
     template_name='project_view/participant_form_update.html'
     
@@ -93,7 +93,7 @@ class ParticipantUpdateView(UpdateView, LoginRequiredMixin):
 
         return redirect(reverse('project_view:participation_list'))
 
-class ParticipantDeleteView(DeleteView, LoginRequiredMixin):
+class ParticipantDeleteView(LoginRequiredMixin, DeleteView):
     model = Participant
     success_url=reverse_lazy('project_view:participation_list')
     def get_queryset(self):
@@ -101,7 +101,7 @@ class ParticipantDeleteView(DeleteView, LoginRequiredMixin):
         qs = super(ParticipantDeleteView, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
-class ParticipationListView(ListView):
+class ParticipationListView(LoginRequiredMixin, ListView):
     template_name='project_view/participation_list.html'
     def get(self, request):
         
@@ -122,7 +122,7 @@ class ParticipationListView(ListView):
         ctx= { 'project_collection':project_collection }
         return render(request, self.template_name, ctx)
 
-class ParticipationCreateView(CreateView, LoginRequiredMixin):
+class ParticipationCreateView(LoginRequiredMixin, CreateView):
     
     template_name='project_view/participation_form.html'
     
@@ -155,7 +155,7 @@ class ParticipationCreateView(CreateView, LoginRequiredMixin):
 
         return redirect(reverse('project_view:participation_list'))
 
-class ParticipationUpdateView(UpdateView, LoginRequiredMixin):
+class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
     
     template_name='project_view/participation_form.html'
     
@@ -187,7 +187,7 @@ class ParticipationUpdateView(UpdateView, LoginRequiredMixin):
 
         return redirect(reverse('project_view:participant_list'))
 
-class ParticipationDeleteView(DeleteView, LoginRequiredMixin):
+class ParticipationDeleteView(LoginRequiredMixin, DeleteView):
     model = Participation
     success_url=reverse_lazy('project_view:participation_list')
     def get_queryset(self):
