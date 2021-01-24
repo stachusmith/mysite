@@ -214,7 +214,7 @@ class ModuleDetailView(LoginRequiredMixin, View):
         client = Client.objects.get(id=client_number)
         print(client)
         
-        all_my_parts = My_part.objects.all()
+        all_my_parts = My_part.objects.filter(user_id=request.user.id)
         my_parts_ids = list()
         for part in all_my_parts:
             my_parts_ids.append(part.part_id)

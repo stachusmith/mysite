@@ -26,17 +26,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.utils import IntegrityError
 
-#class MypartsListView(ListView, LoginRequiredMixin):
-#
-#    template_name='home/base_menu_project_view.html'
-#
-#    def get(self, request):
-#        
-#        my_parts = My_part.objects.filter(user_id=request.user)
-#        print("my_parts_for_dropdown:",my_parts)
-#        ctx= { 'my_parts':my_parts }
-#        return render(request, self.template_name, ctx)
-
 @method_decorator(csrf_exempt, name='dispatch')
 class MypartView(LoginRequiredMixin, View):
     def post(self, request, pk) :

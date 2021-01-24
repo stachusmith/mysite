@@ -56,10 +56,13 @@
             <ul class="dropdown-menu">
                 
                 {% if my_parts %}
+                    
                     {% for my_part in my_parts %}
-                        <li>
-                            <a href="{% url 'project_view:part_detail' my_part.part.module.id my_part.part.id %}">{{my_part.part.name}}</a>
-                        </li>
+                        {% if my_part.user == user %}
+                            <li>
+                                <a href="{% url 'project_view:part_detail' my_part.part.module.id my_part.part.id %}">{{my_part.part.name}}</a>
+                            </li>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     empty :(
