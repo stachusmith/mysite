@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="title_area_right">
-        ({{ topic.last_modified }})
+        Last modified: {{ topic.last_modified }}
         {% if part.owner == user %}
         <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
         <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
@@ -71,7 +71,7 @@
 <div class="problem_area">
     <h3>Problem description:</h3>
 
-    <h4 style="margin-bottom: 40px;">{{ topic.description }}</h4>
+    <h4 style="margin-bottom: 40px; background-color:  rgb(246, 246, 246);padding: 5px;">{{ topic.description }}</h4>
 
 
 
@@ -87,10 +87,10 @@
             </div>
             <div class="entry_list_middle">
                 <div class="entry_list_person">
-                    people responsible:
+                    responsible:
                 </div>
                 <div class="entry_list_person">
-                    people involved:
+                    involved:
                 </div>
                 <div class="entry_list_person">
                     agreed with:

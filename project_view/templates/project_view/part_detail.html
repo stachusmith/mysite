@@ -92,29 +92,35 @@
             {% for fix in fixes %}
               <li class="fixing_list">
                   {{ fix.number_of_elements }} {{ fix.fixing.name }}s
+                  {% if fixing.owner == user %}
                   <div style="float: right;">
                     <a href="{% url 'project_view:fix_update' part.id fix.id %}"><i class="fa fa-pencil"></i></a>
                     <a href="{% url 'project_view:fix_delete' part.id fix.id %}"><i class="fa fa-trash"></i></a>
                   </div>
+                  {% endif %}
               </li>
             {% endfor %}
           </ul>
           {% else %}
             <p>There are no fixing combinations in the database.</p>
           {% endif %}
+          {% if part.owner == user %}
           <p>
             <a href="{% url 'project_view:fix_create' part.id %}">add new combination</a>
           </p>
           <p>
             <a href="{% url 'project_view:fixing_create' %}" target="_blank" rel="noopener noreferrer">create new fixing elements</a>
           </p>
+          {% endif %}
     
   </div>
 </div>
 
 
 <div class="topics_container">
+  {% if part.owner == user %}
   <a href="{% url 'project_view:topic_create' part.id %}"><input type="submit" style='float: right;'  value="Create new topic..."></input></a>
+  {% endif %}
   <input id="normal_view" type="submit" href="#" style='float: right; margin-right: 5px;'
     onclick="document.getElementById('stylesheet').href = '{% static 'project_view/part_print.css' %}'; //change css file for print view
               document.getElementById('print_view').hidden=false; //hide button for print

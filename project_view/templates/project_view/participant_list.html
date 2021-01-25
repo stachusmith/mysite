@@ -23,9 +23,9 @@
     {% endfor %}
     
   </ul>
-  {% if project.owner == user %}
-    <a href="{% url 'project_view:participation_create' %}">Add participant</a>
-  {% endif %}
+  
+  <a href="{% url 'project_view:participation_create' %}">Add participant</a>
+  
   {% else %}
     <p>There are no participants in the db.</p>
 {% endif %}

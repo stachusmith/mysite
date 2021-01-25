@@ -157,6 +157,8 @@ class Participation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ('project', 'participant')
 
 class Responsibility(models.Model):
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)

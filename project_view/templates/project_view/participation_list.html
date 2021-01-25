@@ -1,44 +1,82 @@
 {% extends "base_menu_project_view.html" %}
 {% block content %}
 
-<h1>All Participants:</h1>
+<style>
+.person_grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
+  margin-bottom: 5px;
+}  
+.person_box{
+  border-color: lightgray;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 5px;
+}
 
+.person_box:hover{
+  transform: scale(1.01);
+}
+.project_list{
+  margin-bottom: 5px;
+}
+
+.list_line{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.list_line:nth-child(odd){
+  background-color: rgb(246, 246, 246);
+}
+
+</style>
+
+<h1>All Participants:</h1>
 <p>
-    {% if project_collection %}
-        <ul>
-        
-        {% for person, participation_list in project_collection.items %}
-        <li>
-            {% if person.owner == user %}
-                <h3><a href="{% url 'project_view:participant_update' person.id %}">{{ person.name }}'s</a> projects:</h3>
-            {% endif %}
-            
-            {% for participation in participation_list %}
-            
-                <p>
-                    {{ participation.project.name }}
-                
-                {% if participation.owner == user %}
-                    
-                    (<a href="{% url 'project_view:participation_update' participation.id %}">edit</a> |
-                    <a href="{% url 'project_view:participation_delete' participation.id %}">remove user from project</a>)
-                    
-                {% endif %}
-                </p>
-            {% endfor %}
-            <p>
-                <a href="{% url 'project_view:participation_create' person.id %}">add project</a>
-            </p>
-            
-        </li>    
-            
-        {% endfor %}
-        </ul>
-        
-    
-    
-    {% endif %}
+  <a href="{% url 'project_view:participant_create' %}">Add participant</a>
 </p>
 
-<a href="{% url 'project_view:participant_create' %}">Add participant</a>
+<div class="person_grid">
+  {% if project_collection %}
+    {% for person, participation_list in project_collection.items %}
+      <div class="person_box">
+        <div class="name_line">
+          {% if person.owner == user %}
+            <h3><a href="{% url 'project_view:participant_update' person.id %}">{{ person.name }}</a> in:</h3>
+          {% else%}
+            <h3>{{ person.name }} in:</h3>
+          {% endif %}
+        </div>
+        <div class="project_list">
+          {% for participation in participation_list %}
+            <div class="list_line">
+              <div class="project">
+                <a href="{% url 'project_view:project_detail' participation.project.client.id participation.project.id %}">{{ participation.project.name }}</a>
+              </div>
+              <div class="edit_delete">
+                {% if participation.owner == user %}
+
+                (<a href="{% url 'project_view:participation_update' participation.id %}">edit</a> |
+                <a href="{% url 'project_view:participation_delete' participation.id %}">remove user from project</a>)
+
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <p>
+          <a style="color: green;" href="{% url 'project_view:participation_create' person.id %}">add project</a>
+        </p>
+      </div>
+      
+    {% endfor %}
+  {% endif %}
+</div>
+<p>
+  <a href="{% url 'project_view:participant_create' %}">Add participant</a>
+</p>
 {% endblock %}
