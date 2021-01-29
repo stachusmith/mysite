@@ -32,32 +32,31 @@
     </p>
 
     <p>
-    <a href="{% url 'project_view:module_create' project.id %}">Add a Module</a>
+      <a href="{% url 'project_view:module_create' project.id %}">Add a Module</a>
     </p>
   </div>
   <div class="right_block" id="participants">
     <h2>Participants:</h2>
-    <p>
+
     {% if project_list %}
       <ul class="item_list">
         {% for project in project_list %}
           <div class="items_container">
-            {{ project.participant.name }}
+            <a href="{% url 'project_view:participant_update' project.participant.id %}">{{ project.participant.name }}</a>
           </div>
         {% endfor %}
-        
       </ul>
-      {% if project.owner == user %}
-      <p>
-        <a href="{% url 'project_view:participant_create' %}" target="_blank" rel="noopener noreferrer">Add participant</a>
-      </p>
-      <p>
-        <a href="{% url 'project_view:participation_list' %}" target="_blank" rel="noopener noreferrer">Manage participants</a>
-      </p>
-      {% endif %}
-      {% else %}
+    {% else %}
         <p>There are no participants in this project.</p>
     {% endif %}
+    <p>
+      <a href="{% url 'project_view:participant_create' %}" target="_blank" rel="noopener noreferrer">Add new participant</a>
+    </p>
+    <p>
+      <a href="{% url 'project_view:participation_proj_create' project.id %}" target="_blank" rel="noopener noreferrer">Add existing participant</a>
+    </p>
+    <p>
+      <a href="{% url 'project_view:participation_list' %}" target="_blank" rel="noopener noreferrer">Manage participants</a>
     </p>
   </div>
 </div>

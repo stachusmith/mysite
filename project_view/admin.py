@@ -28,3 +28,6 @@ admin.site.register(Fix)
 
 from project_view.models import Status
 admin.site.register(Status)
+
+from project_view.models import Participant
+admin.site.register(Participant)

@@ -39,11 +39,15 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
                 <li>
+                    logged in as: {{ user.username }}
+                </li>
+                <li>
                     <a href="{% url 'logout' %}?next={% url 'home:main' %}">Logout</a>
                 </li>
                 {% else %}
                 <li>
                     <a href="{% url 'login' %}?next={% url 'home:main' %}">Login</a>
+                </li>
             {% endif %}
         </ul>
     </div>

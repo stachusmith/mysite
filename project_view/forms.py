@@ -30,7 +30,13 @@ class CreateProjectForm(forms.ModelForm):
         
     class Meta:
         model = Project
-        fields = ['name', 'client', 'participant']
+        fields = ['name', 'client']
+
+class UpdateProjectForm(forms.ModelForm):
+        
+    class Meta:
+        model = Project
+        fields = ['name', 'client']
 
 
 class CreateModuleForm(forms.ModelForm):

@@ -11,6 +11,9 @@
   border-radius: 5px;
   background-color: #F8F8F8;
 }
+#topic:hover{
+  box-shadow: 0 0 5px palevioletred;
+}
 
 .topic_middle {
   width: 100%;
@@ -129,5 +132,8 @@
   width:100%;
   margin-left: 0;
   background-color:white;
+}
+.link_as_text {
+  display: none;
 }
 

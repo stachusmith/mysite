@@ -108,6 +108,7 @@ class ProjectCreateView(LoginRequiredMixin, View):
         ctx= { 'form':form, 'client':client}
         return render(request, self.template_name, ctx)
 
+        
     def post(self, request, pk):
         
         #unused:
@@ -115,6 +116,8 @@ class ProjectCreateView(LoginRequiredMixin, View):
         #print(pk)
         
         form = CreateProjectForm(request.POST)
+        print(request.POST)
+        
         
         #if not valid render the form again:
         if not form.is_valid():
@@ -125,6 +128,9 @@ class ProjectCreateView(LoginRequiredMixin, View):
         project = form.save(commit=False)
         project.owner = self.request.user
         project.save()
+        print(request.POST)
+        #for participation in request.POST['participant']:
+        #    Participation.objects.create(participant_id = participation, project_id= project.id , owner= request.user)
 
         return redirect(reverse('project_view:client_detail', args=[pk]))
 
@@ -137,7 +143,7 @@ class ProjectUpdateView(LoginRequiredMixin, View):
     def get(self, request, pk, pk_proj):
         client = Client.objects.get(id=pk)
         project = get_object_or_404(self.model, id=pk_proj, owner=self.request.user)
-        form = CreateProjectForm(instance=project)
+        form = UpdateProjectForm(instance=project)
         
         #limit options in dropdown:
         form.fields['client'].queryset = Client.objects.filter(id=pk)
@@ -158,12 +164,16 @@ class ProjectUpdateView(LoginRequiredMixin, View):
         #pk=request.POST['client']
         #print(pk)
         project = get_object_or_404(self.model, id=pk_proj, owner=self.request.user)
-        form = CreateProjectForm(request.POST, instance=project)
-
+        
+        form = UpdateProjectForm(request.POST, instance=project)
+        #participations = Participation.objects.filter(project_id=pk_proj, owner=self.request.user)
+        #print(request.POST)
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
-
+        #for participation in participations:
+        #    participation.participant_id = request.POST['participant']
+        #    participation.save()    
         form.save()
         return redirect(reverse('project_view:client_detail', args=[project.client_id]))
 
@@ -184,7 +194,7 @@ class ProjectDeleteView(LoginRequiredMixin, View):
 #        return qs.filter(owner=self.request.user)
 
     def post(self, request, pk, pk_proj):
-        project = get_object_or_404(Project, id=pk_proj)
+        project = get_object_or_404(Project, id=pk_proj, owner=self.request.user)
         print(project)
         arg = [project.client_id]
         

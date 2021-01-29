@@ -4,7 +4,7 @@
 <style>
 .person_grid{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 5px;
   margin-bottom: 5px;
 }  
@@ -37,7 +37,7 @@
 
 <h1>All Participants:</h1>
 <p>
-  <a href="{% url 'project_view:participant_create' %}">Add participant</a>
+  <a href="{% url 'project_view:participant_create' %}">Add new participant</a>
 </p>
 
 <div class="person_grid">
@@ -60,8 +60,8 @@
               <div class="edit_delete">
                 {% if participation.owner == user %}
 
-                (<a href="{% url 'project_view:participation_update' participation.id %}">edit</a> |
-                <a href="{% url 'project_view:participation_delete' participation.id %}">remove user from project</a>)
+                <a style="color: rgb(140, 0, 255);" href="{% url 'project_view:participation_update' participation.id %}">edit</a> |
+                <a style="color: rgb(140, 0, 255);" href="{% url 'project_view:participation_delete' participation.id %}">remove from project</a>
 
                 {% endif %}
               </div>
@@ -77,6 +77,6 @@
   {% endif %}
 </div>
 <p>
-  <a href="{% url 'project_view:participant_create' %}">Add participant</a>
+  <a href="{% url 'project_view:participant_create' %}">Add new participant</a>
 </p>
 {% endblock %}

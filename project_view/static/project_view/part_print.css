@@ -52,9 +52,10 @@
   grid-template-columns: 100px 4fr 1fr 1fr 1fr 100px;
   grid-gap: 1px;
   margin-bottom: 1px;
+  
 }
 .entry:nth-child(odd){
-  background-color: rgb(246, 246, 246);
+  background-color: lightgray;
 }
 
 .entry_date{
@@ -185,5 +186,13 @@
   width:100%;
   margin-left: 0;
   background-color:white;
+}
+
+a {
+  display: none;
+}
+
+.link_as_text{
+  display: block;
 }
 

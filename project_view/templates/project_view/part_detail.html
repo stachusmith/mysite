@@ -20,7 +20,7 @@
   }
 </style>
 <span style="float: right;">
-({{ part.updated_at }})
+Last modified: {{ part.updated_at }}
 {% if part.owner == user %}
 <a href="{% url 'project_view:part_update' module.id part.id %}"><i class="fa fa-pencil"></i></a>
 <a href="{% url 'project_view:part_delete' module.id part.id %}"><i class="fa fa-trash"></i></a>
@@ -41,6 +41,7 @@
         </div>
         <div>
           <a href="{% url 'project_view:client_detail'  part.module.project.client.id %}">{{ part.module.project.client }}</a>
+          <div class="link_as_text">{{ part.module.project.client }}</div>
         </div>
       </li>
       <li class="properties">
@@ -49,6 +50,7 @@
         </div>
         <div>
           <a href="{% url 'project_view:client_detail'  part.module.project.id %}">{{ part.module.project }}</a>
+          <div class="link_as_text">{{ part.module.project }}</div>
         </div>
       </li>
       <li class="properties">
@@ -57,6 +59,7 @@
         </div>
         <div>
           <a href="{% url 'project_view:client_detail'  part.module.id %}">{{ part.module }}</a>
+          <div class="link_as_text">{{ part.module }}</div>
         </div>
       </li>
       <li class="properties">
@@ -128,7 +131,7 @@
 
 
 
-  <input id="print_view" type="submit" href="#" hidden style='float: right; margin-right: 5px;'
+  <input id="print_view" type="submit" href="#" hidden style='float: right; margin-right: 5px; box-shadow: 0 0 20px purple;'
   onclick="document.getElementById('stylesheet').href = '{% static 'project_view/part.css' %}'; //change css file for normal view
             document.getElementById('normal_view').hidden=false; //hide button for print
             document.getElementById('print_view').hidden=true; /*show button for normal view*/" value="Compressed view"></input>

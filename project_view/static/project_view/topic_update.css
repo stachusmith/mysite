@@ -27,6 +27,12 @@
     flex-direction: row;
 }
 
+/*upper area
+.upper_area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 30px;
+}*/
 
 /*pictures-------------------------*/
 :root {
@@ -87,6 +93,7 @@
 .picture_grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 3px;
     padding-left: 10px;
     padding-right: 10px;
 }

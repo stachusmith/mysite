@@ -19,55 +19,58 @@ You are editing the following topic:
         {% endif %}
         {{ topic.title }}</h1>
 
+<div class="upper_area">
+    <div class="upper_left">
         <form action="" method="post">
             {% csrf_token %}
             {{ form_topic_create|crispy }}
-
-
-<div class="picture_container" id="target_list">
-    <h2 style="padding-left: 10px;">Pictures:</h2>
-    {% if picture_list %}
-        <div class="picture_grid">
-            {% for picture in picture_list %}
-                <div class="pic_area">
-                    <div class="pic_description">
-                        <div class="pic_desc_left">
-                            picture: {{ picture.id }}
-                        </div>
-                        <div class="pic_desc_right">
-                            {% if part.owner == user %}
-                            <a href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="pic">
-                        <a href="#"><img type="image" id=picture_box
-                            src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
-                            onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
-                        </a>
-
-                        <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
-                            <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
-                            style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
-                        </a></div>
-                    </div>
-                </div>
-                
-            {% endfor %}
-            
-        </div>
-        
-    {% else %}
-    <p>
-        there are no pictures for this topic
-    </p>
-    {% endif %}
-    <div>
-        paste more images...
     </div>
 
-    <div id="target_area">
-        <img type="image" class="target" id="target"></img>
+    <div class="picture_container" id="target_list">
+        <h2 style="padding-left: 10px;">Pictures:</h2>
+        {% if picture_list %}
+            <div class="picture_grid">
+                {% for picture in picture_list %}
+                    <div class="pic_area">
+                        <div class="pic_description">
+                            <div class="pic_desc_left">
+                                picture: {{ picture.id }}
+                            </div>
+                            <div class="pic_desc_right">
+                                {% if part.owner == user %}
+                                <a href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="pic">
+                            <a href="#"><img type="image" id=picture_box
+                                src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                                onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
+                            </a>
+
+                            <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
+                                <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                                style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+                            </a></div>
+                        </div>
+                    </div>
+                    
+                {% endfor %}
+                
+            </div>
+            
+        {% else %}
+        <p>
+            there are no pictures for this topic
+        </p>
+        {% endif %}
+        <div style="padding-left: 10px; width: 100%; border-color: seagreen;">
+            paste more images...
+        </div>
+
+        <div id="target_area">
+            <img type="image" class="target" id="target"></img>
+        </div>
     </div>
 </div>
 <p>
@@ -75,15 +78,41 @@ You are editing the following topic:
     
     {% csrf_token %}
     {{ form|crispy }}
-    
-    <input type="submit" value="Submit">
-    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_cancel' topic.id %}';return false;">
-  </form>
+    <div style="display: flex; flex-direction: row; width:100%; justify-content: flex-end; padding-right: 10px; margin-bottom: 30px;">
+        <input type="submit" value="Submit">
+        <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_cancel' topic.id %}';return false;">
+    </div>
+</form>
 </p>
 
 
 {% if entries_list %}
-
+    <div id="entry_list_title_container" style="padding-right: 50px;">
+        <div class="entry_list_left">
+            <div class="entry_list_date_of_entry">
+                date of entry:
+            </div>
+            <div class="entry_list_solution">
+                solution:
+            </div>
+        </div>
+        <div class="entry_list_middle">
+            <div class="entry_list_person">
+                responsible:
+            </div>
+            <div class="entry_list_person">
+                involved:
+            </div>
+            <div class="entry_list_person">
+                agreed with:
+            </div>
+        </div>
+        <div class="entry_list_right">
+            <div class="entry_list_deadline">
+                deadline:
+            </div>
+        </div>
+    </div>
     {% for entry in entries_list %}
             <div id="entry_list_container">
                 <div class="entry_list_left">

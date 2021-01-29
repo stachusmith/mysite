@@ -52,6 +52,7 @@ urlpatterns = [
 
     path('participation', views.ParticipationListView.as_view(), name='participation_list'),
     path('participant/<int:pk>/participation/create', views.ParticipationCreateView.as_view(), name='participation_create'),
+    path('project/<int:pk_proj>/participation/create', views.ParticipationPrjCreateView.as_view(), name='participation_proj_create'),
     path('participation/<int:pk>/update', views.ParticipationUpdateView.as_view(), name='participation_update'),
     path('participation/<int:pk>/delete', views.ParticipationDeleteView.as_view(), name='participation_delete'),
 

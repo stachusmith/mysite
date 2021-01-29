@@ -194,3 +194,36 @@ class ParticipationDeleteView(LoginRequiredMixin, DeleteView):
         print('delete get_queryset called')
         qs = super(ParticipationDeleteView, self).get_queryset()
         return qs.filter(owner=self.request.user)
+
+class ParticipationPrjCreateView(LoginRequiredMixin, CreateView):
+    
+    template_name='project_view/participation_form.html'
+    
+    def get(self, request, pk_proj):
+        project = Project.objects.get(id = pk_proj)
+        #for link from projects
+        form_data = {'project':pk_proj}
+        
+        form = CreateParticipationForm(initial=form_data)
+
+        #limit options in dropdown:
+        form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
+
+        ctx= { 'form':form, 'project':project }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk_proj):
+              
+        form = CreateParticipationForm(request.POST)
+        
+        #if not valid render the form again:
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+
+        #add user as owner before saving:
+        Participation = form.save(commit=False)
+        Participation.owner = self.request.user
+        Participation.save()
+
+        return redirect(reverse('project_view:participation_list'))
