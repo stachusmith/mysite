@@ -42,7 +42,8 @@
       <ul class="item_list">
         {% for project in project_list %}
           <div class="items_container">
-            <a href="{% url 'project_view:participant_update' project.participant.id %}">{{ project.participant.name }}</a>
+            <a href="{% url 'project_view:participant_update' project.participant.id %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">{{ project.participant.name }} 
+              <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
           </div>
         {% endfor %}
       </ul>
@@ -50,13 +51,16 @@
         <p>There are no participants in this project.</p>
     {% endif %}
     <p>
-      <a href="{% url 'project_view:participant_create' %}" target="_blank" rel="noopener noreferrer">Add new participant</a>
+      <a href="{% url 'project_view:participant_create' %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">Add new participant 
+        <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
     </p>
     <p>
-      <a href="{% url 'project_view:participation_proj_create' project.id %}" target="_blank" rel="noopener noreferrer">Add existing participant</a>
+      <a href="{% url 'project_view:participation_proj_create' project.id %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">Add existing participant 
+        <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
     </p>
     <p>
-      <a href="{% url 'project_view:participation_list' %}" target="_blank" rel="noopener noreferrer">Manage participants</a>
+      <a href="{% url 'project_view:participation_list' %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">Manage participants 
+        <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
     </p>
   </div>
 </div>

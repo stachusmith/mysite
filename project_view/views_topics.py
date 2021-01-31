@@ -121,10 +121,11 @@ class TopicUpdateView(LoginRequiredMixin, UpdateView):
         return render(request, self.template_name, ctx)
         
     def post(self, request, pk_part, pk_topi, pk=None):
+
+        
         topic = get_object_or_404(Topic, id=pk_topi, owner=self.request.user)
         form = UpdateTopicForm(request.POST, instance=topic)
         form_topic_create = CreateTopicForm(request.POST, instance=topic)
-        print(request.POST)
         picture_list = Picture.objects.filter(topic_id=pk_topi)
         #part = Part.objects.get(id=pk_part)
         if not form.is_valid():
@@ -141,8 +142,11 @@ class TopicUpdateView(LoginRequiredMixin, UpdateView):
             picture.save()
         topic.save()
 
-        
-        return redirect(reverse('project_view:topic_detail', args=[pk_part, pk_topi]))
+        #check which button was pressed
+        if 'save_leave' in request.POST:
+            return redirect(reverse('project_view:topic_detail', args=[pk_part, pk_topi]))
+        else:
+            return redirect(reverse('project_view:topic_update', args=[pk_part, pk_topi]))
 
 #---------------------------------------------------------------------------------
 #the view below is an instance of TopicUpdateView with a modified get request!!!

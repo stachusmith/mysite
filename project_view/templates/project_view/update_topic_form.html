@@ -79,7 +79,8 @@ You are editing the following topic:
     {% csrf_token %}
     {{ form|crispy }}
     <div style="display: flex; flex-direction: row; width:100%; justify-content: flex-end; padding-right: 10px; margin-bottom: 30px;">
-        <input type="submit" value="Submit">
+        <input type="submit" name="save" value="Save">
+        <input type="submit" name="save_leave" value="Save & leave" id="leave">
         <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_cancel' topic.id %}';return false;">
     </div>
 </form>
@@ -334,5 +335,6 @@ document.onpaste = function (pasteEvent) {
 window.onload = function () {
     document.getElementById('entry_list_container').scrollIntoView();
 }
+
 </script>
 {% endblock %}

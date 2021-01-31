@@ -1,6 +1,17 @@
 {% extends "base_bootstrap.html" %}
 {% block navbar %}
 {% load app_tags %} <!--gravatar (templatetags folder)-->
+
+<style>
+.footer_holder {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+</style>
+
+
 <nav class="navbar navbar-default navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -13,15 +24,29 @@
           <a href="{% url 'project_view:main' %}">ProjectView</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        {% if user.is_authenticated %}
-        <li>
-            <a href="{% url 'logout' %}?next={% url 'home:main' %}">Logout</a>
-        </li>
-        {% else %}
-        <li>
-            <a href="{% url 'login' %}?next={% url 'home:main' %}">Login</a>
-        {% endif %}
+      {% if user.is_authenticated %}
+      <li class="dropdown">
+          <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{ user.username }}</a>
+          <ul class="dropdown-menu">
+              <li><a href="{% url 'logout' %}?next={% url 'home:main' %}">Logout</a></li>
+          </ul>
+      </li>
+      {% else %}
+      <li>
+      <a href="{% url 'login' %}?next={% url 'home:main' %}">Login</a>
+      </li>
+      {% endif %}
     </ul>
   </div>
 </nav>
+<div class="footer_holder">
+<footer class="bg-light text-center text-lg-start">
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+    get in touch: stackoosmith@gmail.com
+  </div>
+  <!-- Copyright -->
+</footer>
+</div>
+
 {% endblock %}

@@ -95,7 +95,7 @@ Last modified: {{ part.updated_at }}
             {% for fix in fixes %}
               <li class="fixing_list">
                   {{ fix.number_of_elements }} {{ fix.fixing.name }}s
-                  {% if fixing.owner == user %}
+                  {% if fix.owner == user %}
                   <div style="float: right;">
                     <a href="{% url 'project_view:fix_update' part.id fix.id %}"><i class="fa fa-pencil"></i></a>
                     <a href="{% url 'project_view:fix_delete' part.id fix.id %}"><i class="fa fa-trash"></i></a>

@@ -20,7 +20,8 @@ class Client(models.Model):
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -34,7 +35,8 @@ class Project(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     participant = models.ManyToManyField(Participant, through='Participation', related_name='participation_project_view')
-
+    class Meta:
+        ordering = ['name']
     def __str__(self):
         return self.name
 
@@ -45,7 +47,8 @@ class Module(models.Model):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -104,7 +107,8 @@ class Part(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
-
+    class Meta:
+        ordering = ['name']
     def __str__(self):
         return self.name
 
@@ -123,7 +127,8 @@ class Topic(models.Model):
     
     date_of_creation = models.DateField(auto_now_add=True)
     last_modified = models.DateField(auto_now=True)
-
+    class Meta:
+        ordering = ['date_of_creation']
     def __str__(self):
         return self.title
 
