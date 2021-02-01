@@ -17,12 +17,12 @@
         <a href="{% url 'project_view:part_detail' module.id part.id %}">{{ part.name }}</a>
         <div id="edit_delete_myparts">
           <div class="edit_delete">
-            {% if client.owner == user %}
+            {% if part.owner == user %}
               <a href="{% url 'project_view:part_update' module.id part.id %}">Edit</a> |
               <a href="{% url 'project_view:part_delete' module.id part.id %}">Delete</a>
             {% endif %}
           </div>
-          {% if user.is_authenticated %}
+          {% if user.is_authenticated and part.owner == user %}
           <div href="#" id="my_cog{{ part.id }}" title="add to my parts" 
                 onclick="myPartPost('{% url 'project_view:mypart' part.id %}', {{ part.id }}); return false;"
                 {% if part.id in my_parts_ids %} style="display: none;"

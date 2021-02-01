@@ -210,7 +210,7 @@ class ModuleDetailView(LoginRequiredMixin, View):
     # By convention:
     template_name = "project_view/module_detail.html"
     def get(self, request, pk_proj, pk_modu) :
-        #print(pk_proj, pk_modu)
+        print(pk_proj, pk_modu)
         module = Module.objects.get(id=pk_modu)
         print(module)
         

@@ -29,7 +29,7 @@ Last modified: {{ part.updated_at }}
 
 <h1>{{ part.name }}</h1>
 <p>
-  <a href="{% url 'project_view:module_detail' module.id project.id %}">back to all parts</a>
+  <a href="{% url 'project_view:module_detail' project.id module.id %}">back to all parts</a>
 </p>
 <div class='part_container'>
   <div class='part_properties'>
@@ -84,6 +84,14 @@ Last modified: {{ part.updated_at }}
         </div>
         <div>
           {{ part.thickness }}mm
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          minimal draft angle:
+        </div>
+        <div>
+          {{ part.minimal_draft_angle }}°
         </div>
       </li>
     </ul>

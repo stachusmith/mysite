@@ -166,12 +166,15 @@ class TopicEntryUpdateView(TopicUpdateView):
         entry = get_object_or_404(Entry, owner=self.request.user, id=pk)
         entry_form = CreateEntryForm(instance=entry)
         entries_list = Entry.objects.filter(topic_id=pk_topi)
+        form_topic_create = CreateTopicForm(instance=topic)
+        #limit options in dropdown:
+        form_topic_create.fields['part'].queryset = Part.objects.filter(id=pk_part)
 
         # parameter telling template which link to follow 
         # after pressing "save entry" (create entry -> 0 / update entry -> 1):
         update=1
 
-        ctx= { 'form':form, 'topic':topic, 'module':module, 'part':part,
+        ctx= { 'form':form, 'form_topic_create':form_topic_create, 'topic':topic, 'module':module, 'part':part,
                 'picture_list': picture_list, 'entry_form':entry_form, 'update':update,
                 'entry':entry, 'entries_list': entries_list }
         return render(request, self.template_name, ctx)

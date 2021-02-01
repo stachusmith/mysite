@@ -70,11 +70,16 @@ class EntryUpdateView(LoginRequiredMixin, UpdateView):
 
         return redirect(reverse('project_view:topic_update', args=[entry.topic.part.id, entry.topic.id]))
 
-
 class EntryDeleteView(LoginRequiredMixin, DeleteView):
-    model = Fixing
-    success_url=reverse_lazy('project_view:fixing_list')
-    def get_queryset(self):
-        print('delete get_queryset called')
-        qs = super(FixingDeleteView, self).get_queryset()
-        return qs.filter(owner=self.request.user)
+
+    template_name='project_view/entry_confirm_delete.html'
+    def get (self, request, pk):
+        entry = get_object_or_404(Entry, id=pk, owner=self.request.user)
+        ctx = {'entry': entry }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk):
+        entry = get_object_or_404(Entry, id=pk)
+        
+        entry.delete()
+        return redirect(reverse('project_view:topic_update', args=[entry.topic.part.id, entry.topic.id]))

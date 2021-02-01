@@ -42,11 +42,7 @@
                         <div class="pic_desc_left">
                             picture: {{ picture.id }}
                         </div>
-                        <div class="pic_desc_right">
-                            {% if part.owner == user %}
-                            <a href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
-                            {% endif %}
-                        </div>
+                        
                     </div>
                     <div class="pic">
                         <a href="#"><img type="image" id=picture_box
@@ -156,7 +152,7 @@
 
 
 <p>
-<a href="{% url 'project_view:part_detail' module.id part.id %}">All topics</a>
+<a href="{% url 'project_view:part_detail' module.id part.id %}" style="padding-bottom: 40px;">All topics</a>
 </p>
 
 {% endblock %}
