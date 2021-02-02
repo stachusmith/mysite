@@ -42,8 +42,12 @@
       <ul class="item_list">
         {% for project in project_list %}
           <div class="items_container">
+            {% if project.participant.owner == user %}
             <a href="{% url 'project_view:participant_update' project.participant.id %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">{{ project.participant.name }} 
               <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
+            {% else %}
+            {{ project.participant.name }}
+            {% endif %}
           </div>
         {% endfor %}
       </ul>
