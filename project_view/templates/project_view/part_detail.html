@@ -49,7 +49,7 @@ Last modified: {{ part.updated_at }}
           project:
         </div>
         <div>
-          <a href="{% url 'project_view:client_detail'  part.module.project.id %}">{{ part.module.project }}</a>
+          <a href="{% url 'project_view:project_detail'  part.module.project.client.id part.module.project.id %}">{{ part.module.project }}</a>
           <div class="link_as_text">{{ part.module.project }}</div>
         </div>
       </li>
@@ -58,7 +58,7 @@ Last modified: {{ part.updated_at }}
           module
         </div>
         <div>
-          <a href="{% url 'project_view:client_detail'  part.module.id %}">{{ part.module }}</a>
+          <a href="{% url 'project_view:module_detail'  part.module.project.id part.module.id %}">{{ part.module }}</a>
           <div class="link_as_text">{{ part.module }}</div>
         </div>
       </li>
