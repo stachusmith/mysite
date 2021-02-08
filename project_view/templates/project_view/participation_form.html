@@ -1,9 +1,7 @@
 {% extends "base_menu_project_view.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<p>
-  <a href="{% url 'project_view:participant_create'  %}">add a participant to data base</a>
-</p>
+
 <p>
   <form action="" method="post">
     {% csrf_token %}

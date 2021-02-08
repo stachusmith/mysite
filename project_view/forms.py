@@ -86,10 +86,39 @@ class CreateEntryForm(forms.ModelForm):
 #----------------------------------------------------------------------
 
 class CreateParticipantForm(forms.ModelForm):
+    works_for_choices = ((1, 'OEM'),
+                        (2, 'Supplier'),
+                        (3, 'Development provider'))
+    works_for = forms.ChoiceField(choices=works_for_choices)
+    class Meta:
+        model = Participant
+        fields = ['name', 'phone_number', 'email', 'works_for' ]
+
+class CreateParticipantForm2(forms.ModelForm):
+
+    def __init__ (self,  pk_for, *args, **kwargs):
+        super(CreateParticipantForm2, self).__init__(*args, **kwargs)
+        if pk_for == 1:
+            self.fields.pop('supplier')
+            self.fields.pop('development_provider')
+        elif pk_for == 2:
+            self.fields.pop('client')
+            self.fields.pop('development_provider')
+        else:
+            self.fields.pop('client')
+            self.fields.pop('supplier')
+
+        
     
     class Meta:
         model = Participant
-        fields = ['name']
+        fields = ['client', 'supplier', 'development_provider', 'job_title', 'project']
+
+class CreateParticipantForm2POST(forms.ModelForm):
+    
+    class Meta:
+        model = Participant
+        fields = ['client', 'supplier', 'development_provider', 'job_title', 'project']
 
 class CreateParticipationForm(forms.ModelForm):
     

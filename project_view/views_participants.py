@@ -16,8 +16,8 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participant, Participation
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, CreateParticipantForm, CreateParticipationForm
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, Picture, Entry, Participant, Participation, Development_provider, Job_title
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateFixingForm, CreateFixForm, CreateTopicForm, CreateParticipantForm, CreateParticipationForm, CreateParticipantForm2, CreateParticipantForm2POST
 
 #from project_view.utils import dump_queries
 
@@ -29,10 +29,13 @@ class ParticipantCreateView(LoginRequiredMixin, CreateView):
     
     def get(self, request):
         
-        form_data = {'name':''}
-        form = CreateParticipantForm(initial=form_data)
-
+        
+        form = CreateParticipantForm()
+        
         #limit options in dropdown:
+        #works_for_choices = ['OEM', 'Supplier', 'Development service']
+        #form.fields['works_for'].choices = works_for_choices
+        #print(form)
         #form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
 
         ctx= { 'form':form }
@@ -45,16 +48,54 @@ class ParticipantCreateView(LoginRequiredMixin, CreateView):
         #print(pk)
         
         form = CreateParticipantForm(request.POST)
+
         
         #if not valid render the form again:
+        print(request.POST['works_for'])
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
         #add user as owner before saving:
-        Participant = form.save(commit=False)
-        Participant.owner = self.request.user
-        Participant.save()
+        participant = form.save(commit=False)
+        participant.owner = self.request.user
+        participant.save()
+        pk = participant.id
+        arg = [pk, request.POST['works_for']]
+        return redirect(reverse('project_view:participant_create2', args=arg))
+
+class ParticipantCreate2View(LoginRequiredMixin, UpdateView):
+    model= Participant
+    template_name='project_view/participant_form2.html'
+    
+    def get(self, request, pk, pk_for):
+        
+        participant=get_object_or_404(self.model, owner=self.request.user, id=pk)
+        form = CreateParticipantForm2(pk_for, instance=participant)
+        #form takes only pk_for and args, kwargs - so if it's an update, it'll also take instance
+        
+        
+
+        ctx= { 'form':form }
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, pk, pk_for):
+        
+
+        participant=get_object_or_404(self.model, owner=self.request.user, id=pk)
+        form = CreateParticipantForm2POST(request.POST, instance=participant)
+
+        if not form.is_valid():
+            ctx = {'form': form}
+            return render(request, self.template_name, ctx)
+        projects = request.POST.getlist('project')
+        for project in projects:
+            try:
+                participation = Participation.objects.get(project_id=project, owner=self.request.user, participant_id=pk)
+            except:
+                participation = Participation.objects.create(project_id=project, owner=self.request.user, participant_id=pk)
+        
+        form.save()
 
         return redirect(reverse('project_view:participation_list'))
 
@@ -67,31 +108,22 @@ class ParticipantUpdateView(LoginRequiredMixin, UpdateView):
         participant=get_object_or_404(Participant, owner=self.request.user, id=pk)
         form = CreateParticipantForm(instance=participant)
 
-        #limit options in dropdown:
-        #form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
-
         ctx= { 'form':form, 'participant':participant }
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk):
         
-        #unused:
-        #pk=request.POST['client']
-        #print(pk)
-        
-        form = CreateParticipantForm(request.POST)
+        participant=get_object_or_404(Participant, owner=self.request.user, id=pk)
+        form = CreateParticipantForm(request.POST, instance=participant)
         
         #if not valid render the form again:
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
-
-        #add user as owner before saving:
-        Participant = form.save(commit=False)
-        Participant.owner = self.request.user
-        Participant.save()
-
-        return redirect(reverse('project_view:participation_list'))
+        
+        form.save()
+        arg = [pk, request.POST['works_for']]
+        return redirect(reverse('project_view:participant_create2', args=arg))
 
 class ParticipantDeleteView(LoginRequiredMixin, DeleteView):
     model = Participant
@@ -165,25 +197,20 @@ class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
         participation=get_object_or_404(Participation, owner=self.request.user, id=pk)
         form = CreateParticipationForm(instance=participation)
 
-        #limit options in dropdown:
-        #form.fields['part'].queryset = Part.objects.filter(id=pk_part)
-
         ctx= { 'form':form }
         return render(request, self.template_name, ctx)
 
-    def post(self, request):
-              
-        form = CreateParticipationForm(request.POST)
-        
+    def post(self, request, pk):
+        participation=get_object_or_404(Participation, owner=self.request.user, id=pk)
+        form = CreateParticipationForm(request.POST, instance=participation)
+        print(form)
         #if not valid render the form again:
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
 
-        #add user as owner before saving:
-        Participation = form.save(commit=False)
-        Participation.owner = self.request.user
-        Participation.save()
+        form.save()
+        
 
         return redirect(reverse('project_view:participant_list'))
 
@@ -208,7 +235,7 @@ class ParticipationPrjCreateView(LoginRequiredMixin, CreateView):
 
         #limit options in dropdown:
         form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
-
+        
         ctx= { 'form':form, 'project':project }
         return render(request, self.template_name, ctx)
 

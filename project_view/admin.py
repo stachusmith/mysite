@@ -31,3 +31,12 @@ admin.site.register(Status)
 
 from project_view.models import Participant
 admin.site.register(Participant)
+
+from project_view.models import Development_provider
+admin.site.register(Development_provider)
+
+from project_view.models import Job_title
+admin.site.register(Job_title)
+
+from project_view.models import Entry
+admin.site.register(Entry)

@@ -6,12 +6,25 @@ from django.conf import settings
 
 # one to many:
 
-class Participant(models.Model):
+class Development_provider(models.Model):
     name = models.CharField(
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
-    
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class Job_title(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -26,6 +39,14 @@ class Client(models.Model):
     def __str__(self):
         return self.name
 
+class Supplier(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
     name = models.CharField(
             max_length=200,
@@ -34,11 +55,30 @@ class Project(models.Model):
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    participant = models.ManyToManyField(Participant, through='Participation', related_name='participation_project_view')
+    
     class Meta:
         ordering = ['name']
     def __str__(self):
         return self.name
+
+class Participant(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+
+    phone_number = models.IntegerField(null=True, blank=True)
+    email = models.EmailField(blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, null=True, blank=True)
+    development_provider = models.ForeignKey(Development_provider, on_delete=models.CASCADE, null=True, blank=True)
+    job_title = models.ForeignKey(Job_title, on_delete=models.CASCADE, null=True, blank=True)
+    project = models.ManyToManyField(Project, through='Participation', related_name='participation_project_view')
+    
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+
+
 
 class Module(models.Model):
     name = models.CharField(
@@ -53,13 +93,7 @@ class Module(models.Model):
     def __str__(self):
         return self.name
 
-class Supplier(models.Model):
-    name = models.CharField(
-            max_length=200,
-            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
-    def __str__(self):
-        return self.name
 
 class Fixing(models.Model):
     name = models.CharField(

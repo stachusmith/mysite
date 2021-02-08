@@ -47,6 +47,7 @@ urlpatterns = [
     path('fixing/<int:pk>/delete', views.FixingDeleteView.as_view(), name='fixing_delete'),
 
     path('participant/create', views.ParticipantCreateView.as_view(), name='participant_create'),
+    path('participant/<int:pk>/create/<int:pk_for>', views.ParticipantCreate2View.as_view(), name='participant_create2'),
     path('participant/<int:pk>/update', views.ParticipantUpdateView.as_view(), name='participant_update'),
     path('participant/<int:pk>/delete', views.ParticipantDeleteView.as_view(), name='participant_delete'),
 
