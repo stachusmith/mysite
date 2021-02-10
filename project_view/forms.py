@@ -89,7 +89,8 @@ class CreateParticipantForm(forms.ModelForm):
     works_for_choices = ((1, 'OEM'),
                         (2, 'Supplier'),
                         (3, 'Development provider'))
-    works_for = forms.ChoiceField(choices=works_for_choices)
+    works_for = forms.ChoiceField(choices=works_for_choices, initial=True)
+    phone_number = forms.RegexField(regex=r'^\+\d*', error_messages={'invalid':'invalid phone number'})
     class Meta:
         model = Participant
         fields = ['name', 'phone_number', 'email', 'works_for' ]

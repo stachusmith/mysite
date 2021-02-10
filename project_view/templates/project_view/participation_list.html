@@ -46,12 +46,59 @@
       <div class="person_box">
         <div class="name_line">
           {% if person.owner == user %}
-            <h3><a href="{% url 'project_view:participant_update' person.id %}">{{ person.name }}</a> in:</h3>
+            <h3><a href="{% url 'project_view:participant_update' person.id %}">{{ person.name }}</a></h3>
           {% else%}
-            <h3>{{ person.name }} in:</h3>
+            <h3>{{ person.name }}</h3>
           {% endif %}
         </div>
+        <div class="person_details_container">
+          <div class="project_list">
+            <div class="list_line">
+              <div class="project">
+                <ul style="list-style: none; padding-left: 5px;">
+                  <li>
+                    works for:
+                  </li>
+                  <li>
+                    works as:
+                  </li>
+                  <li>
+                    phone number:
+                  </li>
+                  <li>
+                    email:
+                  </li>
+                </ul>
+              </div>
+              <div class="edit_delete">
+                <ul style="list-style: none;">
+                  <li>
+                    {% if person.client %}
+                    {{ person.client }}
+                    {% endif %}
+                    {% if person.supplier %}
+                    {{ person.supplier }} 
+                    {% endif %}
+                    {% if person.development_provider %}
+                    {{ person.development_provider }}
+                    {% endif %}
+                  </li>
+                  <li>
+                    {{ person.job_title }}
+                  </li>
+                  <li>
+                    {{ person.phone_number}}
+                  </li>
+                  <li>
+                    {{ person.email }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="project_list">
+          in following projects:
           {% for participation in participation_list %}
             <div class="list_line">
               <div class="project">

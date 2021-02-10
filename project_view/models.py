@@ -66,7 +66,7 @@ class Participant(models.Model):
             max_length=200,
             validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
-    phone_number = models.IntegerField(null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(blank=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, null=True, blank=True)

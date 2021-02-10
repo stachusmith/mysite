@@ -106,7 +106,18 @@ class ParticipantUpdateView(LoginRequiredMixin, UpdateView):
     def get(self, request, pk):
         
         participant=get_object_or_404(Participant, owner=self.request.user, id=pk)
-        form = CreateParticipantForm(instance=participant)
+        
+        if participant.client:
+            initial_choice = {'works_for': '1' }
+        elif participant.supplier:
+            initial_choice = {'works_for': '2' }
+        elif participant.development_provider:
+            initial_choice = {'works_for': '3' }#f'{participant.development_provider}'}
+        else:
+            initial_choice = {'works_for': '1' }
+
+        form = CreateParticipantForm(initial=initial_choice, instance=participant)
+        print(participant.development_provider)
 
         ctx= { 'form':form, 'participant':participant }
         return render(request, self.template_name, ctx)
@@ -118,7 +129,7 @@ class ParticipantUpdateView(LoginRequiredMixin, UpdateView):
         
         #if not valid render the form again:
         if not form.is_valid():
-            ctx = {'form': form}
+            ctx = {'form': form, 'participant':participant}
             return render(request, self.template_name, ctx)
         
         form.save()
