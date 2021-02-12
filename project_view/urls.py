@@ -70,5 +70,8 @@ urlpatterns = [
     path('part/<int:pk>/mypart', views.MypartView.as_view(), name='mypart'),
     path('part/<int:pk>/unmypart', views.UnmypartView.as_view(), name='unmypart'),
 
+    path('todo/create', views.TodoCreateView.as_view(), name='todo_create'),
+    path('todo/<int:pk>/update', views.TodoUpdateView.as_view(), name='todo_update'),
+    path('todo/<int:pk>/delete', views.TodoDeleteView.as_view(), name='todo_delete'),
 
 ]

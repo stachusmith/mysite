@@ -1,0 +1,96 @@
+{% extends "base_menu_project_view.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/todo.css' %}">
+
+{% if priority_list %}
+    <div id="entry_list_title_container" style="padding-right: 50px;">
+        <div class="entry_list_left">
+            <div class="entry_list_date_of_entry">
+                design engineer:
+            </div>
+            <div class="entry_list_solution">
+                description:
+            </div>
+        </div>
+        <div class="entry_list_middle">
+            <div class="entry_list_person">
+                deadline:
+            </div>
+        </div>
+    </div>
+    {% for todo in priority_list %}
+            <div id="entry_list_container">
+                <div class="entry_list_left">
+                    <div class="entry_list_date_of_entry">
+                        {{ todo.app_user }}
+                    </div>
+                    <div class="entry_list_solution">
+                        {{ todo.description }}
+                    </div>
+                    <div class="entry_list_deadline">
+                        {{ todo.deadline }}
+                    </div>
+                </div>
+                <div class="entry_list_right">
+                    <div class="entry_list_edit_delete_icons">
+                        {% if todo.owner == user %}
+                            <a href="{% url 'project_view:todo_update' todo.id %}"><i class="fa fa-pencil"></i></a> 
+                            <a href="{% url 'project_view:todo_delete' todo.id %}"><i class="fa fa-trash"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        
+    {% endfor %}
+
+
+{% else %}
+    <p>
+        there are no to-do items in the database
+    </p>
+
+{% endif %}
+
+
+
+{% if update == 1 %}
+    <p>
+        <div class="form_group" style="margin-bottom: 40px;">
+            <form action="{% url 'project_view:todo_update' todo.id %}" method="post" id="todo_form" class="form-inline">
+                <div class="form-container">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="submit">
+                        <input type="submit" for="todo_form" value="Update to-do item">
+                        <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:todo_update' todo.id %}'; return false;">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p>
+    <script>
+    //position window to list of entries upon page load:
+    window.onload = function () {
+        document.getElementById('entry_list_container').scrollIntoView();
+    }
+    </script>
+{% else %}
+    <p>
+        <div class="form_group" style="margin-bottom: 40px;">
+            <form action="{% url 'project_view:todo_create' %}" method="post" id="todo_form" class="form-inline">
+                <div class="form-container">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="submit">
+                        <input type="submit" for="todo_form" value="Create to-do item">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p>
+{% endif %}
+
+{% endblock %}

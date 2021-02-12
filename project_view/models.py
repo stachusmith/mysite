@@ -110,7 +110,12 @@ class Status(models.Model):
     def __str__(self):
         return self.name
 
-
+class Check_box(models.Model):
+    state = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    def __str__(self):
+        return self.state
     
 
 # main model:
@@ -165,6 +170,25 @@ class Topic(models.Model):
         ordering = ['date_of_creation']
     def __str__(self):
         return self.title
+
+class Todo(models.Model):
+    description = models.TextField(max_length=255, null=True, blank=True)
+
+    status = models.ForeignKey(Status, on_delete=models.CASCADE, null=True)
+
+    app_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='involved_user')
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+    date_of_creation = models.DateField(auto_now_add=True)
+
+    deadline = models.DateField()
+    
+    last_modified = models.DateField(auto_now=True)
+    class Meta:
+        ordering = ['deadline']
+    def __str__(self):
+        return self.description[:20]
 
 class Entry(models.Model):
     date_of_entry = models.DateField(auto_now_add=True)

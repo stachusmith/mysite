@@ -18,6 +18,8 @@ from project_view.views_topics import *
 from project_view.views_entries import *
 from project_view.views_participants import *
 from project_view.views_mypart import *
+from project_view.views_todo import *
+
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q

@@ -1,5 +1,5 @@
 from django import forms
-from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture, Entry, Participant, Participation
+from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture, Entry, Participant, Participation, Todo
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
@@ -84,6 +84,18 @@ class CreateEntryForm(forms.ModelForm):
         }
         
 #----------------------------------------------------------------------
+
+class CreateTodoForm(forms.ModelForm):
+    
+    class Meta:
+        model = Todo
+        fields = [ 'status', 'app_user', 'description', 'deadline']
+        widgets = {
+            #'status': forms.SelectMultiple(attrs={'class':'form_control'}),
+            #'app_user': forms.SelectMultiple(attrs={'class':'form_control'}),
+            #'description': forms.Textarea(attrs={'class':'form_control'}),
+            'deadline': DateInput(attrs={'class':'form_control'}),
+        }
 
 class CreateParticipantForm(forms.ModelForm):
     works_for_choices = ((1, 'OEM'),

@@ -63,7 +63,7 @@
     <div class="subnav">
         <a href="{% url 'project_view:fixing_list' %}" class="subnav_el" target="_blank" rel="noopener noreferrer">Manage fixing elements <i class="fas fa-external-link-alt" style="font-size: 11px;"></i></a>
         <a href="{% url 'project_view:participation_list' %}" class="subnav_el" target="_blank" rel="noopener noreferrer">Manage project participants <i class="fas fa-external-link-alt" style="font-size: 11px;"></i></a>
-        <a href="#" class="subnav_el">to-do list</a>
+        <a href="{% url 'project_view:todo_create' %}" class="subnav_el">to-do list</a>
         <div class="dropdown">
             <a href="#" class="subnav_el" data-toggle="dropdown" class="dropdown-toggle">myParts</a>
             <ul class="dropdown-menu">

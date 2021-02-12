@@ -40,3 +40,6 @@ admin.site.register(Job_title)
 
 from project_view.models import Entry
 admin.site.register(Entry)
+
+from project_view.models import Todo
+admin.site.register(Todo)
