@@ -93,7 +93,7 @@ class CreateTodoForm(forms.ModelForm):
         widgets = {
             #'status': forms.SelectMultiple(attrs={'class':'form_control'}),
             #'app_user': forms.SelectMultiple(attrs={'class':'form_control'}),
-            #'description': forms.Textarea(attrs={'class':'form_control'}),
+            'description': forms.Textarea(attrs={'class':'form_description'}),
             'deadline': DateInput(attrs={'class':'form_control'}),
         }
 

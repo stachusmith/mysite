@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
+from django.core.mail import send_mail
 
 from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
@@ -28,32 +28,21 @@ class TodoCreateView(LoginRequiredMixin, View):
     template_name='project_view/todo_form.html'
     
     def get(self, request) :
-        todo_list = Todo.objects.filter(owner = self.equest.user)
+        todo_list = Todo.objects.filter(owner = self.request.user)
 
         
         priority_list = Todo.objects.filter(owner = self.request.user, status_id=1).order_by('-deadline') #minus make reverse order
         in_process_list = Todo.objects.filter(owner = self.request.user, status_id=2).order_by('-deadline')
         settled_list = Todo.objects.filter(owner = self.request.user, status_id=3).order_by('-deadline')
-        #print(new_topics_list) 
-        #print(in_process_topics_list)
-        #print(settled_topics_list)
-        
-        #for todo in priority_list:
-        #    todo_list=Todo.objects.filter(todo_id=todo.id).order_by('-deadline')#[:3]
-
-        #for todo in in_process_list:
-        #    todo_list=Todo.objects.filter(todo_id=todo.id).order_by('-deadline')#[:3]
-
-        #for todo in settled_list:
-        #    todo_list=Todo.objects.filter(todo_id=todo.id).order_by('-deadline')#[:3]
         
         form = CreateTodoForm()
-
+        update = 0
         context = { 'form':form, 'priority_list': priority_list, 'in_process_list':in_process_list,
                     'settled_list':settled_list }
         return render(request, self.template_name, context)
         
     def post(self, request):
+
         form = CreateTodoForm(request.POST)
         
         if not form.is_valid():
@@ -62,7 +51,19 @@ class TodoCreateView(LoginRequiredMixin, View):
         todo = form.save(commit=False)
         todo.owner = self.request.user
         todo.save()
-        
+        #send notification:
+        message_name = 'you have a new task in your project'
+        message = request.POST['description']
+        from_email = 'projectviewapp@gmail.com'
+        to_email = [todo.app_user.email]
+        send_mail (
+            message_name, #title
+            message, #message
+            from_email,
+            to_email,
+            fail_silently=False 
+        )
+        print(todo.id)
         return redirect(reverse('project_view:todo_create'))
 
 class TodoUpdateView(LoginRequiredMixin, UpdateView):
@@ -72,21 +73,9 @@ class TodoUpdateView(LoginRequiredMixin, UpdateView):
         todo_list = Todo.objects.filter(owner = self.request.user)
         todo = get_object_or_404(Todo, owner = self.request.user, id = pk)
         
-        priority_list = Todo.objects.filter(owner = request.user, status_id=1).order_by('-deadline') #minus make reverse order
+        priority_list = Todo.objects.filter(owner = request.user, status_id=1).order_by('-deadline') #minus makes reverse order
         in_process_list = Todo.objects.filter(owner = request.user, status_id=2).order_by('-deadline')
         settled_list = Todo.objects.filter(owner = request.user, status_id=3).order_by('-deadline')
-        #print(new_topics_list) 
-        #print(in_process_topics_list)
-        #print(settled_topics_list)
-        
-        #for todo in priority_list:
-        #    todo_list=Todo.objects.filter(todo_id=todo.id).order_by('-deadline')#[:3]
-
-        #for todo in in_process_list:
-        #    todo_list=Todo.objects.filter(todo_id=todo.id).order_by('-deadline')#[:3]
-
-        #for todo in settled_list:
-        #    todo_list=Todo.objects.filter(todo_id=todo.id).order_by('-deadline')#[:3]
         
         form = CreateTodoForm(instance=todo)
         update = 1
@@ -112,7 +101,7 @@ class TodoDeleteView(LoginRequiredMixin, View):
     
     template_name='project_view/todo_confirm_delete.html'
     def get (self, request, pk):
-        todo = get_object_or_404(todo, id = pk, owner=self.request.user)
+        todo = get_object_or_404(Todo, id = pk, owner=self.request.user)
 
         ctx = {'todo': todo}
         return render(request, self.template_name, ctx)
