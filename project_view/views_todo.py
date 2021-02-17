@@ -83,7 +83,7 @@ class TodoUpdateView(LoginRequiredMixin, UpdateView):
                     'settled_list':settled_list, 'update': update }
         return render(request, self.template_name, context)
         
-    def post(self, request):
+    def post(self, request, pk):
         todo = get_object_or_404(Todo, owner = self.request.user, id = pk)
 
         form = CreateTodoForm(request.POST, instance=todo)
@@ -91,10 +91,21 @@ class TodoUpdateView(LoginRequiredMixin, UpdateView):
         if not form.is_valid():
             ctx = {'form': form }
             return render(request, self.template_name, ctx)
-        todo = form.save(commit=False)
-        todo.owner = self.request.user
+        
         todo.save()
         
+        message_name = 'your task has been updated'
+        message = request.POST['description']
+        from_email = 'projectviewapp@gmail.com'
+        to_email = [todo.app_user.email]
+        send_mail (
+            message_name, #title
+            message, #message
+            from_email,
+            to_email,
+            fail_silently=False 
+        )
+
         return redirect(reverse('project_view:todo_create'))
 
 class TodoDeleteView(LoginRequiredMixin, View):
@@ -112,7 +123,27 @@ class TodoDeleteView(LoginRequiredMixin, View):
 #        return qs.filter(owner=self.request.user)
 
     def post(self, request, pk):
-        todo = get_object_or_404(Todo, id=pk)
+        todo = get_object_or_404(Todo, owner=self.request.user, id=pk)
         
         todo.delete()
+        return redirect(reverse('project_view:todo_create'))
+
+
+class StatusUpdateView(LoginRequiredMixin, View):
+
+    model = Todo
+    def post(self, request, pk):
+        
+        todo = get_object_or_404(self.model, owner = self.request.user, id = pk)
+
+        if todo.status_id == 1:
+            todo.status_id = 2
+        elif todo.status_id == 2:
+            todo.status_id = 3
+        else:
+            todo.status_id = 1
+        print(todo.status_id)
+        
+        todo.save()
+        
         return redirect(reverse('project_view:todo_create'))
