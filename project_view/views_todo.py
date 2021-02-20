@@ -28,17 +28,21 @@ class TodoCreateView(LoginRequiredMixin, View):
     template_name='project_view/todo_form.html'
     
     def get(self, request) :
-        todo_list = Todo.objects.filter(owner = self.request.user)
 
-        
-        priority_list = Todo.objects.filter(owner = self.request.user, status_id=1).order_by('-deadline') #minus make reverse order
+        priority_list = Todo.objects.filter(owner = self.request.user, status_id=1).order_by('-deadline')
         in_process_list = Todo.objects.filter(owner = self.request.user, status_id=2).order_by('-deadline')
         settled_list = Todo.objects.filter(owner = self.request.user, status_id=3).order_by('-deadline')
         
+        priority_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=1).order_by('-deadline')
+        in_process_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=2).order_by('-deadline')
+        settled_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=3).order_by('-deadline')
+
+
         form = CreateTodoForm()
         update = 0
         context = { 'form':form, 'priority_list': priority_list, 'in_process_list':in_process_list,
-                    'settled_list':settled_list }
+                    'settled_list':settled_list, 'priority_list_read_only':priority_list_read_only,
+                    'in_process_list_read_only':in_process_list_read_only ,'settled_list_read_only':settled_list_read_only}
         return render(request, self.template_name, context)
         
     def post(self, request):

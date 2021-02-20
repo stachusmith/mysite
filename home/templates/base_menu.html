@@ -24,6 +24,7 @@
           <a href="{% url 'project_view:main' %}">ProjectView</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
+      <li><a href="{% url 'project_view:get_in_touch' %}">get in touch</a></li>
       {% if user.is_authenticated %}
       <li class="dropdown">
           <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{ user.username }}</a>

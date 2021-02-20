@@ -50,9 +50,13 @@
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 5px;
+    
 
+}
+
+#todo_list_container:hover {
+    transform: scale(1.01);
 }
 
 .todo_list_left {

@@ -12,13 +12,14 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
 from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateEntryForm #, CommentForm
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateEntryForm, GetInTouchForm #, CommentForm
 from project_view.views_fixing import *
 from project_view.views_topics import *
 from project_view.views_entries import *
 from project_view.views_participants import *
 from project_view.views_mypart import *
 from project_view.views_todo import *
+from project_view.views_login import *
 
 #from project_view.utils import dump_queries
 
@@ -472,4 +473,22 @@ class PartDeleteView(LoginRequiredMixin, View):
         
         part.delete()
         print(arg)
+        return redirect(reverse('project_view:module_detail', args=arg))
+
+class GetInTouchView(View):
+    
+    template_name='project_view/get_in_touch_form.html'
+    def get (self, request):
+        touch_form = GetInTouchForm()
+        
+        ctx = {'touch_form': touch_form}
+        return render(request, self.template_name, ctx)
+    
+#    def get_queryset(self):
+#        print('delete get_queryset called')
+#        qs = super(ModuleDeleteView, self).get_queryset()
+#        return qs.filter(owner=self.request.user)
+
+    def post(self, request):
+        
         return redirect(reverse('project_view:module_detail', args=arg))

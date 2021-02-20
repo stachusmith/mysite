@@ -1,20 +1,36 @@
 
 
 {% extends "base_menu.html" %}
-
+{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
+
+<h2>Welcome to Stachu Smith's ProjectView app.</h2>
+<h3>Please enter your username and password.</h3>
+
 
 {% if form.errors %}
   <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/login.css' %}">
 
+<div class="login_area">
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form |crispy }}
 
-<form method="post" action="{% url 'login' %}">
+    <input type="submit" class="btn btn-primary" value="Login" />
+    <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+</div>
+
+<h5>If you don't have a username or password, please <b>contact me</b> and I will create a test user for you, so that you can fully appreciate the functionality of this app.</h5>
+<form action="" method="post">
   {% csrf_token %}
-  {{ form.as_p}}
-
-  <input type="submit" class="btn btn-primary" value="Login" />
-  <input type="hidden" name="next" value="{{ next }}" />
+  {{ touch_form |crispy }}
+  <input type="submit" value="Send">
 </form>
+
+
 {% endblock %}

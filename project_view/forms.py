@@ -1,6 +1,7 @@
 from django import forms
 from project_view.models import Client, Project, Module, Part, Fixing, Fix, Topic, Picture, Entry, Participant, Participation, Todo
 
+from django.core.validators import MinLengthValidator
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from project_view.humanize import naturalsize
 from django.core.exceptions import ValidationError
@@ -138,3 +139,8 @@ class CreateParticipationForm(forms.ModelForm):
     class Meta:
         model = Participation
         fields = ['participant', 'project']
+
+class GetInTouchForm(forms.Form):
+    name = forms.CharField(required=True, max_length=200)
+    company = forms.CharField(required= False, max_length=200, validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    message = forms.CharField(required= True, widget=forms.Textarea)
