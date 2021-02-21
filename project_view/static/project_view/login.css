@@ -4,3 +4,19 @@
     /*padding-right: 50%;*/
     padding-bottom: 20px;
 }
+
+.upper_form {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.message_field {
+    max-height: 100px;
+    overflow: auto;
+}
+
+.button {
+    text-align: right;
+}

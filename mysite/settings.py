@@ -80,6 +80,8 @@ TEMPLATES = [
                 'home.context_processors.settings',
                 #https://stackoverflow.com/questions/29451783/django-base-template-view-method
                 'project_view.context_processors.my_parts',
+                'project_view.context_processors.touch_form',
+                'project_view.context_processors.touch_form2',
                 
             ],
 

@@ -26,10 +26,17 @@
 </div>
 
 <h5>If you don't have a username or password, please <b>contact me</b> and I will create a test user for you, so that you can fully appreciate the functionality of this app.</h5>
-<form action="" method="post">
-  {% csrf_token %}
-  {{ touch_form |crispy }}
-  <input type="submit" value="Send">
+<form action="{% url 'project_view:get_in_touch' %}" method="post">
+  <div class="upper_form">
+    {% csrf_token %}
+    {{ touch_form |crispy }}
+  </div>
+  <div class="lower_form">
+    {% csrf_token %}
+    {{ touch_form2 |crispy }}
+  </div>
+  
+  <div class="button"><input type="submit" value="Send"></div>
 </form>
 
 

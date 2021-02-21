@@ -476,19 +476,20 @@ class PartDeleteView(LoginRequiredMixin, View):
         return redirect(reverse('project_view:module_detail', args=arg))
 
 class GetInTouchView(View):
-    
-    template_name='project_view/get_in_touch_form.html'
-    def get (self, request):
-        touch_form = GetInTouchForm()
-        
-        ctx = {'touch_form': touch_form}
-        return render(request, self.template_name, ctx)
-    
-#    def get_queryset(self):
-#        print('delete get_queryset called')
-#        qs = super(ModuleDeleteView, self).get_queryset()
-#        return qs.filter(owner=self.request.user)
 
     def post(self, request):
-        
-        return redirect(reverse('project_view:module_detail', args=arg))
+
+        message_name = 'new message from '+request.POST['email']+' , an app user'
+        message = request.POST['message']
+        from_email = 'projectviewapp@gmail.com'
+        to_email = ['stackoosmith@gmail.com']
+        send_mail (
+            message_name, #title
+            message, #message
+            from_email,
+            to_email,
+            fail_silently=False 
+        )
+
+
+        return redirect(reverse('login'))
