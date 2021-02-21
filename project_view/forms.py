@@ -142,8 +142,8 @@ class CreateParticipationForm(forms.ModelForm):
 
 class GetInTouchForm(forms.Form):
     name = forms.CharField(required=True, max_length=200)
-    company = forms.CharField(required= False, max_length=200, validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
     email = forms.EmailField(required= True, max_length=200)
+    company = forms.CharField(required= False, max_length=200, validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
 
 class GetInTouchForm2(forms.Form):
     message = forms.CharField(required= True, widget=forms.Textarea(attrs={'class':'message_field'}))

@@ -476,10 +476,14 @@ class PartDeleteView(LoginRequiredMixin, View):
         return redirect(reverse('project_view:module_detail', args=arg))
 
 class GetInTouchView(View):
+    template_name = 'project_view/get_in_touch_form.html'
+    def get (self, request):
+        ctx= {} #GetInTouchForm is available as a context processor
+        return render(request, self.template_name, ctx)
 
     def post(self, request):
 
-        message_name = 'new message from '+request.POST['email']+' , an app user'
+        message_name = 'new message from '+request.POST['name']+', '+request.POST['email']+', '+request.POST['company']+', an app user'
         message = request.POST['message']
         from_email = 'projectviewapp@gmail.com'
         to_email = ['stackoosmith@gmail.com']
@@ -491,5 +495,7 @@ class GetInTouchView(View):
             fail_silently=False 
         )
 
+        if request.user.is_authenticated:
+            return redirect(reverse('home:main'))
 
         return redirect(reverse('login'))

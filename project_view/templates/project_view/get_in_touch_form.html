@@ -1,12 +1,24 @@
 {% extends "base_menu_project_view.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/login.css' %}">
+
 <p>
-  <form action="" method="post">
-    {% csrf_token %}
-    {{ touch_form|crispy }}
-    <input type="submit" value="Send">
-    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:main' %}'; return false;">
+  <form action="{% url 'project_view:get_in_touch' %}" method="post">
+    <div class="upper_form">
+      {% csrf_token %}
+      {{ touch_form |crispy }}
+    </div>
+    <div class="lower_form">
+      {% csrf_token %}
+      {{ touch_form2 |crispy }}
+    </div>
+    
+    <div class="button">
+      <input type="submit" value="Send">
+      <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:main' %}'; return false;">
+    </div>
   </form>
 </p>
 {% endblock %}

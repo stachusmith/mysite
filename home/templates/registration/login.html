@@ -6,8 +6,8 @@
 
 {% block content %}
 
-<h2>Welcome to Stachu Smith's ProjectView app.</h2>
-<h3>Please enter your username and password.</h3>
+<h1>Welcome to Stachu Smith's ProjectView app.</h1>
+Please enter your username and password:
 
 
 {% if form.errors %}
@@ -25,7 +25,12 @@
   </form>
 </div>
 
-<h5>If you don't have a username or password, please <b>contact me</b> and I will create a test user for you, so that you can fully appreciate the functionality of this app.</h5>
+<p>
+  For security reasons all pages of this app can only be accessed with a username and password.
+</p>
+<p>
+  If you don't have a username or password, please <b>contact me</b> and I will create a <b>test user</b> for you, so that you can fully appreciate the functionality of this app.
+</p>
 <form action="{% url 'project_view:get_in_touch' %}" method="post">
   <div class="upper_form">
     {% csrf_token %}
@@ -39,5 +44,12 @@
   <div class="button"><input type="submit" value="Send"></div>
 </form>
 
+<h2>About the app:</h2>
+
+<ul>
+  <li>purpose of this app</li>
+  <li>functionality</li>
+  <li>cool features</li>
+</ul>
 
 {% endblock %}
