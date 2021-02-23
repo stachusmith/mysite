@@ -6,6 +6,16 @@ from django.conf import settings
 
 # one to many:
 
+class GetInTouch(models.Model):
+    name = models.CharField(
+            max_length=200,
+            validators=[MinLengthValidator(1, "Title must be greater than 1 character")])
+    sent = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Development_provider(models.Model):
     name = models.CharField(
             max_length=200,

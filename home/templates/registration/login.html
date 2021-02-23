@@ -9,6 +9,9 @@
 <h1>Welcome to Stachu Smith's ProjectView app.</h1>
 Please enter your username and password:
 
+{% if sent == 0 %}
+  stachu is here
+{% endif %}
 
 {% if form.errors %}
   <p>Your username and password didn't match. Please try again.</p>

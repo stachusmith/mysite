@@ -43,3 +43,6 @@ admin.site.register(Entry)
 
 from project_view.models import Todo
 admin.site.register(Todo)
+
+from project_view.models import GetInTouch
+admin.site.register(GetInTouch)

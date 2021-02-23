@@ -77,4 +77,5 @@ urlpatterns = [
     path('todo/<int:pk>/status_update', views.StatusUpdateView.as_view(), name='status_update'),
     
     path('get_in_touch', views.GetInTouchView.as_view(), name='get_in_touch'),
+    
 ]

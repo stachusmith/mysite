@@ -197,7 +197,7 @@ You are editing the following topic:
     </script>
 {% else %}
     <p>
-        <div class="form_group" style="margin-bottom: 40px;">
+        <div class="form_group">
             <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form" class="form-inline">
                 <div class="form-container">
                     {% csrf_token %}

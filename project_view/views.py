@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
 
@@ -11,7 +12,7 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, GetInTouch
 from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateEntryForm, GetInTouchForm #, CommentForm
 from project_view.views_fixing import *
 from project_view.views_topics import *
@@ -19,7 +20,6 @@ from project_view.views_entries import *
 from project_view.views_participants import *
 from project_view.views_mypart import *
 from project_view.views_todo import *
-from project_view.views_login import *
 
 #from project_view.utils import dump_queries
 
@@ -494,8 +494,24 @@ class GetInTouchView(View):
             to_email,
             fail_silently=False 
         )
-
+        get_in_touch = GetInTouch.objects.all()
+        get_in_touch.sent = 1
         if request.user.is_authenticated:
             return redirect(reverse('home:main'))
 
         return redirect(reverse('login'))
+
+class LoginPage (LoginView):
+    template = 'registration/login.html'
+    def get(self, request):
+        get_in_touch = GetInTouch.objects.get(name='msg_status')
+        sent = get_in_touch.sent
+        print (sent)
+        ctx= { 'sent':sent }
+        return render(request, self.template_name, ctx)
+
+# 2021-02-23
+#now that sent is in the database, we can make
+# it a context processor
+
+        
