@@ -478,8 +478,10 @@ class PartDeleteView(LoginRequiredMixin, View):
 class GetInTouchView(View):
     template_name = 'project_view/get_in_touch_form.html'
     def get (self, request):
+
         ctx= {} #GetInTouchForm is available as a context processor
         return render(request, self.template_name, ctx)
+        
 
     def post(self, request):
 
@@ -494,24 +496,23 @@ class GetInTouchView(View):
             to_email,
             fail_silently=False 
         )
-        get_in_touch = GetInTouch.objects.all()
+        
+        get_in_touch = GetInTouch.objects.get(name='msg_status')
         get_in_touch.sent = 1
+        get_in_touch.save()
+
         if request.user.is_authenticated:
             return redirect(reverse('home:main'))
 
         return redirect(reverse('login'))
 
-class LoginPage (LoginView):
-    template = 'registration/login.html'
-    def get(self, request):
-        get_in_touch = GetInTouch.objects.get(name='msg_status')
-        sent = get_in_touch.sent
-        print (sent)
-        ctx= { 'sent':sent }
-        return render(request, self.template_name, ctx)
-
-# 2021-02-23
-#now that sent is in the database, we can make
-# it a context processor
+#this just sets sent back to 0 after displaying thank you msg after using contact form:
+class UnsentView(View):
+    def post(self, request):
 
         
+        get_in_touch = GetInTouch.objects.get(name='msg_status')
+        get_in_touch.sent = 0
+        get_in_touch.save()
+        
+        return HttpResponse()

@@ -78,4 +78,5 @@ urlpatterns = [
     
     path('get_in_touch', views.GetInTouchView.as_view(), name='get_in_touch'),
     
+    path('unsent', views.UnsentView.as_view(), name='unsent'),
 ]

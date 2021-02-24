@@ -82,6 +82,7 @@ TEMPLATES = [
                 'project_view.context_processors.my_parts',
                 'project_view.context_processors.touch_form',
                 'project_view.context_processors.touch_form2',
+                'project_view.context_processors.sent',
                 
             ],
 

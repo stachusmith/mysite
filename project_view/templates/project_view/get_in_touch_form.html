@@ -21,4 +21,27 @@
     </div>
   </form>
 </p>
+<script>
+  var myUrl = '{% url 'project_view:unsent' %}'
+
+  window.onload = function unsentPost(){
+    /*prepare data to be sent to server*/
+    var formData = new FormData();
+    formData.append("unsent", 0); //(name of data, data)
+    /*prepare data to be sent to server*/
+    const csrftoken = Cookies.get('csrftoken');
+    console.log(csrftoken)
+    headers.append('X-CSRFToken', csrftoken);
+    /*send the data using fetch method:*/
+    fetch(myUrl, {
+        method: "post",
+        body: formData,
+        headers: headers,
+        //credentials: 'include',
+        credentials: 'same-origin'
+    }).then(function(data){
+        console.log(data)
+    }).catch(console.log(myUrl, 'error'));
+}
+</script>
 {% endblock %}

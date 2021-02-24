@@ -9,10 +9,6 @@
 <h1>Welcome to Stachu Smith's ProjectView app.</h1>
 Please enter your username and password:
 
-{% if sent == 0 %}
-  stachu is here
-{% endif %}
-
 {% if form.errors %}
   <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
@@ -34,18 +30,24 @@ Please enter your username and password:
 <p>
   If you don't have a username or password, please <b>contact me</b> and I will create a <b>test user</b> for you, so that you can fully appreciate the functionality of this app.
 </p>
-<form action="{% url 'project_view:get_in_touch' %}" method="post">
-  <div class="upper_form">
-    {% csrf_token %}
-    {{ touch_form |crispy }}
-  </div>
-  <div class="lower_form">
-    {% csrf_token %}
-    {{ touch_form2 |crispy }}
-  </div>
-  
-  <div class="button"><input type="submit" value="Send"></div>
-</form>
+
+{% if sent == 0 %}
+  <form action="{% url 'project_view:get_in_touch' %}" method="post">
+    <div class="upper_form">
+      {% csrf_token %}
+      {{ touch_form |crispy }}
+    </div>
+    <div class="lower_form">
+      {% csrf_token %}
+      {{ touch_form2 |crispy }}
+    </div>
+    
+    <div class="button"><input type="submit" value="Send"></div>
+  </form>
+{% else %}
+  thank you for your message, I will get back to you as soon as I can. Cheers!
+
+{% endif %}
 
 <h2>About the app:</h2>
 
@@ -54,5 +56,24 @@ Please enter your username and password:
   <li>functionality</li>
   <li>cool features</li>
 </ul>
+
+<script>
+  var myUrl = '{% url 'project_view:unsent' %}'
+
+  window.onload = function unsentPost(){
+    /*prepare data to be sent to server*/
+    var formData = new FormData();
+    formData.append("unsent", 0); //(name of data, data)
+    /*prepare data to be sent to server*/
+
+    /*send the data using fetch method:*/
+    fetch(myUrl, {
+        method: "post",
+        body: formData,
+    }).then(function(data){
+        console.log(data)
+    }).catch(console.log(myUrl, 'error'));
+}
+</script>
 
 {% endblock %}
