@@ -20,3 +20,27 @@
 .button {
     text-align: right;
 }
+
+.upper {
+    display: grid;
+    grid-gap: 5%;
+    grid-template-columns: 25% 70%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.thank_you {
+    border: solid 1px gray;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 50px;
+}

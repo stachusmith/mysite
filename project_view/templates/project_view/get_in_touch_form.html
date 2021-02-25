@@ -3,6 +3,8 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'project_view/login.css' %}">
+<script type="text/javascript" src="{% static 'project_view/project_view.js' %}"></script>
+
 
 <p>
   <form action="{% url 'project_view:get_in_touch' %}" method="post">
@@ -25,20 +27,14 @@
   var myUrl = '{% url 'project_view:unsent' %}'
 
   window.onload = function unsentPost(){
-    /*prepare data to be sent to server*/
-    var formData = new FormData();
-    formData.append("unsent", 0); //(name of data, data)
-    /*prepare data to be sent to server*/
-    const csrftoken = Cookies.get('csrftoken');
-    console.log(csrftoken)
-    headers.append('X-CSRFToken', csrftoken);
+
+    const csrftoken = getCookie('csrftoken');
+    const request = new Request (myUrl);
     /*send the data using fetch method:*/
-    fetch(myUrl, {
+    fetch(request, {
         method: "post",
-        body: formData,
-        headers: headers,
-        //credentials: 'include',
-        credentials: 'same-origin'
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
     }).then(function(data){
         console.log(data)
     }).catch(console.log(myUrl, 'error'));

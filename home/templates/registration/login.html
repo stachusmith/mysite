@@ -6,70 +6,77 @@
 
 {% block content %}
 
-<h1>Welcome to Stachu Smith's ProjectView app.</h1>
-Please enter your username and password:
+<h2>Welcome to Stachu Smith's</h2><h1>ProjectView App</h1>
+<div class="upper">
+  <div class="left">
+    Please enter your username and password:
+    {% if form.errors %}
+      <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project_view/login.css' %}">
+    <script type="text/javascript" src="{% static 'project_view/project_view.js' %}"></script>
 
-{% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-<link rel="stylesheet" type="text/css" href="{% static 'project_view/login.css' %}">
+    <div class="login_area">
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form |crispy }}
 
-<div class="login_area">
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form |crispy }}
-
-    <input type="submit" class="btn btn-primary" value="Login" />
-    <input type="hidden" name="next" value="{{ next }}" />
-  </form>
+        <input type="submit" class="btn btn-primary" value="Login" />
+        <input type="hidden" name="next" value="{{ next }}" />
+      </form>
+    </div>
+  </div>
+  <div class="right">
+    <p>
+      This app is intended for automotive industry development service providers, often dealing with sensitive data. Therefore, for security reasons, all pages of this app can only be accessed with a username and password.
+    </p>
+    <p>
+      If you don't have a username or password, please <b>contact me</b> and I will provide you with a <b>test user</b>, so that you can fully appreciate the functionality of this app.
+    </p>
+  
+    {% if sent == 0 %}
+      <form action="{% url 'project_view:get_in_touch' %}" method="post">
+        <div class="upper_form">
+          {% csrf_token %}
+          {{ touch_form |crispy }}
+        </div>
+        <div class="lower_form">
+          {% csrf_token %}
+          {{ touch_form2 |crispy }}
+        </div>
+        
+        <div class="button"><input type="submit" value="Send"></div>
+      </form>
+    {% else %}
+    <div class="thank_you">
+      
+      <h4><i class="far fa-paper-plane" style="font-size: 30px;"></i> Thank you for your message, I will get back to you as soon as I can. Cheers! <i class="far fa-paper-plane" style="font-size: 30px;"></i></h4>
+    </div>
+    {% endif %}
+  </div>
 </div>
 
-<p>
-  For security reasons all pages of this app can only be accessed with a username and password.
-</p>
-<p>
-  If you don't have a username or password, please <b>contact me</b> and I will create a <b>test user</b> for you, so that you can fully appreciate the functionality of this app.
-</p>
+    <h2>About the app:</h2>
 
-{% if sent == 0 %}
-  <form action="{% url 'project_view:get_in_touch' %}" method="post">
-    <div class="upper_form">
-      {% csrf_token %}
-      {{ touch_form |crispy }}
-    </div>
-    <div class="lower_form">
-      {% csrf_token %}
-      {{ touch_form2 |crispy }}
-    </div>
-    
-    <div class="button"><input type="submit" value="Send"></div>
-  </form>
-{% else %}
-  thank you for your message, I will get back to you as soon as I can. Cheers!
-
-{% endif %}
-
-<h2>About the app:</h2>
-
-<ul>
-  <li>purpose of this app</li>
-  <li>functionality</li>
-  <li>cool features</li>
-</ul>
-
+    <ul>
+      <li>purpose of this app</li>
+      <li>functionality</li>
+      <li>cool features</li>
+      <li>gallery</li>
+    </ul>
+  
 <script>
   var myUrl = '{% url 'project_view:unsent' %}'
-
+  
   window.onload = function unsentPost(){
-    /*prepare data to be sent to server*/
-    var formData = new FormData();
-    formData.append("unsent", 0); //(name of data, data)
-    /*prepare data to be sent to server*/
 
+    const csrftoken = getCookie('csrftoken');
+    const request = new Request (myUrl);
     /*send the data using fetch method:*/
-    fetch(myUrl, {
+    fetch(request, {
         method: "post",
-        body: formData,
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
     }).then(function(data){
         console.log(data)
     }).catch(console.log(myUrl, 'error'));
