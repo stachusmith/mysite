@@ -29,13 +29,13 @@ class TodoCreateView(LoginRequiredMixin, View):
     
     def get(self, request) :
 
-        priority_list = Todo.objects.filter(owner = self.request.user, status_id=1).order_by('-deadline')
-        in_process_list = Todo.objects.filter(owner = self.request.user, status_id=2).order_by('-deadline')
-        settled_list = Todo.objects.filter(owner = self.request.user, status_id=3).order_by('-deadline')
+        priority_list = Todo.objects.filter(owner = self.request.user, status_id=1).order_by('deadline')
+        in_process_list = Todo.objects.filter(owner = self.request.user, status_id=2).order_by('deadline')
+        settled_list = Todo.objects.filter(owner = self.request.user, status_id=3).order_by('deadline')
         
-        priority_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=1).order_by('-deadline')
-        in_process_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=2).order_by('-deadline')
-        settled_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=3).order_by('-deadline')
+        priority_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=1).order_by('deadline')
+        in_process_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=2).order_by('deadline')
+        settled_list_read_only = Todo.objects.filter(app_user = self.request.user, status_id=3).order_by('deadline')
 
 
         form = CreateTodoForm()
@@ -84,7 +84,7 @@ class TodoUpdateView(LoginRequiredMixin, UpdateView):
         form = CreateTodoForm(instance=todo)
         update = 1
         context = { 'form':form, 'priority_list': priority_list, 'in_process_list':in_process_list,
-                    'settled_list':settled_list, 'update': update }
+                    'settled_list':settled_list, 'update': update, 'todo':todo }
         return render(request, self.template_name, context)
         
     def post(self, request, pk):

@@ -44,3 +44,50 @@ h2 {
     margin-bottom: 50px;
     padding: 50px;
 }
+
+.table_of_contents {
+    margin-top: 50px;
+}
+
+.text {
+    margin-top: 20px;
+}
+
+
+
+.gridbox{
+    border-style: solid;
+    border-color: gray;
+    border-width: 1px;
+    /*text-align: center;*/
+    
+}
+.gridbox:before{  /*before -> before content is added,
+    so that the padding doesn't include the content (won't be a ratio of 1:1)*/
+    content: "";
+    /*display: block;*/
+    float:left; /*this way the width will be known?*/
+    padding-top: 100%;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: center;
+    height: 100%;
+}
+
+.title {
+
+}
+
+.picture {
+    
+}

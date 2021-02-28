@@ -104,7 +104,7 @@ class TopicUpdateView(LoginRequiredMixin, UpdateView):
         entry_form.fields['responsible'].queryset = participants
         entry_form.fields['involved'].queryset = participants
         entry_form.fields['agreed_with'].queryset = participants
-        entries_list = Entry.objects.filter(topic_id=pk_topi)
+        entries_list = Entry.objects.filter(topic_id=pk_topi).order_by('-date_of_entry')
         #/entries:--------------------------------------------------------------------
 
         form = UpdateTopicForm(instance=topic)
@@ -165,7 +165,7 @@ class TopicEntryUpdateView(TopicUpdateView):
         form = UpdateTopicForm(instance=topic)
         entry = get_object_or_404(Entry, owner=self.request.user, id=pk)
         entry_form = CreateEntryForm(instance=entry)
-        entries_list = Entry.objects.filter(topic_id=pk_topi)
+        entries_list = Entry.objects.filter(topic_id=pk_topi).order_by('-date_of_entry')
         form_topic_create = CreateTopicForm(instance=topic)
         #limit options in dropdown:
         form_topic_create.fields['part'].queryset = Part.objects.filter(id=pk_part)

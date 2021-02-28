@@ -8,7 +8,7 @@
 {% if update == 1 %}
     <p>
         <div class="form_group" style="margin-bottom: 40px;">
-            <form action="{% url 'project_view:todo_create' %}" method="post" id="todo_form" class="form-inline">
+            <form action="{% url 'project_view:todo_update' todo.id %}" method="post" id="todo_form" class="form-inline">
                 <div class="form-container">
                     {% csrf_token %}
                     {{ form|crispy }}
@@ -20,12 +20,7 @@
             </form>
         </div>
     </p>
-    <script>
-    //position window to list of entries upon page load:
-    window.onload = function () {
-        document.getElementById('entry_list_container').scrollIntoView();
-    }
-    </script>
+    
 {% else %}
     <p>
         <div class="form_group" style="margin-bottom: 40px;">

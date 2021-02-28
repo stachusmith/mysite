@@ -195,8 +195,8 @@ class Todo(models.Model):
     deadline = models.DateField()
     
     last_modified = models.DateField(auto_now=True)
-    class Meta:
-        ordering = ['deadline']
+    #class Meta:
+    #    ordering = ['deadline']
     def __str__(self):
         return self.description[:20]
 
