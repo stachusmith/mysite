@@ -1,0 +1,20 @@
+{% extends "base_menu_project_view.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+#delete_button:hover {
+    background-color: red
+}
+</style>
+
+<p>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <input type="submit" value="Next">
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:participation_list' %}'; return false;">
+    <input id="delete_button" type="submit" value="Delete participant from database" onclick="window.location.href='{% url 'project_view:participant_delete' participant.id %}'; return false;">
+  </form>
+</p>
+{% endblock %}

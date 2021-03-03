@@ -1,0 +1,24 @@
+{% extends "base_menu_project_view.html" %}
+
+{% block content %}
+
+<h1>Discard Pictures</h1>
+
+<p>Are you sure you want to discard the following pictures?</p>
+
+{% if picture_list %}
+  {% for picture in picture_list %}
+    <img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+  {% endfor %}
+
+{% endif %}
+<p>
+  <form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Yes, discard.">
+    <input type="submit" value="Cancel" 
+      onclick="window.location.href='{% url 'project_view:topic_update' topic.part.id topic.id %}'; return false;">
+
+  </form>
+</p>
+{% endblock %}

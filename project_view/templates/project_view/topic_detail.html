@@ -1,0 +1,159 @@
+
+{% extends "base_menu_project_view.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/topic_update.css' %}">
+<div class="title_area">
+    <div class="title_area_left">
+        <div class="icon">
+            {% if topic.status.id == 1 %}
+                <i class="fas fa-exclamation" style="font-size:30px;color:orange"></i>
+            {% elif topic.status.id == 2 %}
+                <i class="fa fa-cog fa-spin" style="font-size:30px"></i>
+            {% else %}
+                <i class='fas fa-check-circle' style='font-size:30px;color:green'></i>
+            {% endif %}
+        </div>
+        <div class="title">
+            <h1>{{ topic.title }}</h1>
+            <p>
+                <a href="{% url 'project_view:part_detail' module.id part.id %}">All topics</a>
+            </p>
+        </div>
+    </div>
+    <div class="title_area_right">
+        Last modified: {{ topic.last_modified }}
+        {% if part.owner == user %}
+        <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+        <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+        {% endif %}
+    </div>
+    
+</div>
+<div class="picture_container">
+    <h2 style="padding-left: 10px;">Pictures:</h2>
+    {% if picture_list %}
+        <div class="picture_grid" id="target_list">
+            {% for picture in picture_list %}
+                <div class="pic_area">
+                    <div class="pic_description">
+                        <div class="pic_desc_left">
+                            picture: {{ picture.id }}
+                        </div>
+                        
+                    </div>
+                    <div class="pic">
+                        <a href="#"><img type="image" id=picture_box
+                            src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                            onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
+                        </a>
+
+                        <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
+                            <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                            style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+                        </a></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p>
+        there are no pictures for this topic
+    </p>
+    {% endif %}
+</div>
+<div class="problem_area">
+    <h3>Problem description:</h3>
+
+    <h4 style="margin-bottom: 40px; background-color:  rgb(246, 246, 246);padding: 5px;">{{ topic.description }}</h4>
+
+
+
+    {% if entries_list %}
+        <div id="entry_list_title_container">
+            <div class="entry_list_left">
+                <div class="entry_list_date_of_entry">
+                    date of entry:
+                </div>
+                <div class="entry_list_solution">
+                    solution:
+                </div>
+            </div>
+            <div class="entry_list_middle">
+                <div class="entry_list_person">
+                    responsible:
+                </div>
+                <div class="entry_list_person">
+                    involved:
+                </div>
+                <div class="entry_list_person">
+                    agreed with:
+                </div>
+            </div>
+            <div class="entry_list_right">
+                <div class="entry_list_deadline_for_topic_detail">
+                    deadline:
+                </div>
+            </div>
+        </div>
+
+        {% for entry in entries_list %}
+            <div id="entry_list_container">
+                <div class="entry_list_left">
+                    <div class="entry_list_date_of_entry">
+                        {{ entry.date_of_entry }}
+                    </div>
+                    <div class="entry_list_solution">
+                        {{ entry.solution }}
+                    </div>
+                </div>
+                <div class="entry_list_middle">
+                    <div class="entry_list_person">
+                        {% for person in entry.responsible.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.involved.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.agreed_with.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="entry_list_right">
+                    <div class="entry_list_deadline_for_topic_detail">
+                        {{ entry.deadline }}
+                    </div>
+                </div>
+            </div>
+            
+        {% endfor %}
+
+
+    {% else %}
+        <p>
+            there are no entries for this topic
+        </p>
+
+    {% endif %}
+</div>
+
+
+<p>
+<a href="{% url 'project_view:part_detail' module.id part.id %}">All topics</a>
+</p>
+
+{% endblock %}
+

@@ -1,31 +1,31 @@
-{% extends "base_menu.html" %}
+{% extends "base_menu_project_view.html" %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/structure.css' %}">
+<div class="left_block">
+  <h1>OEMs:</h1>
 
-<h1>OEMs:</h1>
-
-<p>
-{% if client_list %}
-<ul>
-  {% for client in client_list %}
-    <li>
-        <a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }}</a>
-        {% if client.owner == user %}
-        (<a href="{% url 'project_view:client_update' client.id %}">Edit</a> |
-        <a href="{% url 'project_view:client_delete' client.id %}">Delete</a>)
-        {% endif %}
-    </li>
-  {% endfor %}
-</ul>
-{% else %}
-  <p>There are no clients in the database.</p>
-{% endif %}
-</p>
-<p>
-<a href="{% url 'project_view:client_create' %}">Add a Client</a> |
-{% if user.is_authenticated %}
-<a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a>
-{% else %}
-<a href="{% url 'login' %}?next={% url 'project_view:main' %}">Login</a>
-{% endif %}
-</p>
+  <p>
+  {% if client_list %}
+  <ul class="item_list">
+    {% for client in client_list %}
+      <div class="items_container">
+          <a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }}</a>
+          {% if client.owner == user %}
+          <div class="edit_delete">
+            <a href="{% url 'project_view:client_update' client.id %}">Edit</a> | 
+            <a href="{% url 'project_view:client_delete' client.id %}">Delete</a>
+          </div>
+          {% endif %}
+        </div>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no clients in the database.</p>
+  {% endif %}
+  </p>
+  <p>
+    <a href="{% url 'project_view:client_create' %}">Add an OEM</a>
+  </p>
+</div>
 {% endblock %}

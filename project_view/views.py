@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
 
@@ -11,9 +12,15 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 #from project_view.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 
-from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix
-from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm #, CommentForm
+from project_view.models import Part, Client, Project, Module, Supplier, Topic, Fixing, Fix, GetInTouch
+from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartForm, CreateEntryForm, GetInTouchForm #, CommentForm
 from project_view.views_fixing import *
+from project_view.views_topics import *
+from project_view.views_entries import *
+from project_view.views_participants import *
+from project_view.views_mypart import *
+from project_view.views_todo import *
+
 #from project_view.utils import dump_queries
 
 #from django.db.models import Q
@@ -21,10 +28,10 @@ from project_view.views_fixing import *
 # Clients
 #-------------------------------------------------------------------------------
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
 
-class ClientDetailView(View, LoginRequiredMixin):
+class ClientDetailView(LoginRequiredMixin, View):
     model = Client
     
     # By convention:
@@ -73,7 +80,7 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
 # Projects
 #-------------------------------------------------------------------------------
 
-class ProjectDetailView(View, LoginRequiredMixin):
+class ProjectDetailView(LoginRequiredMixin, View):
     model = Project
     
     # By convention:
@@ -81,9 +88,10 @@ class ProjectDetailView(View, LoginRequiredMixin):
     def get(self, request, pk, pk_proj) :
         x = Project.objects.get(id=pk_proj)
         module_list = Module.objects.filter(project_id=x)
+        project_list = Participation.objects.filter(project_id=x)
         client = Client.objects.get(id=pk)
         print(client)
-        ctx = {'project' : x, 'module_list' : module_list, 'client': client}
+        ctx = {'project' : x, 'module_list' : module_list, 'client': client, 'project_list':project_list}
         return render(request, self.template_name, ctx)
 
 class ProjectCreateView(LoginRequiredMixin, View):
@@ -94,15 +102,16 @@ class ProjectCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         client = Client.objects.get(id=pk)
-        form_data = {'name':'project name', 'client':client}
-        form = CreateProjectForm(form_data)
-        
+        form_data = {'client':client}
+        form = CreateProjectForm(initial=form_data)
+        print(form)
         #limit options in dropdown:
         form.fields['client'].queryset = Client.objects.filter(id=pk)
-
+        
         ctx= { 'form':form, 'client':client}
         return render(request, self.template_name, ctx)
 
+        
     def post(self, request, pk):
         
         #unused:
@@ -110,6 +119,8 @@ class ProjectCreateView(LoginRequiredMixin, View):
         #print(pk)
         
         form = CreateProjectForm(request.POST)
+        print(request.POST)
+        
         
         #if not valid render the form again:
         if not form.is_valid():
@@ -120,6 +131,9 @@ class ProjectCreateView(LoginRequiredMixin, View):
         project = form.save(commit=False)
         project.owner = self.request.user
         project.save()
+        print(request.POST)
+        #for participation in request.POST['participant']:
+        #    Participation.objects.create(participant_id = participation, project_id= project.id , owner= request.user)
 
         return redirect(reverse('project_view:client_detail', args=[pk]))
 
@@ -132,7 +146,7 @@ class ProjectUpdateView(LoginRequiredMixin, View):
     def get(self, request, pk, pk_proj):
         client = Client.objects.get(id=pk)
         project = get_object_or_404(self.model, id=pk_proj, owner=self.request.user)
-        form = CreateProjectForm(instance=project)
+        form = UpdateProjectForm(instance=project)
         
         #limit options in dropdown:
         form.fields['client'].queryset = Client.objects.filter(id=pk)
@@ -153,12 +167,16 @@ class ProjectUpdateView(LoginRequiredMixin, View):
         #pk=request.POST['client']
         #print(pk)
         project = get_object_or_404(self.model, id=pk_proj, owner=self.request.user)
-        form = CreateProjectForm(request.POST, instance=project)
-
+        
+        form = UpdateProjectForm(request.POST, instance=project)
+        #participations = Participation.objects.filter(project_id=pk_proj, owner=self.request.user)
+        #print(request.POST)
         if not form.is_valid():
             ctx = {'form': form}
             return render(request, self.template_name, ctx)
-
+        #for participation in participations:
+        #    participation.participant_id = request.POST['participant']
+        #    participation.save()    
         form.save()
         return redirect(reverse('project_view:client_detail', args=[project.client_id]))
 
@@ -179,7 +197,7 @@ class ProjectDeleteView(LoginRequiredMixin, View):
 #        return qs.filter(owner=self.request.user)
 
     def post(self, request, pk, pk_proj):
-        project = get_object_or_404(Project, id=pk_proj)
+        project = get_object_or_404(Project, id=pk_proj, owner=self.request.user)
         print(project)
         arg = [project.client_id]
         
@@ -189,13 +207,13 @@ class ProjectDeleteView(LoginRequiredMixin, View):
 # Modules
 #-------------------------------------------------------------------------------
 
-class ModuleDetailView(View, LoginRequiredMixin):
+class ModuleDetailView(LoginRequiredMixin, View):
     model = Module
     
     # By convention:
     template_name = "project_view/module_detail.html"
     def get(self, request, pk_proj, pk_modu) :
-        #print(pk_proj, pk_modu)
+        print(pk_proj, pk_modu)
         module = Module.objects.get(id=pk_modu)
         print(module)
         
@@ -209,7 +227,12 @@ class ModuleDetailView(View, LoginRequiredMixin):
         client = Client.objects.get(id=client_number)
         print(client)
         
-        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list}
+        all_my_parts = My_part.objects.filter(user_id=request.user.id)
+        my_parts_ids = list()
+        for part in all_my_parts:
+            my_parts_ids.append(part.part_id)
+        print(my_parts_ids)
+        ctx = {'client': client, 'project': project, 'module' : module, 'part_list' : part_list, 'my_parts_ids': my_parts_ids }
         print(ctx)
         return render(request, self.template_name, ctx)
 
@@ -221,8 +244,8 @@ class ModuleCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         project = Project.objects.get(id=pk_proj)
-        form_data = {'name':'module name', 'project':project}
-        form = CreateModuleForm(form_data)
+        form_data = {'name':'', 'project':project}
+        form = CreateModuleForm(initial=form_data)
         
         #limit options in dropdown:
         form.fields['project'].queryset = Project.objects.filter(id=pk_proj)
@@ -316,7 +339,7 @@ class ModuleDeleteView(LoginRequiredMixin, View):
 # Parts
 #-------------------------------------------------------------------------------
 
-class PartDetailView(DetailView, LoginRequiredMixin):
+class PartDetailView(LoginRequiredMixin, DetailView):
     model = Part
     template_name = "project_view/part_detail.html"
     def get(self, request, pk_modu, pk_part) :
@@ -328,19 +351,29 @@ class PartDetailView(DetailView, LoginRequiredMixin):
         project = Project.objects.get(id=project_number)
 
         fixes = Fix.objects.filter(part_id=part)
-        #fix_list = list()
-        #for fix in fixes:
-        #    fix_list=fix_list+fix
-        #print(fix_list)
-        #fixing_types = Fix.objects.filter(part_id=pk_part)
         
-        #rows = part.fixing_project_view.values('id')
-        #print(rows)
-        #for row in rows:
-        #    fixings = row['id']
-        #print(fixings)
+        new_topics_list = Topic.objects.filter(part_id=part, status_id=1).order_by('-last_modified') #minus make reverse order
+        in_process_topics_list = Topic.objects.filter(part_id=part, status_id=2).order_by('-last_modified')
+        settled_topics_list = Topic.objects.filter(part_id=part, status_id=3).order_by('-last_modified')
+        #print(new_topics_list) 
+        #print(in_process_topics_list)
+        #print(settled_topics_list)
+        
+        for topic in new_topics_list:
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('-id')#[:3]
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')
 
-        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes}
+        for topic in in_process_topics_list:
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('-id')
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')
+            print(topic.entry_list)
+        for topic in settled_topics_list:
+            topic.pic_list=Picture.objects.filter(topic_id=topic.id).order_by('-id')
+            topic.entry_list=Entry.objects.filter(topic_id=topic.id).order_by('-date_of_entry')
+        
+        context = { 'part' : part, 'module': module, 'project': project, 'fixes':fixes,
+                    'new_topics_list': new_topics_list, 'in_process_topics_list':in_process_topics_list,
+                    'settled_topics_list':settled_topics_list }
         return render(request, self.template_name, context)
 
 class PartCreateView(LoginRequiredMixin, View):
@@ -351,8 +384,8 @@ class PartCreateView(LoginRequiredMixin, View):
         
         #pull defaults in form:
         module = Module.objects.get(id=pk_modu)
-        form_data = {'name':'...', 'description':'...', 'module':module, 'thickness':0, 'minimal_draft_angle':0}
-        form = CreatePartForm(form_data)
+        form_data = {'name':'', 'description':'', 'module':module, 'thickness':0, 'minimal_draft_angle':0}
+        form = CreatePartForm(initial=form_data)
         
         #limit options in dropdown:
         form.fields['module'].queryset = Module.objects.filter(id=pk_modu)
@@ -378,7 +411,7 @@ class PartCreateView(LoginRequiredMixin, View):
         part.owner = self.request.user
         part.save()
 
-        return redirect(reverse('project_view:module_detail', args=[part.module.project_id, part.module_id]))
+        return redirect(reverse('project_view:part_detail', args=[part.module.id, part.id]))
 
 class PartUpdateView(LoginRequiredMixin, View):
     
@@ -417,7 +450,7 @@ class PartUpdateView(LoginRequiredMixin, View):
             return render(request, self.template_name, ctx)
 
         form.save()
-        return redirect(reverse('project_view:module_detail', args=[part.module.project_id, part.module_id]))
+        return redirect(reverse('project_view:part_detail', args=[part.module.id, part.id]))
 
 
 class PartDeleteView(LoginRequiredMixin, View):
@@ -441,3 +474,45 @@ class PartDeleteView(LoginRequiredMixin, View):
         part.delete()
         print(arg)
         return redirect(reverse('project_view:module_detail', args=arg))
+
+class GetInTouchView(View):
+    template_name = 'project_view/get_in_touch_form.html'
+    def get (self, request):
+
+        ctx= {} #GetInTouchForm is available as a context processor
+        return render(request, self.template_name, ctx)
+        
+
+    def post(self, request):
+
+        message_name = 'new message from '+request.POST['name']+', '+request.POST['email']+', '+request.POST['company']+', an app user'
+        message = request.POST['message']
+        from_email = 'projectviewapp@gmail.com'
+        to_email = ['stackoosmith@gmail.com']
+        send_mail (
+            message_name, #title
+            message, #message
+            from_email,
+            to_email,
+            fail_silently=False 
+        )
+        
+        get_in_touch = GetInTouch.objects.get(name='msg_status')
+        get_in_touch.sent = 1
+        get_in_touch.save()
+
+        if request.user.is_authenticated:
+            return redirect(reverse('home:main'))
+
+        return redirect(reverse('login'))
+
+#this just sets sent back to 0 after displaying thank you msg after using contact form:
+class UnsentView(View):
+    def post(self, request):
+
+        
+        get_in_touch = GetInTouch.objects.get(name='msg_status')
+        get_in_touch.sent = 0
+        get_in_touch.save()
+        
+        return HttpResponse()

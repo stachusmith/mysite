@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'project_view.apps.ProjectViewConfig',    
 ]
 
-CRISPY_TEMPLATE_PACK = 'bootstrap3' #'uni_form'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,6 +78,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.settings',
+                #https://stackoverflow.com/questions/29451783/django-base-template-view-method
+                'project_view.context_processors.my_parts',
+                'project_view.context_processors.touch_form',
+                'project_view.context_processors.touch_form2',
+                'project_view.context_processors.sent',
                 
             ],
 
@@ -135,6 +140,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
@@ -151,6 +158,12 @@ AUTHENTICATION_BACKENDS = (
 
     'django.contrib.auth.backends.ModelBackend',
 )
-
+#LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
+#turn less secure app (at gmail)
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'projectviewapp@gmail.com'
+EMAIL_USE_TLS = True

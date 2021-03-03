@@ -1,0 +1,43 @@
+{% extends "base_menu_project_view.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/login.css' %}">
+<script type="text/javascript" src="{% static 'project_view/project_view.js' %}"></script>
+
+
+<p>
+  <form action="{% url 'project_view:get_in_touch' %}" method="post">
+    <div class="upper_form">
+      {% csrf_token %}
+      {{ touch_form |crispy }}
+    </div>
+    <div class="lower_form">
+      {% csrf_token %}
+      {{ touch_form2 |crispy }}
+    </div>
+    
+    <div class="button">
+      <input type="submit" value="Send">
+      <input type="submit" value="Cancel" onclick="window.location.href='{% url 'home:main' %}'; return false;">
+    </div>
+  </form>
+</p>
+<script>
+  var myUrl = '{% url 'project_view:unsent' %}'
+
+  window.onload = function unsentPost(){
+
+    const csrftoken = getCookie('csrftoken');
+    const request = new Request (myUrl);
+    /*send the data using fetch method:*/
+    fetch(request, {
+        method: "post",
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
+    }).then(function(data){
+        console.log(data)
+    }).catch(console.log(myUrl, 'error'));
+}
+</script>
+{% endblock %}

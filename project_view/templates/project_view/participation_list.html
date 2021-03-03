@@ -1,0 +1,131 @@
+{% extends "base_menu_project_view.html" %}
+{% block content %}
+
+<style>
+.person_grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 5px;
+  margin-bottom: 5px;
+}  
+.person_box{
+  border-color: lightgray;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.person_box:hover{
+  transform: scale(1.02);
+}
+.project_list{
+  margin-bottom: 5px;
+}
+
+.list_line{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.list_line:nth-child(odd){
+  background-color: rgb(246, 246, 246);
+}
+
+</style>
+
+<h1>All Participants:</h1>
+<p>
+  <a href="{% url 'project_view:participant_create' %}">Add new participant</a>
+</p>
+
+<div class="person_grid">
+  {% if project_collection %}
+    {% for person, participation_list in project_collection.items %}
+      <div class="person_box">
+        <div class="name_line">
+          {% if person.owner == user %}
+            <h3><a href="{% url 'project_view:participant_update' person.id %}">{{ person.name }}</a></h3>
+          {% else%}
+            <h3>{{ person.name }}</h3>
+          {% endif %}
+        </div>
+        <div class="person_details_container">
+          <div class="project_list">
+            <div class="list_line">
+              <div class="project">
+                <ul style="list-style: none; padding-left: 5px;">
+                  <li>
+                    works for:
+                  </li>
+                  <li>
+                    works as:
+                  </li>
+                  <li>
+                    phone number:
+                  </li>
+                  <li>
+                    email:
+                  </li>
+                </ul>
+              </div>
+              <div class="edit_delete">
+                <ul style="list-style: none;">
+                  <li>
+                    {% if person.client %}
+                    {{ person.client }}
+                    {% endif %}
+                    {% if person.supplier %}
+                    {{ person.supplier }} 
+                    {% endif %}
+                    {% if person.development_provider %}
+                    {{ person.development_provider }}
+                    {% endif %}
+                  </li>
+                  <li>
+                    {{ person.job_title }}
+                  </li>
+                  <li>
+                    {{ person.phone_number}}
+                  </li>
+                  <li>
+                    {{ person.email }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project_list">
+          in following projects:
+          {% for participation in participation_list %}
+            <div class="list_line">
+              <div class="project">
+                <a href="{% url 'project_view:project_detail' participation.project.client.id participation.project.id %}">{{ participation.project.name }}</a>
+              </div>
+              <div class="edit_delete">
+                {% if participation.owner == user %}
+
+                <a style="color: rgb(140, 0, 255);" href="{% url 'project_view:participation_update' participation.id %}">edit</a> |
+                <a style="color: rgb(140, 0, 255);" href="{% url 'project_view:participation_delete' participation.id %}">remove from project</a>
+
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <p>
+          <a style="color: green;" href="{% url 'project_view:participation_create' person.id %}">add project</a>
+        </p>
+      </div>
+      
+    {% endfor %}
+  {% endif %}
+</div>
+<div>
+<p>
+  <a href="{% url 'project_view:participant_create' %}">Add new participant</a>
+</p>
+</div>
+{% endblock %}

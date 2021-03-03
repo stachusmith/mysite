@@ -1,0 +1,245 @@
+/*title area*/
+.title_area{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /*border-color: lightgray;
+    border-style: solid;
+    border-width: 1px;*/
+    border-radius: 5px;
+}
+
+.icon {
+    width: 50px;
+    padding-top: 25px;
+    padding-left: 10px;
+}
+.title {
+    overflow: auto;
+}
+.title_area_right {
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+.title_area_left {
+    display: flex;
+    flex-direction: row;
+}
+
+/*upper area
+.upper_area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 30px;
+}*/
+
+/*pictures-------------------------*/
+:root {
+    --box-width: 100%;
+    --box-height: 200px;
+}
+.target {
+    width: 100%;
+    max-height: var(--box-height);
+    border-radius: 7px;
+    background-color: rgb(246, 246, 246);
+    padding: 2px;
+}
+
+.more_pics_text{
+    display: flex;
+}
+
+#target_area {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+#picture_box {
+    width: var(--box-width);
+    height: auto;
+    max-height: 200px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: gray;
+    border-radius: 5px;
+    background-color: rgb(246, 246, 246);
+}
+.picture_detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.picture_container {
+    margin-top: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 5px;
+    padding-bottom: 10px;
+    background-color:  rgb(246, 246, 246);
+    margin-bottom: 30px;
+}
+
+.picture_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.pic_area {
+}
+.pic_description{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.pic_desc_left {
+}
+
+.pic_desc_right {
+}
+
+.pic{
+}
+
+/*------------------------------------*/
+
+
+
+/*entry form--------------------------*/
+.form-container {
+    display: flex;
+    justify-content: space-evenly; 
+}
+
+.submit{
+    padding-top: 1.5em;
+}
+/*------------------------------------*/
+
+.problem_area {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border-color: lightgrey;
+    border-style: solid;
+    border-width: 1px;
+    
+}
+
+/*entry list--------------------------*/
+#entry_list_title_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-weight: bold
+
+}
+
+#entry_list_container {
+    border-color: gray;
+    border-style: solid;
+    border-width: 1px;
+    background-color: rgb(246, 246, 246);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+}
+
+.entry_list_left {
+    /*border-color: yellow;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    
+}
+
+.entry_list_middle {
+    width: 100%;
+    /*border-color: lightgray;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    
+}
+
+.entry_list_right {
+    /*border-color: red;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+
+
+
+
+/*left*/
+
+.entry_list_date_of_entry {
+    width: 120px;
+    /*border-color: green;*/
+    overflow: auto;
+    flex-shrink: 1;
+}
+
+.entry_list_solution {
+    width: 450px;
+    /*border-color: violet;*/
+    max-height: 100px;
+    overflow: auto;
+    flex-shrink: 2;
+}
+
+/*middle*/
+
+.entry_list_person {
+    width: 100%;
+    /*border-color: orange;*/
+    overflow: auto;
+    
+}
+
+/*right*/
+
+.entry_list_edit_delete_icons {
+    width: 50px;
+    /*border-color: lightseagreen;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    overflow: auto;
+}
+
+.entry_list_deadline {
+    width: 120px;
+    /*border-color: blue;*/
+    overflow: auto;
+}
+
+.entry_list_deadline_for_topic_detail {
+    width: 120px;
+    overflow: auto;
+    display: flex;
+    justify-content: flex-end;
+}

@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- Edit settings.py and add APP_NAME = 'app_name' -->
+<meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    style-src https://ajax.googleapis.com/ https://maxcdn.bootstrapcdn.com https://code.jquery.com https://use.fontawesome.com 'self' 'unsafe-inline';
+    script-src https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
+    https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js
+    https://code.jquery.com/ui/1.12.1/jquery-ui.js 'self' 'unsafe-inline';
+    font-src https://use.fontawesome.com 'self' https://maxcdn.bootstrapcdn.com;
+    img-src 'self' data:;
+    object-src 'none';
+    connect-src 'self';
+    form-action 'self';
+    base-uri 'none';">
+    <!-- Edit settings.py and add APP_NAME = 'app_name' -->
 <title>{% block title %}{{ settings.APP_NAME }}{% endblock %}</title>
 
 <link rel="stylesheet"
@@ -14,16 +26,19 @@
 
 <link rel="stylesheet"
     href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"
-     crossorigin="anonymous">
+    crossorigin="anonymous">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
     crossorigin="anonymous"></script>
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"
+    integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18Nw"
     crossorigin="anonymous"></script>
 
 <script
   src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+  integrity="sha384-JPbtLYL10d/Z1crlc6GGGGM3PavCzzoUJ1UxH0bXHOfguWHQ6XAWrIzW+MBGGXe5"
   crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
@@ -35,7 +50,12 @@
 
 </head>
 <body>
-<div class="container">
+<style>
+    .container {
+        margin-bottom: 30px;
+    }
+</style>
+<div class="container"> 
 {% block navbar %} {% endblock %}
 {% block welcome %} {% endblock %}
 {% block messages %}

@@ -1,0 +1,101 @@
+{% extends "base_bootstrap.html" %}
+{% block navbar %}
+{% load app_tags %} <!--gravatar (templatetags folder)-->
+
+<style>
+    .subnav {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        width: 100%;
+        height: 30px;
+        background-color: gray;
+        padding-top: 5px;
+        padding-left: 150px;
+        padding-right: 10px;
+    }
+    .subnav_el, .subnav_el:focus{
+        text-decoration: none;
+        color: white;
+    }
+    .subnav_el:hover{
+        text-decoration: none;
+        color: orange;
+    }
+    #log-button {
+        background-color: transparent;
+    }
+    
+    .footer_holder {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    }
+
+
+</style>
+
+
+<nav class="navbar navbar-default navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">{{ settings.APP_NAME }}</a>
+        </div>
+        <!-- https://stackoverflow.com/questions/22047251/django-dynamically-get-view-url-and-check-if-its-the-current-page -->
+        <ul class="nav navbar-nav">
+        {% url 'project_view' as project_view %}
+        <li {% if request.get_full_path == project_view %}class="active"{% endif %}>
+            <a href="{% url 'project_view:main' %}">ProjectView</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+            
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'project_view:get_in_touch' %}">get in touch</a></li>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{ user.username }}</a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'logout' %}?next={% url 'home:main' %}">Logout</a></li>
+                </ul>
+            </li>
+            {% else %}
+            <li><a href="{% url 'login' %}">get in touch</a></li>
+            <li>
+            <a href="{% url 'login' %}?next={% url 'home:main' %}">Login</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="subnav">
+        <a href="{% url 'project_view:fixing_list' %}" class="subnav_el" target="_blank" rel="noopener noreferrer">Manage fixing elements <i class="fas fa-external-link-alt" style="font-size: 11px;"></i></a>
+        <a href="{% url 'project_view:participation_list' %}" class="subnav_el" target="_blank" rel="noopener noreferrer">Manage project participants <i class="fas fa-external-link-alt" style="font-size: 11px;"></i></a>
+        <a href="{% url 'project_view:todo_create' %}" class="subnav_el">to-do list</a>
+        <div class="dropdown">
+            <a href="#" class="subnav_el" data-toggle="dropdown" class="dropdown-toggle">myParts</a>
+            <ul class="dropdown-menu">
+                
+                {% if my_parts %}
+                    {% for my_part in my_parts %}
+                        {% if my_part.user == user %}
+                            <li>
+                                <a href="{% url 'project_view:part_detail' my_part.part.module.id my_part.part.id %}">{{my_part.part.name }} {{ my_part.part.module.project.name }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    empty :(
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="footer_holder">
+    <footer class="bg-light text-center text-lg-start">
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+        get in touch: stackoosmith@gmail.com
+      </div>
+      <!-- Copyright -->
+    </footer>
+    </div>
+{% endblock %}

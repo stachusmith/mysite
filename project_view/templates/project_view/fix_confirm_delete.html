@@ -1,0 +1,16 @@
+{% extends "base_menu_project_view.html" %}
+
+{% block content %}
+
+<h1>Delete Part</h1>
+
+<p>Are you sure you want to delete the following fixing combination: {{ fix.number_of_elements}} {{fix.fixing.name}}s?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Yes, delete.">
+  <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:part_detail' fix.part.module.id fix.part.id %}'; return false;">
+
+</form>
+
+{% endblock %}

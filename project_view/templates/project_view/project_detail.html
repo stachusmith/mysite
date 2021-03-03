@@ -1,31 +1,71 @@
-{% extends "base_menu.html" %}
+{% extends "base_menu_project_view.html" %}
+{% load static %}
+
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/structure.css' %}">
 
-<h1><a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }}</a> / {{ project.name }}:</h1>
 
-<p>
-{% if module_list %}
-<ul>
-  {% for module in module_list %}
-    <li>
-        <a href="{% url 'project_view:module_detail' project.id module.id %}">{{ module.name }}</a>
-        {% if client.owner == user %}
-        (<a href="{% url 'project_view:module_update' project.id module.id %}">Edit</a> |
-        <a href="{% url 'project_view:module_delete' project.id module.id %}">Delete</a>)
-        {% endif %}
-    </li>
-  {% endfor %}
-</ul>
-{% else %}
-  <p>There are no modules for this project.</p>
-{% endif %}
-</p>
-<p>
-<a href="{% url 'project_view:module_create' project.id %}">Add a Module</a> |
-{% if user.is_authenticated %}
-<a href="{% url 'logout' %}?next={% url 'project_view:main' %}">Logout</a>
-{% else %}
-<a href="{% url 'login' %}?next={% url 'project_view:main' %}">Login</a>
-{% endif %}
-</p>
+<div class="page">
+  <div class="left_block">
+    <h3><a href="{% url 'project_view:main' %}">OEMs /</a></h3>
+    <h2><a href="{% url 'project_view:client_detail'  client.id %}">{{ client.name }} /</a></h2>
+    <h1>{{ project.name }}:</h1>
+
+    <p>
+    {% if module_list %}
+    <ul class="item_list">
+      {% for module in module_list %}
+      <div class="items_container">
+            <a href="{% url 'project_view:module_detail' project.id module.id %}">{{ module.name }}</a>
+            {% if module.owner == user %}
+            <div class="edit_delete">
+              <a href="{% url 'project_view:module_update' project.id module.id %}">Edit</a> |
+              <a href="{% url 'project_view:module_delete' project.id module.id %}">Delete</a>
+            </div>
+            {% endif %}
+      </div>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>There are no modules for this project.</p>
+    {% endif %}
+    </p>
+
+    <p>
+      <a href="{% url 'project_view:module_create' project.id %}">Add a Module</a>
+    </p>
+  </div>
+  <div class="right_block" id="participants">
+    <h2>Participants:</h2>
+
+    {% if project_list %}
+      <ul class="item_list">
+        {% for project in project_list %}
+          <div class="items_container">
+            {% if project.participant.owner == user %}
+            <a href="{% url 'project_view:participant_update' project.participant.id %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">{{ project.participant.name }} 
+              <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
+            {% else %}
+            {{ project.participant.name }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </ul>
+    {% else %}
+        <p>There are no participants in this project.</p>
+    {% endif %}
+    <p>
+      <a href="{% url 'project_view:participant_create' %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">Add new participant 
+        <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
+    </p>
+    <p>
+      <a href="{% url 'project_view:participation_proj_create' project.id %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">Add existing participant 
+        <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
+    </p>
+    <p>
+      <a href="{% url 'project_view:participation_list' %}" target="_blank" rel="noopener noreferrer" style="width: 100%;">Manage participants 
+        <i class="fas fa-external-link-alt" style="font-size: 11px; float: right;"></i></a>
+    </p>
+  </div>
+</div>
 {% endblock %}

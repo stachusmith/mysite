@@ -1,61 +1,421 @@
-
-{% extends "base_menu.html" %}
-
+{% extends "base_menu_project_view.html" %}
 {% load humanize %}
+{% load static %}
+
 
 {% block content %}
-
+<link id="stylesheet" rel="stylesheet" type="text/css" href="{% static 'project_view/part.css' %}">
+<style>
+  .properties{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .properties:nth-child(odd){
+    background-color: rgb(246, 246, 246);
+  }
+  .fixing_list:nth-child(odd){
+    background-color: rgb(246, 246, 246);
+  }
+</style>
 <span style="float: right;">
-({{ part.updated_at|naturaltime }})
+Last modified: {{ part.updated_at }}
 {% if part.owner == user %}
 <a href="{% url 'project_view:part_update' module.id part.id %}"><i class="fa fa-pencil"></i></a>
 <a href="{% url 'project_view:part_delete' module.id part.id %}"><i class="fa fa-trash"></i></a>
 {% endif %}
 </span>
+
 <h1>{{ part.name }}</h1>
-
 <p>
-description: {{ part.description }}
+  <a href="{% url 'project_view:module_detail' project.id module.id %}">back to all parts</a>
 </p>
-<p>
-OEM: {{ part.module.project.client }}
-</p>
-<p>
-project: {{ part.module.project }}
-</p>
-<p>
-module: {{ part.module }}
-</p>
-<p>
-supplier: {{ part.supplier }}
-</p>
-<p>
-thickness: {{ part.thickness }}mm
-</p>
-<p>
-fixing combinations:
-    {% if fixes %}
-    <ul>
-      {% for fix in fixes %}
-        <li>
-            {{ fix.number_of_elements }} {{ fix.fixing.name }}s
-        </li>
-      {% endfor %}
+<div class='part_container'>
+  <div class='part_properties'>
+    <ul style="list-style: none; padding-left: 0;">
+      
+      <li class="properties">
+        <div>
+          OEM:
+        </div>
+        <div>
+          <a href="{% url 'project_view:client_detail'  part.module.project.client.id %}">{{ part.module.project.client }}</a>
+          <div class="link_as_text">{{ part.module.project.client }}</div>
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          project:
+        </div>
+        <div>
+          <a href="{% url 'project_view:project_detail'  part.module.project.client.id part.module.project.id %}">{{ part.module.project }}</a>
+          <div class="link_as_text">{{ part.module.project }}</div>
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          module
+        </div>
+        <div>
+          <a href="{% url 'project_view:module_detail'  part.module.project.id part.module.id %}">{{ part.module }}</a>
+          <div class="link_as_text">{{ part.module }}</div>
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          supplier:
+        </div>
+        <div>
+          {{ part.supplier }}
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          material:
+        </div>
+        <div>
+          {{ part.material }}
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          thickness:
+        </div>
+        <div>
+          {{ part.thickness }}mm
+        </div>
+      </li>
+      <li class="properties">
+        <div>
+          minimal draft angle:
+        </div>
+        <div>
+          {{ part.minimal_draft_angle }}°
+        </div>
+      </li>
     </ul>
-    {% else %}
-      <p>There are no fixing combinations in the database.</p>
-    {% endif %}
-    <p>
-      <a href="{% url 'project_view:fix_create' %}">add new combination</a>
-    </p>
-    <p>
-      <a href="{% url 'project_view:fixing_create' %}">create new fixing elements</a>
-    </p>
-</p>
+  </div>
+  <div class='fixing_container'>
+    <p style="font-weight: bold;">fixing combinations:</p>
+          {% if fixes %}
+          <ul style="list-style: none; padding-left: 10px;">
+            {% for fix in fixes %}
+              <li class="fixing_list">
+                  {{ fix.number_of_elements }} {{ fix.fixing.name }}s
+                  {% if fix.owner == user %}
+                  <div style="float: right;">
+                    <a href="{% url 'project_view:fix_update' part.id fix.id %}"><i class="fa fa-pencil"></i></a>
+                    <a href="{% url 'project_view:fix_delete' part.id fix.id %}"><i class="fa fa-trash"></i></a>
+                  </div>
+                  {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+            <p>There are no fixing combinations in the database.</p>
+          {% endif %}
+          {% if part.owner == user %}
+          <p>
+            <a href="{% url 'project_view:fix_create' part.id %}">add new combination</a>
+          </p>
+          <p>
+            <a href="{% url 'project_view:fixing_create' %}" target="_blank" rel="noopener noreferrer">create new fixing elements</a>
+          </p>
+          {% endif %}
+    
+  </div>
+</div>
 
+
+<div class="topics_container">
+  {% if part.owner == user %}
+  <a href="{% url 'project_view:topic_create' part.id %}"><input type="submit" style='float: right;'  value="Create new topic..."></input></a>
+  {% endif %}
+  <input id="normal_view" type="submit" href="#" style='float: right; margin-right: 5px;'
+    onclick="document.getElementById('stylesheet').href = '{% static 'project_view/part_print.css' %}'; //change css file for print view
+              document.getElementById('print_view').hidden=false; //hide button for print
+              document.getElementById('normal_view').hidden=true; /*show button for normal view*/" value="Print protocol view"></input>
+
+
+
+  <input id="print_view" type="submit" href="#" hidden style='float: right; margin-right: 5px; box-shadow: 0 0 20px purple;'
+  onclick="document.getElementById('stylesheet').href = '{% static 'project_view/part.css' %}'; //change css file for normal view
+            document.getElementById('normal_view').hidden=false; //hide button for print
+            document.getElementById('print_view').hidden=true; /*show button for normal view*/" value="Compressed view"></input>
+
+
+
+
+
+
+  <h4>Topics:</h4>
+  {% if new_topics_list %}
+    
+    {% for topic in new_topics_list %}
+      <div id="topic">
+        <div class="topic_left">
+          <div class="icon"><i class="fas fa-exclamation" style="font-size:20px;color:orange"></i></div>
+          <div class="topic_title_prot">
+            {{ topic.title }}
+          </div>
+        </div>
+        <div class="topic_middle">
+            <div class="topic_title">
+              <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+            </div>
+            <div class="entry_container">
+              {% if topic.entry_list %}
+                  {% for entry in topic.entry_list %}
+                  <div class="entry">
+                      <div class="entry_date">
+                        {{ entry.date_of_entry }}
+                      </div>
+                      <div class="entry_solution">
+                        {{ entry.solution }}
+                      </div>
+                      <div class="entry_responsible">
+                        {% for person in entry.responsible.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_involved">
+                        {% for person in entry.involved.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_agreed_with">
+                        {% for person in entry.agreed_with.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_deadline">
+                        {{ entry.deadline }}
+                      </div>
+                  </div>
+                  {% endfor %}
+              {% else %}
+                  there are no entries for this topic
+              {% endif %}
+            </div>
+        </div>
+        <div class="topic_right">
+            <div class="pic_list">
+              {% if topic.pic_list %}
+                  {% for picture in topic.pic_list %}
+                      <img class="pic" type="image" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+                  {% endfor %}
+                  {% else %}
+                    <img src="{% static 'project_view/my_block.png' %}"
+                      style="width: 100px; height: 100px;" alt="no pictures in database">
+              {% endif %}
+            </div>
+            <div class="edit_delete_icons">
+              {% if part.owner == user %}
+                  <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+                  <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+              {% endif %}
+            </div>
+        </div>
+      </div>
+  {% endfor %}
+  {% else %}
+  <p>
+      There are no new topics in the database.
+  </p>
+  {% endif %}
+
+
+
+
+  <!--<h4>topics in process:</h4>-->
+  {% if in_process_topics_list %}
+    {% for topic in in_process_topics_list %}
+    <div id="topic">
+      <div class="topic_left">
+        <div class="icon"><i class="fa fa-cog fa-spin" style="font-size:20px"></i></div>
+        <div class="topic_title_prot">
+          {{ topic.title }}
+        </div>
+      </div>
+      <div class="topic_middle">
+          <div class="topic_title">
+          <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+          </div>
+          <div class="entry_container">
+            {% if topic.entry_list %}
+                {% for entry in topic.entry_list %}
+                  <div class="entry">
+                      <div class="entry_date">
+                        {{ entry.date_of_entry }}
+                      </div>
+                      <div class="entry_solution">
+                        {{ entry.solution }}
+                      </div>
+                      <div class="entry_responsible">
+                        {% for person in entry.responsible.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_involved">
+                        {% for person in entry.involved.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_agreed_with">
+                        {% for person in entry.agreed_with.all %}
+                          <div class="person">
+                            {{ person }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="entry_deadline">
+                        {{ entry.deadline }}
+                      </div>
+                  </div>
+                {% endfor %}
+            {% else %}
+                there are no entries for this topic
+            {% endif %}
+          </div>
+      </div>
+      <div class="topic_right">
+          <div class="pic_list">
+            {% if topic.pic_list %}
+                {% for picture in topic.pic_list %}
+                    <img class="pic" type="image" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+                {% endfor %}
+                {% else %}
+                  <img src="{% static 'project_view/my_block.png' %}"
+                      style="width: 100px; height: 100px;" alt="no pictures in database">
+            {% endif %}
+          </div>
+          <div class="edit_delete_icons">
+            {% if part.owner == user %}
+                <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+                <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+            {% endif %}
+          </div>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
 <p>
-<a href="{% url 'project_view:module_detail' module.id project.id %}">All parts</a>
+  There are no "in process" topics in the database.
 </p>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--<h4>settled topics:</h4>-->
+  {% if settled_topics_list %}
+    
+    {% for topic in settled_topics_list %}
+      <div id="topic">
+        <div class="topic_left">
+          <div class="icon"><i class='fas fa-check-circle' style='font-size:20px;color:green'></i></div>
+          <div class="topic_title_prot">
+            {{ topic.title }}
+          </div>
+        </div>
+        <div class="topic_middle">
+          <div class="topic_title">
+            <a href="{% url 'project_view:topic_detail' part.id topic.id %}">{{ topic.title }}</a>
+          </div>
+          <div class="entry_container">
+            {% if topic.entry_list %}
+              {% for entry in topic.entry_list %}
+                <div class="entry">
+                  <div class="entry_date">
+                    {{ entry.date_of_entry }}
+                  </div>
+                  <div class="entry_solution">
+                    {{ entry.solution }}
+                  </div>
+                  <div class="entry_responsible">
+                    {% for person in entry.responsible.all %}
+                      <div class="person">
+                        {{ person }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="entry_involved">
+                    {% for person in entry.involved.all %}
+                      <div class="person">
+                        {{ person }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="entry_agreed_with">
+                    {% for person in entry.agreed_with.all %}
+                      <div class="person">
+                        {{ person }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="entry_deadline">
+                    {{ entry.deadline }}
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              there are no entries for this topic
+            {% endif %}
+          </div>
+        </div>
+        <div class="topic_right">
+          <div class="pic_list">
+            {% if topic.pic_list %}
+                {% for picture in topic.pic_list %}
+                  <img class="pic" type="image" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+                {% endfor %}
+              {% else %}
+                <img src="{% static 'project_view/my_block.png' %}"
+                  style="width: 100px; height: 100px;" alt="no pictures in database">
+            {% endif %}
+          </div>
+          <div class="edit_delete_icons">
+            {% if part.owner == user %}
+              <a href="{% url 'project_view:topic_update' part.id topic.id %}"><i class="fa fa-pencil"></i></a>
+              <a href="{% url 'project_view:topic_delete' part.id topic.id %}"><i class="fa fa-trash"></i></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>
+      There are no settled topics in the database.
+    </p>
+  {% endif %}
+</div>
+
 
 {% endblock %}
 

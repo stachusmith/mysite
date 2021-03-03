@@ -1,0 +1,261 @@
+{% extends "base_menu_project_view.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/todo.css' %}">
+
+{% if update == 1 %}
+    <p>
+        <div class="form_group" style="margin-bottom: 40px;">
+            <form action="{% url 'project_view:todo_update' todo.id %}" method="post" id="todo_form" class="form-inline">
+                <div class="form-container">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="submit">
+                        <input type="submit" for="todo_form" value="Update to-do item">
+                        <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:todo_create' %}'; return false;">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p>
+    
+{% else %}
+    <p>
+        <div class="form_group" style="margin-bottom: 40px;">
+            <form action="{% url 'project_view:todo_create' %}" method="post" id="todo_form" class="form-inline">
+                <div class="form-container">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="submit">
+                        <input type="submit" for="todo_form" value="Create to-do item">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p>
+{% endif %}
+
+
+
+{% if priority_list or priority_list_read_only %}
+    <div id="todo_list_title_container">
+        <div>
+            
+        </div>
+        <div class="todo_list_user">
+            design engineer:
+        </div>
+        <div class="todo_list_description">
+            description:
+        </div>
+    
+    
+        <div class="todo_list_deadline">
+            deadline:
+        </div>
+        <div class="todo_list_edit_delete_icons">
+            
+        </div>
+    </div>
+    {% for todo in priority_list %}
+        
+        <div id="todo_list_container">
+            <form method="POST" action="{% url 'project_view:status_update' todo.id %}">
+                {% csrf_token %}
+                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                    <i class="fas fa-exclamation" style="font-size:20px;color:orange"></i>
+                </button>
+            </form>
+            <div class="todo_list_user">
+                {{ todo.app_user }}
+            </div>
+            <div class="todo_list_description">
+                {{ todo.description }}
+            </div>
+            <div class="todo_list_deadline">
+                {{ todo.deadline }}
+            </div>
+        
+        
+            <div class="todo_list_edit_delete_icons">
+                {% if todo.owner == user %}
+                <a href="{% url 'project_view:todo_update' todo.id %}"><i class="fa fa-pencil"></i></a> 
+                <a href="{% url 'project_view:todo_delete' todo.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %}
+            </div>
+            
+        </div>
+        
+    {% endfor %}
+    {% for todo in priority_list_read_only %}
+        
+        <div id="todo_list_container">
+            <i class="fas fa-exclamation" style="font-size:20px;color:orange"></i>
+            <div class="todo_list_user">
+                {{ todo.app_user }}
+            </div>
+            <div class="todo_list_description">
+                {{ todo.description }}
+            </div>
+            <div class="todo_list_deadline">
+                {{ todo.deadline }}
+            </div>
+        
+        
+            <div class="todo_list_edit_delete_icons">
+                {% if todo.owner == user %}
+                <a href="{% url 'project_view:todo_update' todo.id %}"><i class="fa fa-pencil"></i></a> 
+                <a href="{% url 'project_view:todo_delete' todo.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %}
+            </div>
+            
+        </div>
+        
+    {% endfor %}
+
+
+{% else %}
+    <p>
+        there are no to-do items in the database
+    </p>
+
+{% endif %}
+
+{% if in_process_list or in_process_list_read_only %}
+    {% for todo in in_process_list %}
+        
+        <div id="todo_list_container">
+            <form method="post" action="{% url 'project_view:status_update' todo.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                    <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
+                </button>
+            </form>
+            <div class="todo_list_user">
+                {{ todo.app_user }}
+            </div>
+            <div class="todo_list_description">
+                {{ todo.description }}
+            </div>
+            <div class="todo_list_deadline">
+                {{ todo.deadline }}
+            </div>
+        
+        
+            <div class="todo_list_edit_delete_icons">
+                {% if todo.owner == user %}
+                <a href="{% url 'project_view:todo_update' todo.id %}"><i class="fa fa-pencil"></i></a> 
+                <a href="{% url 'project_view:todo_delete' todo.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %} 
+            </div>
+            
+        </div>
+        
+    {% endfor %}
+    {% for todo in in_process_list_read_only %}
+        
+        <div id="todo_list_container">
+            
+            <i class="fa fa-cog fa-spin" style="font-size:20px"></i>
+            <div class="todo_list_user">
+                {{ todo.app_user }}
+            </div>
+            <div class="todo_list_description">
+                {{ todo.description }}
+            </div>
+            <div class="todo_list_deadline">
+                {{ todo.deadline }}
+            </div>
+        
+        
+            <div class="todo_list_edit_delete_icons">
+                {% if todo.owner == user %}
+                <a href="{% url 'project_view:todo_update' todo.id %}"><i class="fa fa-pencil"></i></a> 
+                <a href="{% url 'project_view:todo_delete' todo.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %} 
+            </div>
+            
+        </div>
+        
+    {% endfor %}
+
+
+{% else %}
+    <p>
+        there are no to-do items in the database
+    </p>
+
+{% endif %}
+
+
+{% if settled_list or settled_list_read_only %}
+    
+    {% for todo in settled_list %}
+        
+        
+        <div id="todo_list_container">
+            <form method="post" action="{% url 'project_view:status_update' todo.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                    <i class='fas fa-check-circle' style='font-size:20px;color:green'></i>
+                </button>
+            </form>
+            <div class="todo_list_user">
+                {{ todo.app_user }}
+            </div>
+            <div class="todo_list_description">
+                {{ todo.description }}
+            </div>
+            <div class="todo_list_deadline">
+                {{ todo.deadline }}
+            </div>
+        
+        
+            <div class="todo_list_edit_delete_icons">
+                {% if todo.owner == user %}
+                <a href="{% url 'project_view:todo_update' todo.id %}"><i class="fa fa-pencil"></i></a> 
+                <a href="{% url 'project_view:todo_delete' todo.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %}
+            </div>
+            
+        </div>
+        
+    {% endfor %}
+    {% for todo in settled_list_read_only %}
+        
+        
+        <div id="todo_list_container">
+            <i class='fas fa-check-circle' style='font-size:20px;color:green'></i>
+            <div class="todo_list_user">
+                {{ todo.app_user }}
+            </div>
+            <div class="todo_list_description">
+                {{ todo.description }}
+            </div>
+            <div class="todo_list_deadline">
+                {{ todo.deadline }}
+            </div>
+        
+        
+            <div class="todo_list_edit_delete_icons">
+                {% if todo.owner == user %}
+                <a href="{% url 'project_view:todo_update' todo.id %}"><i class="fa fa-pencil"></i></a> 
+                <a href="{% url 'project_view:todo_delete' todo.id %}"><i class="fa fa-trash"></i></a>
+                {% endif %}
+            </div>
+            
+        </div>
+        
+    {% endfor %}
+    
+
+{% else %}
+    <p>
+        there are no to-do items in the database
+    </p>
+
+{% endif %}
+
+{% endblock %}

@@ -1,20 +1,185 @@
 
 
 {% extends "base_menu.html" %}
-
+{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 
-{% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+<h2>Welcome to Stachu Smith's</h2><h1>ProjectView App</h1>
+<div class="upper">
+  <div class="left">
+    Please enter your username and password:
+    {% if form.errors %}
+      <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static 'project_view/login.css' %}">
+    <script type="text/javascript" src="{% static 'project_view/project_view.js' %}"></script>
 
+    <div class="login_area">
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form |crispy }}
 
-<form method="post" action="{% url 'login' %}">
-  {% csrf_token %}
-  {{ form.as_p}}
+        <input type="submit" class="btn btn-primary" value="Login" />
+        <input type="hidden" name="next" value="{{ next }}" />
+      </form>
+    </div>
+  </div>
+  <div class="right">
+    <p>
+      This app is intended for automotive industry development service providers, often dealing with sensitive data. Therefore, for security reasons, all pages of this app can only be accessed with a username and password.
+    </p>
+    <p>
+      If you don't have a username or password, please <b>contact me</b> and I will provide you with a <b>test user</b>, so that you can fully appreciate the functionality of this app.
+    </p>
+  
+    {% if sent == 0 %}
+      <form action="{% url 'project_view:get_in_touch' %}" method="post">
+        <div class="upper_form">
+          {% csrf_token %}
+          {{ touch_form |crispy }}
+        </div>
+        <div class="lower_form">
+          {% csrf_token %}
+          {{ touch_form2 |crispy }}
+        </div>
+        
+        <div class="button"><input type="submit" value="Send"></div>
+      </form>
+    {% else %}
+    <div class="thank_you">
+      
+      <h4><i class="far fa-paper-plane" style="font-size: 30px;"></i> Thank you for your message, I will get back to you as soon as I can. Cheers! <i class="far fa-paper-plane" style="font-size: 30px;"></i></h4>
+    </div>
+    {% endif %}
+  </div>
+</div>
 
-  <input type="submit" class="btn btn-primary" value="Login" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</form>
+<h2>About the app:</h2>
+
+<ul class="table_of_contents">
+  <li>technical details</li>
+  <li>purpose of this app</li>
+  <li>functionality</li>
+  <li>cool features</li>
+  <li>gallery</li>
+</ul>
+
+<h3>
+  Technical details:
+</h3>
+<div class="text">
+  I built this app using <b>Python</b> and the <b>Django</b> framework on the backend.
+  I chose <b>SQLite</b> as the data base. I'm thinking about switching to
+  something more suited for multiple users. The front end is pure <b>HTML, CSS and JavaScript</b>
+</div>
+
+<h3>
+  Purpose of this app:
+</h3>
+
+<div class="text">
+  This app is intended for project/team leaders working for companies providing development services
+  for the automotive industry. I myself come from this field and work as project leader in such a company.
+  As a project leader I was always missing a tool such as this app. I needed a kind of virtual cockpit,
+  where I would have all the information from all the projects in one place, accessable from any
+  place, at any time.
+</div>
+
+<h3>
+  Functionality:
+</h3>
+
+<div class="text">
+  The ProjectView app provides the following functionality:<br><br>
+  <p>
+    A folder like structure of <b>OEMs</b> (original elements manufacturers e.g. BMW, Tesla), <b>Projects, Modules, Parts, Topics</b>
+  </p>
+  <p>
+    <b>A part area</b> where all the information about the part is held, including a section for types and
+    amounts of fixing elements (many to many). There is also a list of topics, which can be viewed as a compressed view,
+    or a protocol view (so that one can easily print out all topics including pictures as pdf or on paper)
+  </p>
+  <p>
+    <b>A topic area</b> which is used during meetings. During a meeting one can edit, or create a new topic,
+    set a chosen priority of the topic, add information, pictures & entries. This way one can easily create
+    documentation on the fly during a meeting.
+  </p>
+  <p>
+    <b>A project participant area</b>, where all information about all the project participants is held e.g. for whom the 
+    participant works, his job title, contact details, list of projects this person is involved in.
+  </p>
+  <p>
+    <b>A to-do area</b> for the project leader to maintain their tasks. This area includes a section with responsible design
+    engineer. As soon as a to-do item is created, or modified, the person responsible receives an email notification
+    that a new task is ready, or an exitsting task has been modified. The responsible design engineer then clicks a
+    link in the email to see the task, upon doing this the project leader is informed that the person has seen the task.
+  </p>
+  <p>
+    <b>myParts area</b> which is basically a favourites area, where the project leader keeps a list of the parts they are currently
+    taking care of.
+  </p>
+
+  <h3>
+    Cool features:
+  </h3>
+  
+  <div class="text">
+    <li>adding pictures simply by copy-paste - very handy during a meeting. This feature is possible thanks to the
+      Javascript fetch method, which allowes adding many pictures directly to the database without having to refresh
+      the page. CSRF prevention is present.
+    </li>
+    <li>
+      switching between compressed view and protocol view without having to refresh the page (JavaScript)
+    </li>
+    <li>
+      adding, removing myParts without having to refresh the page (JavaScript)
+    </li>
+    <li>
+      adding/editing/removing entries whilst editing a topic without having to refresh the page
+    </li>
+    <li>
+      Email notification sent to person involved as soon as a new task is created or edited
+    </li>
+  </div>
+
+</div>
+<div class="gallery">
+  <h2>Gallery:</h2>
+  <div class="grid">
+    <div class="gridbox">
+      <div class="content">
+        <div class="title">
+          Structure:
+        </div>
+        <div class="picture">
+          <img src="" alt="">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  var myUrl = '{% url 'project_view:unsent' %}'
+  
+  window.onload = function unsentPost(){
+
+    const csrftoken = getCookie('csrftoken');
+    const request = new Request (myUrl);
+    /*send the data using fetch method:*/
+    fetch(request, {
+        method: "post",
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
+    }).then(function(data){
+        console.log(data)
+    }).catch(console.log(myUrl, 'error'));
+}
+</script>
+
 {% endblock %}

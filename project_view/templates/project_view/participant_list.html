@@ -1,0 +1,33 @@
+{% extends "base_menu_project_view.html" %}
+{% block content %}
+
+<h2>All Participants:</h2>
+<p>
+{% if participant_list %}
+  <ul>
+    {% for participant in participant_list %}
+      <li>
+          {{ participant.name }} in:
+          {% if participation_list %}
+            {% for participantion in participation_list %}
+                {{ participation.project }}
+            {% endfor %}
+          {% endif %}
+          
+          {% if participant.owner == user %}
+          (<a href="{% url 'project_view:participant_update' participant.id %}">Edit</a> |
+          <a href="{% url 'project_view:participation_create' %}">Manage participation</a> |
+          <a href="{% url 'project_view:participant_delete' participant.id %}">Delete</a>)
+          {% endif %}
+      </li>
+    {% endfor %}
+    
+  </ul>
+  
+  <a href="{% url 'project_view:participation_create' %}">Add participant</a>
+  
+  {% else %}
+    <p>There are no participants in the db.</p>
+{% endif %}
+</p>
+{% endblock %}

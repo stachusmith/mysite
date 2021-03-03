@@ -1,0 +1,348 @@
+{% extends "base_menu_project_view.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'project_view/topic_update.css' %}">
+
+You are editing the following topic:
+
+
+<h1 style='margin-bottom: 30px;'>{% if topic.status.id == 1 %}
+        <i class="fas fa-exclamation" style="font-size:30px;color:orange"></i>
+        {% elif topic.status.id == 2 %}
+          <i class="fa fa-cog fa-spin" style="font-size:30px"></i>
+        {% elif topic.status.id == 3 %}
+        <i class='fas fa-check-circle' style='font-size:30px;color:green'></i>
+        {% else %}
+        <i class="fas fa-exclamation" style="font-size:30px;color:orange"></i>
+        {% endif %}
+        {{ topic.title }}</h1>
+
+<div class="upper_area">
+    <div class="upper_left">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form_topic_create|crispy }}
+    </div>
+
+    
+</div>
+<p>
+  <form action="" method="post">
+    
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div style="display: flex; flex-direction: row; width:100%; justify-content: flex-end; padding-right: 10px; margin-bottom: 30px;">
+        <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_cancel' topic.id %}';return false;">
+        <input type="submit" name="save" value="Save">
+        <input type="submit" name="save_leave" value="Save & leave" id="leave" style="color: green;">
+        
+    </div>
+</form>
+</p>
+<div class="picture_container" id="target_list">
+    <h2 style="padding-left: 10px;">Pictures:</h2>
+    {% if picture_list %}
+        <div class="picture_grid">
+            {% for picture in picture_list %}
+                <div class="pic_area">
+                    <div class="pic_description">
+                        <div class="pic_desc_left">
+                            picture: {{ picture.id }}
+                        </div>
+                        <div class="pic_desc_right">
+                            {% if part.owner == user %}
+                            <a href="{% url 'project_view:picture_delete' topic.id picture.id %}"><i class="fa fa-trash"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="pic">
+                        <a href="#"><img type="image" id=picture_box
+                            src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                            onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'block';"><!--picture detail appears-->
+                        </a>
+
+                        <div id='picture_detail{{ picture.id}}' class="picture_detail" onclick="document.getElementById('picture_detail{{ picture.id}}').style.display= 'none';"><a href="#">
+                            <img type="image"  src="{% url 'project_view:picture_stream' topic.id picture.id %}" 
+                            style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+                        </a></div>
+                    </div>
+                </div>
+                
+            {% endfor %}
+            
+        </div>
+        
+    {% else %}
+    <p>
+        there are no pictures for this topic
+    </p>
+    {% endif %}
+    <div style="padding-left: 10px; width: 100%; border-color: seagreen;">
+        paste more images...
+    </div>
+
+    <div id="target_area">
+        <img type="image" class="target" id="target"></img>
+    </div>
+</div>
+
+
+{% if entries_list %}
+    <div id="entry_list_title_container" style="padding-right: 50px;">
+        <div class="entry_list_left">
+            <div class="entry_list_date_of_entry">
+                date of entry:
+            </div>
+            <div class="entry_list_solution">
+                solution:
+            </div>
+        </div>
+        <div class="entry_list_middle">
+            <div class="entry_list_person">
+                responsible:
+            </div>
+            <div class="entry_list_person">
+                involved:
+            </div>
+            <div class="entry_list_person">
+                agreed with:
+            </div>
+        </div>
+        <div class="entry_list_right">
+            <div class="entry_list_deadline">
+                deadline:
+            </div>
+        </div>
+    </div>
+    {% for entry in entries_list %}
+            <div id="entry_list_container">
+                <div class="entry_list_left">
+                    <div class="entry_list_date_of_entry">
+                        {{ entry.date_of_entry }}
+                    </div>
+                    <div class="entry_list_solution">
+                        {{ entry.solution }}
+                    </div>
+                </div>
+                <div class="entry_list_middle">
+                    <div class="entry_list_person">
+                        {% for person in entry.responsible.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.involved.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="entry_list_person">
+                        {% for person in entry.agreed_with.all %}
+                            <p>
+                                {{ person }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="entry_list_right">
+                    <div class="entry_list_deadline">
+                        {{ entry.deadline }}
+                    </div>
+                    <div class="entry_list_edit_delete_icons">
+                        {% if topic.owner == user %}
+                            <a href="{% url 'project_view:topic_entry_update' entry.topic.part.id entry.topic.id entry.id %}"><i class="fa fa-pencil"></i></a> 
+                            <a href="{% url 'project_view:entry_delete' entry.id %}"><i class="fa fa-trash"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        
+    {% endfor %}
+
+
+{% else %}
+    <p>
+        there are no entries for this topic
+    </p>
+
+{% endif %}
+
+
+
+{% if update == 1 %}
+    <p>
+        <div class="form_group" style="margin-bottom: 40px;">
+            <form action="{% url 'project_view:entry_update' entry.id %}" method="post" id="entry_form" class="form-inline">
+                <div class="form-container">
+                    {% csrf_token %}
+                    {{ entry_form|crispy }}
+                    <div class="submit">
+                        <input type="submit" for="entry_form" value="Update entry">
+                        <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_update' part.id topic.id %}'; return false;">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p>
+    <script>
+    //position window to list of entries upon page load:
+    window.onload = function () {
+        document.getElementById('entry_list_container').scrollIntoView();
+    }
+    </script>
+{% else %}
+    <p>
+        <div class="form_group">
+            <form action="{% url 'project_view:entry_create' topic.id %}" method="post" id="entry_form" class="form-inline">
+                <div class="form-container">
+                    {% csrf_token %}
+                    {{ entry_form|crispy }}
+                    <div class="submit">
+                        <input type="submit" for="entry_form" value="Create entry">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p>
+{% endif %}
+
+
+<script>
+document.onpaste = function (pasteEvent) {
+    
+    //create new target html element for next picture:
+    var t = document.getElementById("target")
+    //document.getElementById("target").hidden = false
+    var cloneT = t.cloneNode(true)
+    //document.getElementById("target").setAttribute('id', 'target_used')
+    //cloneT.setAttribute('id', 'target_renamed')
+    document.getElementById("target_area").append(cloneT); 
+
+
+    //pull image items from clipboard:
+    var items = pasteEvent.clipboardData.items;
+    //check data type of clipboard for image
+    typeCheck= /^image.*/;
+    test = typeCheck.test(items[0].type);
+    console.log(items[0]);
+    if (test === true) {
+        var blob = items[0].getAsFile();//returns the item's file object
+        console.log(blob)
+        
+        //set up a new file-reader
+        var reader = new FileReader();
+
+        //reading/rendering the content of the the file object is triggered:
+        reader.readAsDataURL(blob);
+        reader.name = blob.name;//set name
+        
+        //upon loading the reader (reading the file), an image is created:
+        reader.onload = function (theBlobLoad) {
+            //set up a new image
+            var img = new Image();
+            //get properties of new image from file that's being read:
+            img.src = theBlobLoad.target.result //get src of new image from file (result is a base64-encoded Data URI)
+            img.name = theBlobLoad.target.name //get name of new image from file
+            img.size = theBlobLoad.target.size //get size of new image from file
+
+            //upon loading the image draw a resized version:
+            img.onload = function reSize(image) {
+                
+                //desired picture width
+                var resize_width=1700; // no px
+                
+                originalWidth=image.target.naturalWidth;//get width of src
+                originalHeight=image.target.naturalHeight;//get height of src
+                if (originalWidth>resize_width) {
+                    var myCanvas = document.createElement('canvas');//create a canvas
+                    var picRatio = resize_width / originalWidth;//set image ratio
+                    myCanvas.width = resize_width;//new width
+                    myCanvas.height = originalHeight * picRatio;//new height
+                    
+
+                    //draw in canvas
+                    var myCanvasContent = myCanvas.getContext('2d');
+                    myCanvasContent.drawImage(image.target, 0, 0, myCanvas.width, myCanvas.height);
+
+                    //get the base64-encoded Data URI of the drawn image
+                    var srcEncoded = myCanvasContent.canvas.toDataURL(image.target, 'image/jpeg', 0);
+                    
+                    //upon loading the new image in file-reader, the target html element's src attribute is set,
+                    //the file-reader will now know where to render the image
+                    document.getElementById("target").src = srcEncoded;
+                    document.getElementById('target').setAttribute('id', 'target_used')
+                    
+                    
+                    
+                    // found this on stackoverflow - changes base64 back into file:
+                    function dataURLtoFile(dataurl, filename) {
+
+                    var arr = dataurl.split(','),
+                        mime = arr[0].match(/:(.*?);/)[1],
+                        bstr = atob(arr[1]), 
+                        n = bstr.length, 
+                        u8arr = new Uint8Array(n);
+                        
+                    while(n--){
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+                    
+                    return new File([u8arr], filename, {type:mime});
+                    }
+                    
+
+                    //execute changing base64 back into file
+                    var file = dataURLtoFile(srcEncoded, 'reducedImage.png')
+
+                    
+                    /*prepare data to be sent to server*/
+                    var formData = new FormData();
+                    var myUrl = "{% url 'project_view:picture_add' topic.id %}";//target url on server side
+                    formData.append("inpFile", file); //(name of data, data)
+                    /*prepare data to be sent to server*/
+
+                    /*send the data using fetch method:*/
+                    fetch(myUrl, {
+                        method: "post",
+                        body: formData
+                    }).then(function(data){
+                        console.log(data)
+                    }).catch(console.log(myUrl, 'error'));
+                }
+                else {
+                    //upon loading the new image in file-reader, the target html element's src attribute is set,
+                    //the file-reader will now know where to render the image
+                    document.getElementById("target").src = img.src; //(img.src = theBlobLoad.target.result)
+                    document.getElementById('target').setAttribute('id', 'target_used')
+
+                    /*prepare data to be sent to server*/
+                    var formData = new FormData();
+                    var myUrl = "{% url 'project_view:picture_add' topic.id %}";//target url on server side
+                    formData.append("inpFile", blob); //(name of data, data)
+                    /*prepare data to be sent to server*/
+
+                    /*send the data using fetch method:*/
+                    fetch(myUrl, {
+                        method: "post",
+                        body: formData
+                    }).then(function(data){
+                        console.log(data)
+                    }).catch(console.log(myUrl, 'error'));
+                }
+                
+            }    
+        }
+    }
+};
+//position window to list of entries upon page load:
+/*window.onload = function () {
+    document.getElementById('entry_list_container').scrollIntoView();
+}*/
+
+</script>
+{% endblock %}

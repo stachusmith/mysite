@@ -1,13 +1,17 @@
-{% extends "base_menu.html" %}
-
+{% extends "base_menu_project_view.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
 <p>
+  <a href="{% url 'project_view:fixing_create'  %}" target="_blank" rel="noopener noreferrer">add a fixing element to data base</a>
+</p>
+<p>
+
   <form action="" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
 
     <input type="submit" value="Submit">
-    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:main' %}'; return false;">
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:part_detail' part.module.id part.id %}'; return false;">
   </form>
 </p>
 {% endblock %}

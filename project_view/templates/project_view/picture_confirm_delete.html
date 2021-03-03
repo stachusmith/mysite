@@ -1,0 +1,17 @@
+{% extends "base_menu_project_view.html" %}
+
+{% block content %}
+
+<h1>Delete Picture</h1>
+
+<p>Are you sure you want to delete the following picture?</p>
+<img type="image" style="width: 100px; height: 100px;" src="{% url 'project_view:picture_stream' topic.id picture.id %}">
+<p>
+    <form action="" method="POST">
+        {% csrf_token %}
+    <input type="submit" value="Yes, delete.">
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'project_view:topic_detail' picture.topic.part_id picture.topic_id %}'; return false;">
+
+    </form>
+</p>
+{% endblock %}
