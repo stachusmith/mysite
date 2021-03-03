@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h2>Welcome to Stachu Smith's</h2><h1>ProjectView App</h1>
+<h2>Welcome to Stachu Smith's</h2><h1>ProjectView Web Application</h1>
 <div class="upper">
   <div class="left">
     Please enter your username and password:
@@ -28,7 +28,7 @@
   </div>
   <div class="right">
     <p>
-      This app is intended for automotive industry development service providers, often dealing with sensitive data. Therefore, for security reasons, all pages of this app can only be accessed with a username and password.
+      This app is intended for <b>engineering service providers</b> in the automotive industry, who are often dealing with sensitive data. Therefore, for security reasons, all pages of this app can only be accessed with a username and password.
     </p>
     <p>
       If you don't have a username or password, please <b>contact me</b> and I will provide you with a <b>test user</b>, so that you can fully appreciate the functionality of this app.
@@ -58,36 +58,43 @@
 
 <h2>About the app:</h2>
 
-<ul class="table_of_contents">
-  <li>technical details</li>
-  <li>purpose of this app</li>
-  <li>functionality</li>
-  <li>cool features</li>
-  <li>gallery</li>
-</ul>
-
-<h3>
-  Technical details:
-</h3>
-<div class="text">
-  I built this app using <b>Python</b> and the <b>Django</b> framework on the backend.
-  I chose <b>SQLite</b> as the data base. I'm thinking about switching to
-  something more suited for multiple users. The front end is pure <b>HTML, CSS and JavaScript</b>
+<div class="table_of_contents">
+  <li class="cont"><a href="#purpose">purpose of this app</a></li>
+  <li class="cont"><a href="#technical">technical details</a></li>
+  <li class="cont"><a href="#functionality">functionality</a></li>
+  <li class="cont"><a href="#features">cool features</a></li>
+  <li class="cont"><a href="#gallery">gallery</a></li>
 </div>
 
-<h3>
+<h3 id="purpose">
   Purpose of this app:
 </h3>
 
 <div class="text">
-  This app is intended for project/team leaders working for companies providing development services
-  for the automotive industry. I myself come from this field and work as project leader in such a company.
-  As a project leader I was always missing a tool such as this app. I needed a kind of virtual cockpit,
-  where I would have all the information from all the projects in one place, accessable from any
-  place, at any time.
+  This app is intended for <b>project / team leaders</b> working for companies providing <b>development / engineering services</b>
+  for the <b>automotive industry</b>. I myself come from this field and work as a project leader in such a company.
+  As a project leader I was always missing a tool such as this app. I needed a kind of digital control panel,
+  where I would have all the information from all projects in one place - including protocols from meetings, to-do lists, contacts etc. 
+  Accessable from any place, at any time. I believe that with some adjustments, this app would also do fine in just about <b>any industry</b>, not 
+  only in the automotive one.
 </div>
 
-<h3>
+<h3 id="technical">
+  Technical details:
+</h3>
+<div class="text">
+  I built this app using <b>Python</b> and the <b>Django</b> framework on the backend.
+  I chose <b>SQLite</b> for the data base, but I'm thinking of switching to
+  something more suited for multiple users. The front end is pure <b>HTML, CSS and JavaScript</b> plus a little bit of <b>Bootstrap & Crispy Forms</b>,.
+   To create this app I used the following tools: <b>Visual Studio Code as IDE, GitHub for version control</b>.
+    To set it up online I bought a <b>Raspberry Pi</b>, which I then set up as a <b>Linux</b> server using <b>Apache2</b>. 
+    The domain has an SSL certificate, the firewall allows 443 traffic only. The Django deployment check list 
+    has been completed. Recomended browsers: Firefox and Chrome
+
+    <br><br>Even though this is a <b>full stack project</b>, I like to think of myself more as a backend kind of guy.
+</div>
+
+<h3 id="functionality">
   Functionality:
 </h3>
 
@@ -97,69 +104,172 @@
     A folder like structure of <b>OEMs</b> (original elements manufacturers e.g. BMW, Tesla), <b>Projects, Modules, Parts, Topics</b>
   </p>
   <p>
-    <b>A part area</b> where all the information about the part is held, including a section for types and
+    <b>A part area</b> where all the information about a part is held, including a section for types and
     amounts of fixing elements (many to many). There is also a list of topics, which can be viewed as a compressed view,
-    or a protocol view (so that one can easily print out all topics including pictures as pdf or on paper)
+    or a protocol view (so that one can easily print out all topics including all entries and pictures as a pdf file or on paper)
   </p>
   <p>
-    <b>A topic area</b> which is used during meetings. During a meeting one can edit, or create a new topic,
-    set a chosen priority of the topic, add information, pictures & entries. This way one can easily create
-    documentation on the fly during a meeting.
+    <b>A topic area</b> which is used during meetings. During a meeting the user can edit, or create a new topic,
+    <b>set a chosen priority</b> for the topic, add information, pictures & entries. This way you can easily create
+    <b>documentation on the fly</b> during a meeting. <b>Entries</b> concist of entry date, solution and deadline. 
+    Entries are <b>coupled with project participants</b>. From the project participants pool, at least one participant must be chosen as
+     'responsible', one as 'involved' and one as the one with whom the given entry was agreed with.
   </p>
   <p>
     <b>A project participant area</b>, where all information about all the project participants is held e.g. for whom the 
     participant works, his job title, contact details, list of projects this person is involved in.
   </p>
   <p>
-    <b>A to-do area</b> for the project leader to maintain their tasks. This area includes a section with responsible design
-    engineer. As soon as a to-do item is created, or modified, the person responsible receives an email notification
-    that a new task is ready, or an exitsting task has been modified. The responsible design engineer then clicks a
-    link in the email to see the task, upon doing this the project leader is informed that the person has seen the task.
+    <b>A to-do area</b> for the project leader to maintain their tasks. This area includes a field where the responsible design
+    engineer is set. As soon as a to-do item is created, or modified, the person responsible receives an <b>email notification</b>
+    that a new task is ready (or an exitsting task has been modified). The responsible design engineer then clicks a
+    link in the email to see the task, upon doing so the project leader is informed that the person has seen the task. To-do items 
+    also have a statuses (currently <b>'priority'</b>, <b>'in process'</b> and <b>'settled'</b>), which can be <b>easily changed simply by clicking on the icon</b>.
   </p>
   <p>
     <b>myParts area</b> which is basically a favourites area, where the project leader keeps a list of the parts they are currently
     taking care of.
   </p>
 
-  <h3>
+  <h3 id="features">
     Cool features:
   </h3>
   
-  <div class="text">
-    <li>adding pictures simply by copy-paste - very handy during a meeting. This feature is possible thanks to the
-      Javascript fetch method, which allowes adding many pictures directly to the database without having to refresh
-      the page. CSRF prevention is present.
+  <div class="text" id="cool_features">
+    <li class="cool"><b>adding pictures simply by copy-paste</b> - very handy during a meeting. This feature is possible thanks to the
+      <b>Javascript fetch method</b>, which allowes adding many pictures directly to the database without having to refresh
+      the page. <b>CSRF prevention</b> is present.
     </li>
-    <li>
-      switching between compressed view and protocol view without having to refresh the page (JavaScript)
+    <li class="cool">
+      switching between <b>compressed view</b> and <b>protocol view</b> without having to refresh the page (JavaScript)
     </li>
-    <li>
+    <li class="cool">
       adding, removing myParts without having to refresh the page (JavaScript)
     </li>
-    <li>
+    <li class="cool">
       adding/editing/removing entries whilst editing a topic without having to refresh the page
     </li>
-    <li>
-      Email notification sent to person involved as soon as a new task is created or edited
+    <li class="cool">
+      <b>Email notification</b> sent to the person involved as soon as a new task is created or edited
     </li>
   </div>
 
 </div>
-<div class="gallery">
-  <h2>Gallery:</h2>
+<div class="gallery" id="gallery">
+  <h3>Gallery:</h3>
   <div class="grid">
     <div class="gridbox">
-      <div class="content">
-        <div class="title">
-          Structure:
-        </div>
-        <div class="picture">
-          <img src="" alt="">
+      <div class="title">
+        <h4>Project structure:</h4>
+      </div>
+      <div class="picture" id="picture_01">
+        <a href="#"><img src="{% static 'project_view/myParts.png' %}" alt="view of project structure"
+        onclick="document.getElementById('picture_detail_01').style.display= 'block';"></a><!--picture detail appears-->
+        
+        <div id='picture_detail_01' class="picture_detail"
+        onclick="document.getElementById('picture_detail_01').style.display= 'none';
+                  document.getElementById('picture_01').scrollIntoView();">
+          <img type="image"  src="{% static 'project_view/myParts.png' %}" 
+          style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
         </div>
       </div>
-
     </div>
-
+    <div class="gridbox">
+      <div class="title">
+        <h4>Part view:</h4>
+      </div>
+      <div class="picture" id="picture_02">
+        <a href="#"><img src="{% static 'project_view/part_view_comp.png' %}" alt="view of project structure"
+        onclick="document.getElementById('picture_detail_02').style.display= 'block';"></a><!--picture detail appears-->
+        
+        <div id='picture_detail_02' class="picture_detail"
+        onclick="document.getElementById('picture_detail_02').style.display= 'none';
+                  document.getElementById('picture_02').scrollIntoView();">
+          <img type="image"  src="{% static 'project_view/part_view_comp.png' %}" 
+          style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+        </div>
+      </div>
+    </div>
+    <div class="gridbox">
+      <div class="title">
+        <h4>Topic view:</h4>
+      </div>
+      <div class="picture" id="picture_03">
+        <a href="#"><img src="{% static 'project_view/topic_detail_view.png' %}" alt="view of project structure"
+        onclick="document.getElementById('picture_detail_03').style.display= 'block';"></a><!--picture detail appears-->
+        
+        <div id='picture_detail_03' class="picture_detail"
+        onclick="document.getElementById('picture_detail_03').style.display= 'none';
+                  document.getElementById('picture_03').scrollIntoView();">
+          <img type="image"  src="{% static 'project_view/topic_detail_view.png' %}" 
+          style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+        </div>
+      </div>
+    </div>
+    <div class="gridbox">
+      <div class="title">
+        <h4>Editing topic:</h4>
+      </div>
+      <div class="picture" id="picture_04">
+        <a href="#"><img src="{% static 'project_view/edit_topic_.png' %}" alt="view of project structure"
+        onclick="document.getElementById('picture_detail_04').style.display= 'block';"></a><!--picture detail appears-->
+        
+        <div id='picture_detail_04' class="picture_detail"
+        onclick="document.getElementById('picture_detail_04').style.display= 'none';
+                  document.getElementById('picture_04').scrollIntoView();">
+          <img type="image"  src="{% static 'project_view/edit_topic_.png' %}" 
+          style="position: fixed; max-width: 100%; max-height: 900px; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+        </div>
+      </div>
+    </div>
+    <div class="gridbox">
+      <div class="title">
+        <h4>Participants' area:</h4>
+      </div>
+      <div class="picture" id="picture_05">
+        <a href="#"><img src="{% static 'project_view/participants_area.png' %}" alt="view of project structure"
+        onclick="document.getElementById('picture_detail_05').style.display= 'block';"></a><!--picture detail appears-->
+        
+        <div id='picture_detail_05' class="picture_detail"
+        onclick="document.getElementById('picture_detail_05').style.display= 'none';
+                  document.getElementById('picture_05').scrollIntoView();">
+          <img type="image"  src="{% static 'project_view/participants_area.png' %}" 
+          style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+        </div>
+      </div>
+    </div>
+    <div class="gridbox">
+      <div class="title">
+        <h4>Creating participant:</h4>
+      </div>
+      <div class="picture" id="picture_06">
+        <a href="#"><img src="{% static 'project_view/participant_create.png' %}" alt="view of project structure"
+        onclick="document.getElementById('picture_detail_06').style.display= 'block';"></a><!--picture detail appears-->
+        
+        <div id='picture_detail_06' class="picture_detail"
+        onclick="document.getElementById('picture_detail_06').style.display= 'none';
+                  document.getElementById('picture_06').scrollIntoView();">
+          <img type="image"  src="{% static 'project_view/participant_create.png' %}" 
+          style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+        </div>
+      </div>
+    </div>
+    <div class="gridbox">
+      <div class="title">
+        <h4>To-do's with email notification:</h4>
+      </div>
+      <div class="picture" id="picture_07">
+        <a href="#"><img src="{% static 'project_view/todo_.png' %}" alt="view of project structure"
+        onclick="document.getElementById('picture_detail_07').style.display= 'block';"></a><!--picture detail appears-->
+        
+        <div id='picture_detail_07' class="picture_detail"
+        onclick="document.getElementById('picture_detail_07').style.display= 'none';
+                  document.getElementById('picture_07').scrollIntoView();">
+          <img type="image"  src="{% static 'project_view/todo_.png' %}" 
+          style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

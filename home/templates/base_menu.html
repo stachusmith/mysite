@@ -1,6 +1,7 @@
 {% extends "base_bootstrap.html" %}
 {% block navbar %}
 {% load app_tags %} <!--gravatar (templatetags folder)-->
+{% load static %}
 
 <style>
 .footer_holder {
@@ -24,9 +25,15 @@
           <a href="{% url 'project_view:main' %}">ProjectView</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      
+      <li><a href="https://github.com/stachusmith" target="_blank" rel="noopener noreferrer">
+        <img src="{% static 'project_view/GitHub-Mark-Light-32px.png' %}" style="width: auto; height: 20px;" alt="GitHub icon">
+      </a></li> 
+      <li><a href="https://www.linkedin.com/in/stanis%C5%82aw-smith-49b6731b3/" target="_blank" rel="noopener noreferrer">
+        <img src="{% static 'project_view/LI-In-Bug.png' %}" style="width: auto; height: 20px;" alt="LinkedIn icon">
+      </a></li>
       {% if user.is_authenticated %}
       <li><a href="{% url 'project_view:get_in_touch' %}">get in touch</a></li>
+      
       <li class="dropdown">
           <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{ user.username }}</a>
           <ul class="dropdown-menu">
@@ -45,8 +52,14 @@
 <div class="footer_holder">
 <footer class="bg-light text-center text-lg-start">
   <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-    get in touch: stackoosmith@gmail.com
+  <div class="text-center p-3" style="background-color: rgb(230, 230, 230)">
+    <a href="{% url 'login' %}">get in touch form</a> | stackoosmith@gmail.com | 
+    <a href="https://github.com/stachusmith" target="_blank" rel="noopener noreferrer">
+      <img src="{% static 'project_view/GitHub-Mark-32px.png' %}" style="width: auto; height: 18px;" alt="GitHub icon">
+    </a> 
+    <a href="https://www.linkedin.com/in/stanis%C5%82aw-smith-49b6731b3/" target="_blank" rel="noopener noreferrer">
+      <img src="{% static 'project_view/LI-In-Bug.png' %}" style="width: auto; height: 18px;" alt="LinkedIn icon">
+    </a>
   </div>
   <!-- Copyright -->
 </footer>
