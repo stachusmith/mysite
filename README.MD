@@ -34,7 +34,7 @@ Search box which will be intoduced soon.
 
 ### Cool features:
 
-**adding pictures simply by copy-paste** - very handy during a meeting. This feature is possible thanks to the **Javascript fetch method**, which allowes adding many pictures directly to the database without having to refresh the page. **CSRF prevention** is present. The same function also resizes the clipboard image to a decent size, not to save unnecessarily large images in the database.
+**adding pictures simply by copy-paste** - very handy during a meeting. This feature is possible thanks to the **Javascript fetch method**, which allowes adding many pictures directly to the database without having to refresh the page. **CSRF prevention** is present. The same function also **resizes** the clipboard image to a decent size, not to save unnecessarily large images in the database.
 
 switching between **compressed view** and **protocol view** without having to refresh the page (JavaScript)
 
