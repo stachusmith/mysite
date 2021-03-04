@@ -1,4 +1,4 @@
-# MYSITE
+# MYSITE / ProjectView App
 
 this is mysite, holds my Django Apps in one place. The main app is called ProjectView.
 
@@ -10,7 +10,7 @@ This app is intended for project / team leaders working for companies providing 
 
 Technical details:
 
-I built this app using Python and the Django framework on the backend. I chose SQLite for the data base, but I'm thinking of switching to something more suited for multiple users. The front end is pure HTML, CSS and JavaScript. To create this app I used the following tools: Visual Studio Code as IDE, GitHub for version control. To set it up online I bought a Raspberry Pi, which I then set up as a Linux server using Apache2. The domain has an SSL certificate, the firewall allows 443 traffic only. The Django deployment check list has been completed.
+I built this app using Python and the Django framework on the backend. I chose SQLite for the data base, but I'm thinking of switching to something more suited for multiple users. The front end is pure HTML, CSS and JavaScript. To create this app I used the following tools: Visual Studio Code as IDE, GitHub for version control. To set it up online I bought a Raspberry Pi, which I then set up as a Linux server using Apache2. The domain has an SSL certificate, the firewall allows 443 traffic only. The Django deployment check list has been completed. Recomended browsers: Firefox and Chrome
 
 Even though this is a full stack project, I like to think of myself more as a backend kind of guy.
 
@@ -41,3 +41,5 @@ adding, removing myParts without having to refresh the page (JavaScript)
 adding/editing/removing entries whilst editing a topic without having to refresh the page
 
 Email notification sent to the person involved as soon as a new task is created or edited
+
+user can only modify / delete items he has created, this protects from accidentally modifying other users' data
