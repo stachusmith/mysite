@@ -66,7 +66,6 @@ class EntryUpdateView(LoginRequiredMixin, UpdateView):
 
         
         entry_form.save()
-#        entry_form.save_m2m()
 
         return redirect(reverse('project_view:topic_update', args=[entry.topic.part.id, entry.topic.id]))
 

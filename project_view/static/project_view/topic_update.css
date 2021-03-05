@@ -191,6 +191,11 @@
     
 }
 
+.form_solution {
+    max-height: 82px;
+    overflow: auto;
+}
+
 
 
 

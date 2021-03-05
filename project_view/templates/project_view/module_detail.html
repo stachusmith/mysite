@@ -2,6 +2,8 @@
 {% block content %}
 {% load static %}
 <link id="stylesheet" rel="stylesheet" type="text/css" href="{% static 'project_view/structure.css' %}">
+<script type="text/javascript" src="{% static 'project_view/project_view.js' %}"></script>
+
 
 <div class="left_block">
   <h4><a href="{% url 'project_view:main' %}">OEMs /</a></h4>
@@ -57,9 +59,11 @@
     /*prepare data to be sent to server*/
   
     /*send the data using fetch method:*/
+    const csrftoken = getCookie('csrftoken');
     fetch(myUrl, {
         method: "post",
-        body: formData
+        body: formData,
+        headers: {'X-CSRFToken': csrftoken}
     }).then(function(data){
         console.log(data)
     }).catch(console.log(myUrl, 'error'));

@@ -75,7 +75,7 @@
   for the <b>automotive industry</b>. I myself come from this field and work as a project leader in such a company.
   As a project leader I was always missing a tool such as this app. I needed a kind of digital control panel,
   where I would have all the information from all projects in one place - including protocols from meetings, to-do lists, contacts etc. 
-  Accessable from any place, at any time. I believe that with some adjustments, this app would also do fine in just about <b>any industry</b>, not 
+  Accessible from any place, at any time. I believe that with some adjustments, this app would also do fine in just about <b>any industry</b>, not 
   only in the automotive one.
 </div>
 
@@ -89,7 +89,7 @@
    To create this app I used the following tools: <b>Visual Studio Code as IDE, GitHub for version control</b>.
     To set it up online I bought a <b>Raspberry Pi</b>, which I then set up as a <b>Linux</b> server using <b>Apache2</b>. 
     The domain has an SSL certificate, the firewall allows 443 traffic only. The Django deployment check list 
-    has been completed. Recomended browsers: Firefox and Chrome
+    has been completed. Recommended browsers: Firefox and Chrome
 
     <br><br>Even though this is a <b>full stack project</b>, I like to think of myself more as a backend kind of guy.
 </div>
@@ -111,7 +111,7 @@
   <p>
     <b>A topic area</b> which is used during meetings. During a meeting the user can edit, or create a new topic,
     <b>set a chosen priority</b> for the topic, add information, pictures & entries. This way you can easily create
-    <b>documentation on the fly</b> during a meeting. <b>Entries</b> concist of entry date, solution and deadline. 
+    <b>documentation on the fly</b> during a meeting. <b>Entries</b> consist of entry date, solution and deadline. 
     Entries are <b>coupled with project participants</b>. From the project participants pool, at least one participant must be chosen as
      'responsible', one as 'involved' and one as the one with whom the given entry was agreed with.
   </p>
@@ -122,13 +122,16 @@
   <p>
     <b>A to-do area</b> for the project leader to maintain their tasks. This area includes a field where the responsible design
     engineer is set. As soon as a to-do item is created, or modified, the person responsible receives an <b>email notification</b>
-    that a new task is ready (or an exitsting task has been modified). The responsible design engineer then clicks a
+    that a new task is ready (or an existing task has been modified). The responsible design engineer then clicks a
     link in the email to see the task, upon doing so the project leader is informed that the person has seen the task. To-do items 
     also have a statuses (currently <b>'priority'</b>, <b>'in process'</b> and <b>'settled'</b>), which can be <b>easily changed simply by clicking on the icon</b>.
   </p>
   <p>
     <b>myParts area</b> which is basically a favourites area, where the project leader keeps a list of the parts they are currently
     taking care of.
+  </p>
+  <p>
+    Search box which will be introduced soon.
   </p>
 
   <h3 id="features">
@@ -137,8 +140,9 @@
   
   <div class="text" id="cool_features">
     <li class="cool"><b>adding pictures simply by copy-paste</b> - very handy during a meeting. This feature is possible thanks to the
-      <b>Javascript fetch method</b>, which allowes adding many pictures directly to the database without having to refresh
-      the page. <b>CSRF prevention</b> is present.
+      <b>JavaScript fetch method</b>, which allows adding many pictures directly to the database without having to refresh
+      the page. <b>CSRF prevention</b> is present. The same function also <b>resizes</b> the clipboard image to a decent size, not to save 
+      unnecessarily large images in the database.
     </li>
     <li class="cool">
       switching between <b>compressed view</b> and <b>protocol view</b> without having to refresh the page (JavaScript)
@@ -151,6 +155,9 @@
     </li>
     <li class="cool">
       <b>Email notification</b> sent to the person involved as soon as a new task is created or edited
+    </li>
+    <li>
+      user can only modify / delete items he has created, this protects from accidentally modifying other users' data
     </li>
   </div>
 
@@ -168,7 +175,7 @@
         
         <div id='picture_detail_01' class="picture_detail"
         onclick="document.getElementById('picture_detail_01').style.display= 'none';
-                  document.getElementById('picture_01').scrollIntoView();">
+                  document.getElementById('gallery').scrollIntoView();">
           <img type="image"  src="{% static 'project_view/myParts.png' %}" 
           style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
         </div>
@@ -184,7 +191,7 @@
         
         <div id='picture_detail_02' class="picture_detail"
         onclick="document.getElementById('picture_detail_02').style.display= 'none';
-                  document.getElementById('picture_02').scrollIntoView();">
+                  document.getElementById('gallery').scrollIntoView();">
           <img type="image"  src="{% static 'project_view/part_view_comp.png' %}" 
           style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
         </div>
@@ -200,7 +207,7 @@
         
         <div id='picture_detail_03' class="picture_detail"
         onclick="document.getElementById('picture_detail_03').style.display= 'none';
-                  document.getElementById('picture_03').scrollIntoView();">
+                  document.getElementById('gallery').scrollIntoView();">
           <img type="image"  src="{% static 'project_view/topic_detail_view.png' %}" 
           style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
         </div>
@@ -216,7 +223,7 @@
         
         <div id='picture_detail_04' class="picture_detail"
         onclick="document.getElementById('picture_detail_04').style.display= 'none';
-                  document.getElementById('picture_04').scrollIntoView();">
+                  document.getElementById('gallery').scrollIntoView();">
           <img type="image"  src="{% static 'project_view/edit_topic_.png' %}" 
           style="position: fixed; max-width: 100%; max-height: 900px; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
         </div>
@@ -232,7 +239,7 @@
         
         <div id='picture_detail_05' class="picture_detail"
         onclick="document.getElementById('picture_detail_05').style.display= 'none';
-                  document.getElementById('picture_05').scrollIntoView();">
+                  document.getElementById('gallery').scrollIntoView();">
           <img type="image"  src="{% static 'project_view/participants_area.png' %}" 
           style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
         </div>
@@ -248,7 +255,7 @@
         
         <div id='picture_detail_06' class="picture_detail"
         onclick="document.getElementById('picture_detail_06').style.display= 'none';
-                  document.getElementById('picture_06').scrollIntoView();">
+                  document.getElementById('gallery').scrollIntoView();">
           <img type="image"  src="{% static 'project_view/participant_create.png' %}" 
           style="position: fixed; max-width: 100%; height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%);"><!--picture detail disappears-->
         </div>

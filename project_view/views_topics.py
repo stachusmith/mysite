@@ -231,15 +231,6 @@ class TopicDeleteView(LoginRequiredMixin, View):
 
 #Pictures--------------------------------------------------------------------------------------
 
-# csrf exemption in class based views
-# https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.db.utils import IntegrityError
-
-
-
-@method_decorator(csrf_exempt, name='dispatch')
 class AddPictureView(LoginRequiredMixin, View):
 
     def post(self, request, pk_topi) :
@@ -255,7 +246,6 @@ class AddPictureView(LoginRequiredMixin, View):
         
         return HttpResponse()
 
-#@method_decorator(csrf_exempt, name='dispatch')
 class DeletePictureView(LoginRequiredMixin, View):
     
     template_name='project_view/picture_confirm_delete.html'
