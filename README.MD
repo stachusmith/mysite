@@ -10,7 +10,7 @@ This app is intended for **project / team leaders** working for companies provid
 
 ### Technical details:
 
-I built this app using **Python** and the **Django** framework on the backend. I chose **SQLite** for the data base, but I'm thinking of switching to something more suited for multiple users. The front end is pure **HTML, CSS and JavaScript** plus a little bit of **Bootstrap & Crispy Forms**. To create this app I used the following tools: **Visual Studio Code as IDE, GitHub for version control**. To set it up online, for demontsration purposes, I bought a **Raspberry Pi**, which I then set up as a **Linux** server using **Apache2**. The domain has an SSL certificate; the firewall allows 443 traffic only. The Django deployment check list has been completed. Recommended browsers: Firefox and Chrome
+I built this app using **Python** and the **Django** framework on the backend. I chose **SQLite** for the data base, but I'm thinking of switching to something more suited for multiple users. The front end is pure **HTML, CSS and JavaScript** plus a little bit of **Bootstrap & Crispy Forms**. To create this app I used the following tools: **Visual Studio Code as IDE, GitHub for version control**. To set it up online I bought a **Raspberry Pi**, which I then set up as a **Linux** server using **Apache2**. The domain has an SSL certificate; the firewall allows 443 traffic only. The Django deployment check list has been completed. Recommended browsers: Firefox and Chrome
 
 Even though this is a **full stack project**, I like to think of myself more as a backend kind of guy.
 
