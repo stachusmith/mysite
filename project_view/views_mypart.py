@@ -20,13 +20,16 @@ from project_view.forms import CreateProjectForm, CreateModuleForm, CreatePartFo
 
 #MyParts--------------------------------------------------------------------------------------
 
+ 
+
 # csrf exemption in class based views
 # https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.db.utils import IntegrityError
+#from django.views.decorators.csrf import csrf_exempt
+#from django.utils.decorators import method_decorator
+#from django.db.utils import IntegrityError
 
-@method_decorator(csrf_exempt, name='dispatch')
+#@method_decorator(csrf_exempt, name='dispatch')
+#2021-03-05 CSRF Present
 class MypartView(LoginRequiredMixin, View):
     def post(self, request, pk) :
         print("mypart",pk)
@@ -38,7 +41,8 @@ class MypartView(LoginRequiredMixin, View):
             pass
         return HttpResponse()
 
-@method_decorator(csrf_exempt, name='dispatch')
+#@method_decorator(csrf_exempt, name='dispatch')
+#2021-03-05 CSRF Present
 class UnmypartView(LoginRequiredMixin, View):
     def post(self, request, pk) :
         print("unmypart",pk)

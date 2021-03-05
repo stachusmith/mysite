@@ -4,6 +4,7 @@
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'project_view/topic_update.css' %}">
+<script type="text/javascript" src="{% static 'project_view/project_view.js' %}"></script>
 
 You are editing the following topic:
 
@@ -237,7 +238,7 @@ document.onpaste = function (pasteEvent) {
         //set up a new file-reader
         var reader = new FileReader();
 
-        //reading/rendering the content of the the file object is triggered:
+        //reading/rendering the content of the file object is triggered:
         reader.readAsDataURL(blob);
         reader.name = blob.name;//set name
         
@@ -307,9 +308,11 @@ document.onpaste = function (pasteEvent) {
                     /*prepare data to be sent to server*/
 
                     /*send the data using fetch method:*/
+                    const csrftoken = getCookie('csrftoken'); //get CSRF token - code in js file
                     fetch(myUrl, {
                         method: "post",
-                        body: formData
+                        body: formData,
+                        headers: {'X-CSRFToken': csrftoken}
                     }).then(function(data){
                         console.log(data)
                     }).catch(console.log(myUrl, 'error'));
@@ -327,9 +330,11 @@ document.onpaste = function (pasteEvent) {
                     /*prepare data to be sent to server*/
 
                     /*send the data using fetch method:*/
+                    const csrftoken = getCookie('csrftoken'); //get CSRF token - code in js file
                     fetch(myUrl, {
                         method: "post",
-                        body: formData
+                        body: formData,
+                        headers: {'X-CSRFToken': csrftoken}
                     }).then(function(data){
                         console.log(data)
                     }).catch(console.log(myUrl, 'error'));

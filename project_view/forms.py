@@ -79,7 +79,7 @@ class CreateEntryForm(forms.ModelForm):
         widgets = {
             'deadline': DateInput(attrs={'class':'form_control'}),
             'responsible': forms.SelectMultiple(attrs={'class':'form_control'}),
-            'solution': forms.Textarea(attrs={'class':'form_control'}),
+            'solution': forms.Textarea(attrs={'class':'form_solution'}),
             'involved': forms.SelectMultiple(attrs={'class':'form_control'}),
             'agreed_with': forms.SelectMultiple(attrs={'class':'form_control'}),
         }
