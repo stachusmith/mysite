@@ -26,6 +26,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('admin/', admin.site.urls),
     path('project_view/', include('project_view.urls')),
+    path('spotify_download/', include('spotify_download.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
