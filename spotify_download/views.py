@@ -31,6 +31,7 @@ class AuthView(APIView):
     def get(self, request, format=None):
         scopes = 'playlist-read-private playlist-modify-private'
 
+        auth_URL = Request('GET', 'https://accounts.spotify.com/authorize', parama={}) 
 
 
 
@@ -38,9 +39,9 @@ class AuthView(APIView):
         ctx = {'form' = form}
         return(render(request, self.template_name, ctx))
 
-#------------------------------------------------------------------------------
-#old python script for spotify playlist download as reference and guide:
-#------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
+#below my old python script for spotify playlist download as reference and guide:
+#---------------------------------------------------------------------------------
 
     def post(self, request):
 
