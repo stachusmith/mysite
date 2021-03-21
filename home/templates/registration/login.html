@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h2>Welcome to Stachu Smith's</h2><h1>ProjectView Web Application</h1>
+<h1 class="intro">Welcome to Stachu Smith's</h1><h2 class="page_title">ProjectView Web Application</h2>
 <div class="upper">
   <div class="left">
     Please enter your username and password:
@@ -84,8 +84,7 @@
 </h3>
 <div class="text">
   I built the app using <b>Python</b> and the <b>Django</b> framework on the backend.
-  I chose <b>SQLite</b> for the data base, but I'm thinking of switching to
-  something more suited to multiple users. The front end is pure <b>HTML, CSS and JavaScript</b> plus a bit of <b>Bootstrap & Crispy Forms</b>.
+  The database is <b>PostgreSQL</b> - recently updated from SQLite. The front end is pure <b>HTML, CSS and JavaScript</b> plus a bit of <b>Bootstrap & Crispy Forms</b>.
    To create the app I used the following tools: <b>Visual Studio Code as IDE, GitHub for version control</b>.
     To set it up online I bought a <b>Raspberry Pi</b>, which I then set up as a <b>Linux</b> server using <b>Apache2</b>. 
     The domain has an SSL certificate, the firewall allows 443 traffic only. The settings have been verified in accordance with the 
@@ -99,7 +98,7 @@
 <div class="text">
   The ProjectView app provides the following functionality:<br><br>
   <p>
-    A folder-like structure of <b>OEMs</b> (original elements manufacturers, e.g. BMW, Tesla), <b>Projects, Modules, Parts, Topics.</b>
+    <b>A folder-like structure of OEMs</b> (original elements manufacturers, e.g. BMW, Tesla), <b>Projects, Modules, Parts, Topics.</b>
   </p>
   <p>
     <b>A part area</b> where all the information about a particular part is held, including a section for types and
@@ -125,11 +124,11 @@
     also have statuses (currently <b>'priority'</b>, <b>'in process'</b> and <b>'settled'</b>), which are <b>easily changed by simply clicking on the icon</b>.
   </p>
   <p>
-    A <b>myParts area</b>, which is basically a 'favourites' area, where the project leader keeps a list of the parts they are currently
+    <b>A myParts area</b>, which is basically a 'favourites' area, where the project leader keeps a list of the parts they are currently
     dealing with.
   </p>
   <p>
-    A <b>search box</b> (to be introduced shortly).
+    <b>A search box</b> (to be introduced shortly).
   </p>
 
   <h3 id="features">
@@ -137,7 +136,7 @@
   </h3>
   
   <div class="text" id="cool_features">
-    <li class="cool"><b>adding pictures simply by copy-paste</b> - very handy during a meeting. This feature is possible thanks to the
+    <li class="cool">adding <b>pictures simply by copy-paste</b> - very handy during a meeting. This feature is possible thanks to the
       <b>JavaScript fetch method</b>, which allows many pictures to be added directly to the database without having to refresh
       the page. <b>CSRF prevention</b> is present. The same function also <b>resizes</b> the clipboard image to a reasonable magnitude, so as to avoid 
       saving unnecessarily large images in the database.
