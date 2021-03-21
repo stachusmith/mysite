@@ -10,7 +10,7 @@ This app is intended for **project/team leaders** working for companies providin
 
 ### Technical details:
 
-I built the app using **Python** and the **Django** framework on the backend. I chose **SQLite** for the data base, but I'm thinking of switching to something more suited to multiple users. The front end is pure **HTML, CSS and JavaScript** plus a bit of **Bootstrap & Crispy Forms**. To create the app I used the following tools: **Visual Studio Code as IDE, GitHub for version control**. To set it up online I bought a **Raspberry Pi**, which I then set up as a **Linux** server using **Apache2**. The domain has an SSL certificate; the firewall allows 443 traffic only. The settings have been verified in accordance with the Django deployment checklist. Recommended browsers: Firefox and Chrome
+I built the app using **Python** and the **Django** framework on the backend. The database is **PostgreSQL** - recently updated from SQLite. The front end is pure **HTML, CSS and JavaScript** plus a bit of **Bootstrap & Crispy Forms**. To create the app I used the following tools: **Visual Studio Code as IDE, GitHub for version control**. To set it up online I bought a **Raspberry Pi**, which I then set up as a **Linux** server using **Apache2**. The domain has an SSL certificate; the firewall allows 443 traffic only. The settings have been verified in accordance with the Django deployment checklist. Recommended browsers: Firefox and Chrome
 
 ### Functionality:
 
