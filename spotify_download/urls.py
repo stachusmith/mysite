@@ -7,7 +7,8 @@ app_name = 'spotify_download'
 
 urlpatterns = [
     
-    path('', views.UpdatePlaylistView.as_view(), name='playlist_input'),
-    path('get_creds', views.GetCredsView.as_view(), name='get_creds'), 
-    path('playlist', views.PrintPlaylistView.as_view(), name='playlist_print'), 
+    path('auth', views.AuthView.as_view(), name='auth'),
+#    path('', views.UpdatePlaylistView.as_view(), name='playlist_input'),
+#    path('get_creds', views.GetCredsView.as_view(), name='get_creds'), 
+#    path('playlist', views.PrintPlaylistView.as_view(), name='playlist_print'), 
 ]
